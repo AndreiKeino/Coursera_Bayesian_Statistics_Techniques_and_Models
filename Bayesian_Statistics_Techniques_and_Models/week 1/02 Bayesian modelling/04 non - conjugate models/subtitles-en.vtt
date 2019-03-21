@@ -1,0 +1,460 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:03.343
+[MUSIC]
+
+2
+00:00:03.343 --> 00:00:07.867
+Let's talk about a couple examples
+of models that don't have nice,
+
+3
+00:00:07.867 --> 00:00:10.130
+clean posterior distributions.
+
+4
+00:00:11.270 --> 00:00:17.390
+We'll first look at an example of a one
+parameter model that is not conjugate.
+
+5
+00:00:17.390 --> 00:00:22.400
+Suppose we have values that
+represent the percentage change in
+
+6
+00:00:22.400 --> 00:00:28.653
+total personnel from last year to this
+year for, we'll say, ten companies.
+
+7
+00:00:31.235 --> 00:00:34.700
+These companies come from
+a particular industry.
+
+8
+00:00:34.700 --> 00:00:39.310
+We're going to assume for now, that these
+are independent measurements from a normal
+
+9
+00:00:39.310 --> 00:00:45.160
+distribution with a known variance
+equal to one, but an unknown mean.
+
+10
+00:00:45.160 --> 00:00:49.620
+So we'll say the percentage
+change in the total personnel for
+
+11
+00:00:49.620 --> 00:00:53.820
+company I, given the unknown mean mu.
+
+12
+00:00:56.610 --> 00:01:02.230
+Will be distributed normally with mean mu,
+
+13
+00:01:02.230 --> 00:01:05.120
+and we're just going to use variance 1.
+
+14
+00:01:05.120 --> 00:01:07.060
+In this case,
+
+15
+00:01:07.060 --> 00:01:12.150
+the unknown mean could represent
+growth for this particular industry.
+
+16
+00:01:13.600 --> 00:01:17.418
+It's the average of the growth
+of all the different companies.
+
+17
+00:01:17.418 --> 00:01:21.891
+The small variance
+between the companies and
+
+18
+00:01:21.891 --> 00:01:28.608
+percentage growth might be appropriate
+if the industry is stable.
+
+19
+00:01:28.608 --> 00:01:30.709
+We know that the conjugate prior for
+
+20
+00:01:30.709 --> 00:01:33.800
+mu in this location would
+be a normal distribution.
+
+21
+00:01:34.820 --> 00:01:39.450
+But suppose we decide that our
+prior believes about mu are better
+
+22
+00:01:39.450 --> 00:01:44.990
+reflected using a standard t
+distribution with one degree of freedom.
+
+23
+00:01:44.990 --> 00:01:49.650
+So we could write that as the prior for
+mu is a t distribution
+
+24
+00:01:51.260 --> 00:01:53.590
+with a location parameter 0.
+
+25
+00:01:53.590 --> 00:01:56.260
+That's where the center
+of the distribution is.
+
+26
+00:01:56.260 --> 00:02:00.400
+A scale parameter of 1
+to make it the standard
+
+27
+00:02:00.400 --> 00:02:05.000
+t distribution similar to a standard
+normal, and 1 degree of freedom.
+
+28
+00:02:06.570 --> 00:02:11.600
+This particular prior distribution has
+heavier tails than the conjugate and
+
+29
+00:02:11.600 --> 00:02:13.390
+normal distribution,
+
+30
+00:02:13.390 --> 00:02:18.650
+which can more easily accommodate
+the possibility of extreme values for mu.
+
+31
+00:02:19.740 --> 00:02:24.670
+It is centered on zero so, that a priori,
+there is a 50% chance that
+
+32
+00:02:24.670 --> 00:02:29.260
+the growth is positive and
+a 50% chance that the growth is negative.
+
+33
+00:02:31.330 --> 00:02:34.840
+Recall that the posterior
+distribution of mu
+
+34
+00:02:34.840 --> 00:02:38.860
+is proportional to
+the likelihood times the prior.
+
+35
+00:02:38.860 --> 00:02:42.050
+Let's write the expression for
+that in this model.
+
+36
+00:02:42.050 --> 00:02:45.260
+That is the posterior distribution for
+
+37
+00:02:45.260 --> 00:02:51.060
+mu given the data y1 through yn
+
+38
+00:02:53.290 --> 00:03:00.850
+is going to be proportional to the
+likelihood which is this piece right here.
+
+39
+00:03:00.850 --> 00:03:08.450
+It is a product from i equals 1 to n,
+in this case that's 10.
+
+40
+00:03:08.450 --> 00:03:11.440
+Densities from a normal distribution.
+
+41
+00:03:11.440 --> 00:03:15.267
+Let's write the density from this
+particular normal distribution.
+
+42
+00:03:15.267 --> 00:03:19.170
+Is 1 over the square root of 2 pi.
+
+43
+00:03:21.037 --> 00:03:23.380
+E to the negative one-half.
+
+44
+00:03:26.530 --> 00:03:30.197
+Yi minus the mean squared,
+
+45
+00:03:30.197 --> 00:03:37.213
+this is the normal density for
+each individual Yi and
+
+46
+00:03:37.213 --> 00:03:41.844
+we multiplied it for likelihood.
+
+47
+00:03:41.844 --> 00:03:45.258
+The density for
+this t prior looks like this.
+
+48
+00:03:45.258 --> 00:03:51.993
+It's 1 over pi times 1 plus Mu squared.
+
+49
+00:03:57.672 --> 00:04:00.595
+This is the likelihood times the prior.
+
+50
+00:04:00.595 --> 00:04:03.430
+If we do a little algebra here,
+first of all,
+
+51
+00:04:03.430 --> 00:04:06.580
+we're doing this up to proportionality.
+
+52
+00:04:06.580 --> 00:04:11.440
+So, constants being multiplied by
+this expression are not important.
+
+53
+00:04:11.440 --> 00:04:15.710
+So, the square root of 2 pi
+being multiplied n times,
+
+54
+00:04:15.710 --> 00:04:20.010
+just creates the constant number, and this
+pi out here creates a constant number.
+
+55
+00:04:20.010 --> 00:04:23.100
+We're going to drop them in our next step.
+
+56
+00:04:23.100 --> 00:04:28.580
+So this is now proportional too,
+we're removing this piece and
+
+57
+00:04:28.580 --> 00:04:30.880
+now we're going to use
+properties of exponents.
+
+58
+00:04:30.880 --> 00:04:36.910
+The product of exponents is the sum
+of the exponentiated pieces.
+
+59
+00:04:36.910 --> 00:04:42.495
+So we have the exponent of negative
+
+60
+00:04:42.495 --> 00:04:48.466
+one-half times the sum from i equals
+
+61
+00:04:48.466 --> 00:04:53.679
+1 to n, of Yi minus mu squared.
+
+62
+00:04:53.679 --> 00:05:00.575
+And then we're dropping the pie over here,
+so times 1 plus mu squared.
+
+63
+00:05:03.039 --> 00:05:07.665
+We're going to do a few more steps of
+algebra here to get a nicer expression for
+
+64
+00:05:07.665 --> 00:05:08.860
+this piece.
+
+65
+00:05:08.860 --> 00:05:10.860
+But we're going to skip ahead to that.
+
+66
+00:05:10.860 --> 00:05:13.451
+We've now added these
+last two expressions.
+
+67
+00:05:14.868 --> 00:05:18.556
+To arrive at this expression here for
+the posterior, or
+
+68
+00:05:18.556 --> 00:05:22.250
+what's proportional to
+the posterior distribution.
+
+69
+00:05:23.830 --> 00:05:28.970
+This expression right here is almost
+proportional to a normal distribution
+
+70
+00:05:28.970 --> 00:05:33.170
+except we have this 1 plus mu
+squared term in the denominator.
+
+71
+00:05:34.590 --> 00:05:38.090
+We know the posterior
+distribution up to a constant but
+
+72
+00:05:38.090 --> 00:05:42.950
+we don't recognize its form
+as a standard distribution.
+
+73
+00:05:42.950 --> 00:05:47.270
+That we can integrate or simulate from,
+so we'll have to do something else.
+
+74
+00:05:49.050 --> 00:05:51.670
+Let's move on to our second example.
+
+75
+00:05:51.670 --> 00:05:53.530
+For a two parameter example,
+
+76
+00:05:53.530 --> 00:05:58.290
+we're going to return to the case
+where we have a normal likelihood.
+
+77
+00:05:58.290 --> 00:06:02.680
+And we're now going to estimate mu and
+sigma squared,
+
+78
+00:06:02.680 --> 00:06:04.540
+because they're both unknown.
+
+79
+00:06:05.590 --> 00:06:09.010
+Recall that if sigma squared were known,
+
+80
+00:06:09.010 --> 00:06:13.570
+the conjugate prior from mu
+would be a normal distribution.
+
+81
+00:06:13.570 --> 00:06:17.440
+And if mu were known,
+the conjugate prior we could choose for
+
+82
+00:06:17.440 --> 00:06:19.640
+sigma squared would be an inverse gamma.
+
+83
+00:06:21.180 --> 00:06:25.835
+We saw earlier that if you include
+sigma squared in the prior for mu, and
+
+84
+00:06:25.835 --> 00:06:29.483
+use the hierarchical model
+that we presented earlier,
+
+85
+00:06:29.483 --> 00:06:33.610
+that model would be conjugate and
+have a closed form solution.
+
+86
+00:06:33.610 --> 00:06:38.372
+However, in the more general
+case that we have right here,
+
+87
+00:06:38.372 --> 00:06:42.089
+the posterior distribution
+does not appear as
+
+88
+00:06:42.089 --> 00:06:46.203
+a distribution that we can simulate or
+integrate.
+
+89
+00:06:46.203 --> 00:06:49.650
+Challenging posterior
+distributions like these ones and
+
+90
+00:06:49.650 --> 00:06:54.008
+most others that we'll encounter in
+this course kept Bayesian in methods
+
+91
+00:06:54.008 --> 00:06:58.160
+from entering the main stream
+of statistics for many years.
+
+92
+00:06:58.160 --> 00:07:00.610
+Since only the simplest
+problems were tractable.
+
+93
+00:07:01.880 --> 00:07:06.060
+However, computational methods
+invented in the 1950's, and
+
+94
+00:07:06.060 --> 00:07:10.480
+implemented by statisticians decades
+later, revolutionized the field.
+
+95
+00:07:11.790 --> 00:07:16.220
+We do have the ability to simulate
+from the posterior distributions in
+
+96
+00:07:16.220 --> 00:07:20.750
+this lesson as well as for
+many other more complicated models.
+
+97
+00:07:22.130 --> 00:07:25.252
+How we do that is the subject
+of next week's lesson.
+
+98
+00:07:25.252 --> 00:07:31.299
+[MUSIC]

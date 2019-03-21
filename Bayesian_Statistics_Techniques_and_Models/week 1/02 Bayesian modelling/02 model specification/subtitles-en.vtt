@@ -1,0 +1,420 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:03.451
+[MUSIC]
+
+2
+00:00:03.451 --> 00:00:08.940
+Before fitting any model we first need
+to specify all of its components.
+
+3
+00:00:09.970 --> 00:00:15.790
+One convenient way to do this is to write
+down the hierarchical form of the model.
+
+4
+00:00:15.790 --> 00:00:20.939
+By hierarchy, we mean that the model
+is specified in steps or in layers.
+
+5
+00:00:22.050 --> 00:00:26.720
+We usually start with the model for
+the data directly, or the likelihood.
+
+6
+00:00:26.720 --> 00:00:30.820
+For example, let's write, again,
+the model from the previous lesson.
+
+7
+00:00:30.820 --> 00:00:34.164
+We had the height for person i,
+
+8
+00:00:34.164 --> 00:00:39.193
+given our parameters mu and
+sigma squared,.
+
+9
+00:00:39.193 --> 00:00:44.180
+So conditional on those parameters,
+yi came from a normal
+
+10
+00:00:44.180 --> 00:00:49.986
+distribution that was independent and
+identically distributed,
+
+11
+00:00:49.986 --> 00:00:56.890
+where the normal distribution has
+mean mu and variance sigma squared.
+
+12
+00:00:56.890 --> 00:01:04.290
+And we're doing this for individuals 1
+up to n, which was 15 in this example.
+
+13
+00:01:06.110 --> 00:01:10.990
+The next level that we need is the prior
+distribution from mu and sigma squared.
+
+14
+00:01:12.200 --> 00:01:15.170
+For now we're going to say that
+they're independent priors.
+
+15
+00:01:15.170 --> 00:01:19.170
+So that our prior from mu and
+sigma squared
+
+16
+00:01:20.520 --> 00:01:26.770
+is going to be able to factor Into
+the product of two independent priors.
+
+17
+00:01:29.520 --> 00:01:31.900
+We can assume independents
+in the prior and
+
+18
+00:01:31.900 --> 00:01:35.710
+still get dependents in
+the posterior distribution.
+
+19
+00:01:37.350 --> 00:01:42.370
+In the previous course we learned that
+the conjugate prior for mu, if we know
+
+20
+00:01:42.370 --> 00:01:48.010
+the value of sigma squared, is a normal
+distribution, and that the conjugate
+
+21
+00:01:48.010 --> 00:01:53.140
+prior for sigma squared when mu is known
+is the inverse gamma distribution.
+
+22
+00:01:54.370 --> 00:01:58.080
+Those might seem like natural choices so
+let's write them down.
+
+23
+00:01:58.080 --> 00:02:04.029
+Let's suppose that our prior distribution
+for mu is a normal distribution
+
+24
+00:02:06.320 --> 00:02:09.370
+where mean will be mu 0.
+
+25
+00:02:09.370 --> 00:02:13.290
+This is just some number that
+you're going to fill in here
+
+26
+00:02:13.290 --> 00:02:16.620
+when you decide what the prior should be.
+
+27
+00:02:16.620 --> 00:02:21.360
+Mean mu 0, and less say sigma squared
+0 would be the variance of that prior.
+
+28
+00:02:23.140 --> 00:02:23.740
+The prior for
+
+29
+00:02:23.740 --> 00:02:28.150
+sigma squared will be inverse gamma,
+we'll write inverse gamma like that.
+
+30
+00:02:30.020 --> 00:02:34.220
+And the inverse gamma
+distribution has two parameters.
+
+31
+00:02:34.220 --> 00:02:38.620
+It has a shape parameter,
+we're going to call that nu 0, and
+
+32
+00:02:38.620 --> 00:02:43.880
+a scale parameter, we'll call that beta 0.
+
+33
+00:02:43.880 --> 00:02:48.090
+Of course, we need to choose values for
+these hyper parameters here.
+
+34
+00:02:48.090 --> 00:02:51.630
+But we do now have
+a complete Bayesian model.
+
+35
+00:02:53.350 --> 00:02:57.760
+We now introduce some new ideas that were
+not presented in the previous course.
+
+36
+00:02:58.970 --> 00:03:02.687
+Another useful way to
+write out this model Is
+
+37
+00:03:02.687 --> 00:03:07.117
+using what's called
+a graphical representation.
+
+38
+00:03:07.117 --> 00:03:11.848
+To write a graphical representation,
+we're going to do the reverse order,
+
+39
+00:03:11.848 --> 00:03:15.655
+we'll start with the priors and
+finish with the likelihood.
+
+40
+00:03:15.655 --> 00:03:20.303
+In the graphical representation
+we draw what are called nodes so
+
+41
+00:03:20.303 --> 00:03:22.290
+this would be a node for mu.
+
+42
+00:03:22.290 --> 00:03:27.690
+The circle means that the this is a random
+variable that has its own distribution.
+
+43
+00:03:28.750 --> 00:03:31.790
+So mu with its prior will
+be represented with that.
+
+44
+00:03:33.030 --> 00:03:34.892
+And then we also have sigma squared.
+
+45
+00:03:37.425 --> 00:03:42.599
+The next part of a graphical model is
+showing the dependence on other variables.
+
+46
+00:03:43.790 --> 00:03:48.650
+So once we have the parameters,
+we can generate the data, for example.
+
+47
+00:03:49.720 --> 00:03:56.160
+We have y1, y2, and so forth, down to yn.
+
+48
+00:03:57.590 --> 00:04:02.010
+These are also random variables,
+so we'll create these as nodes.
+
+49
+00:04:02.010 --> 00:04:06.360
+And I'm going to double up
+the circle here to indicate that
+
+50
+00:04:06.360 --> 00:04:09.890
+these nodes are observed,
+you see them in the data.
+
+51
+00:04:12.750 --> 00:04:15.237
+So we'll do this for all of the ys here.
+
+52
+00:04:17.622 --> 00:04:22.439
+And to indicate the dependence of
+the distributions of the ys on mu and
+
+53
+00:04:22.439 --> 00:04:25.687
+sigma squared, we're going to draw arrows.
+
+54
+00:04:25.687 --> 00:04:31.210
+So mu influences the distribution of y for
+each one of these ys.
+
+55
+00:04:31.210 --> 00:04:36.267
+The same is true for
+sigma squared, the distribution of
+
+56
+00:04:36.267 --> 00:04:41.117
+each y depends on the distribution
+of sigma squared.
+
+57
+00:04:43.750 --> 00:04:47.206
+Again, these nodes right here,
+that are double-circled,
+
+58
+00:04:47.206 --> 00:04:49.210
+mean that they've been observed.
+
+59
+00:04:50.820 --> 00:04:54.570
+If they're shaded,
+which is the usual case,
+
+60
+00:04:54.570 --> 00:04:57.320
+that also means that they're observed.
+
+61
+00:04:57.320 --> 00:05:00.550
+The arrows indicate the dependence
+between the random variables and
+
+62
+00:05:00.550 --> 00:05:01.680
+their distributions.
+
+63
+00:05:03.090 --> 00:05:06.910
+Notice that in this
+hierarchical representation,
+
+64
+00:05:06.910 --> 00:05:09.690
+I wrote the dependence of
+the distributions also.
+
+65
+00:05:11.900 --> 00:05:17.060
+We can simplify the graphical model by
+writing exchangeable random variables and
+
+66
+00:05:17.060 --> 00:05:18.590
+I'll define exchangeable later.
+
+67
+00:05:19.700 --> 00:05:24.384
+We're going to write this using
+a representative of the ys
+
+68
+00:05:24.384 --> 00:05:27.163
+here on what's called the plate.
+
+69
+00:05:27.163 --> 00:05:34.480
+So I'm going to re draw this hierarchical
+structure, we have mu and sigma squared.
+
+70
+00:05:35.550 --> 00:05:39.776
+And we don't want to have to
+write all of these notes again.
+
+71
+00:05:39.776 --> 00:05:46.549
+So I'm going to indicate that
+there are n of them, And
+
+72
+00:05:46.549 --> 00:05:53.280
+I'm just going to draw one representative,
+yi.
+
+73
+00:05:53.280 --> 00:05:55.700
+And they depend on mu and sigma squared.
+
+74
+00:05:57.970 --> 00:06:04.321
+To write a model like this, we must
+assume that the ys are exchangeable.
+
+75
+00:06:04.321 --> 00:06:09.159
+That means that the distribution for
+the ys does not change if we
+
+76
+00:06:09.159 --> 00:06:13.370
+were to switch the index label
+like the i on the y there.
+
+77
+00:06:14.830 --> 00:06:19.760
+So, if for some reason, we knew that one
+of the ys was different from the other
+
+78
+00:06:19.760 --> 00:06:25.000
+ys in its distribution, and
+
+79
+00:06:25.000 --> 00:06:30.650
+if we also know which one it is, then we
+would need to write a separate node for
+
+80
+00:06:30.650 --> 00:06:32.730
+it and not use a plate like we have here.
+
+81
+00:06:34.600 --> 00:06:38.520
+Both the hierarchical and
+graphical representations
+
+82
+00:06:38.520 --> 00:06:42.950
+show how you could hypothetically
+simulate data from this model.
+
+83
+00:06:42.950 --> 00:06:46.820
+You start with the variables that
+don't have any dependence on any other
+
+84
+00:06:46.820 --> 00:06:47.522
+variables.
+
+85
+00:06:47.522 --> 00:06:52.483
+You would simulate those, and
+then given those draws, you would simulate
+
+86
+00:06:52.483 --> 00:06:57.460
+from the distributions for these other
+variables further down the chain.
+
+87
+00:06:58.750 --> 00:07:03.287
+This is also how you might simulate
+from a prior predictive distribution.
+
+88
+00:07:03.287 --> 00:07:09.239
+[MUSIC]
