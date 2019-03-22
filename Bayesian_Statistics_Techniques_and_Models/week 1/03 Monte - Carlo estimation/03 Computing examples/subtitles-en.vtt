@@ -1,0 +1,837 @@
+WEBVTT
+
+1
+00:00:01.230 --> 00:00:05.150
+Monte Carlo simulation from
+the most common distributions
+
+2
+00:00:05.150 --> 00:00:06.420
+is straightforward in R.
+
+3
+00:00:08.060 --> 00:00:12.720
+As a refresher from the previous course,
+let's start up R and
+
+4
+00:00:12.720 --> 00:00:16.089
+talk a little bit about how we'll
+use it throughout the course.
+
+5
+00:00:17.140 --> 00:00:20.970
+When we start up R,
+we first see the R console
+
+6
+00:00:20.970 --> 00:00:25.580
+which gives us some information about
+the current R session that we are running.
+
+7
+00:00:26.920 --> 00:00:31.930
+We will always enter our code
+into the R console to run it.
+
+8
+00:00:31.930 --> 00:00:35.986
+For example,
+if we want to know the answer of 2 + 3,
+
+9
+00:00:35.986 --> 00:00:41.230
+we can enter it directly in the console
+and press Return to get the answer.
+
+10
+00:00:42.670 --> 00:00:47.070
+It will be convenient for
+us to save our code for later and
+
+11
+00:00:47.070 --> 00:00:50.860
+one way to do that is to use R scripts.
+
+12
+00:00:50.860 --> 00:00:56.680
+To open a new script,
+go to File > New Document.
+
+13
+00:00:56.680 --> 00:01:00.959
+This opens a new script for
+us where we can work over here,
+
+14
+00:01:00.959 --> 00:01:05.251
+create and edit and
+save code that we can run in R console.
+
+15
+00:01:08.057 --> 00:01:12.263
+We also get a warning which
+has to do with the particular
+
+16
+00:01:12.263 --> 00:01:16.650
+operating system of
+the computer I'm using.
+
+17
+00:01:16.650 --> 00:01:17.270
+You may or
+
+18
+00:01:17.270 --> 00:01:21.780
+may not get this warning on your computer
+but we're not going to worry about it.
+
+19
+00:01:21.780 --> 00:01:22.847
+It won't affect our session.
+
+20
+00:01:25.783 --> 00:01:31.591
+Let's begin our session by setting
+the random number generator seed,
+
+21
+00:01:31.591 --> 00:01:34.510
+using the set.seed function in R.
+
+22
+00:01:35.570 --> 00:01:40.570
+The only argument we need to give
+the set.seed function is some integer,
+
+23
+00:01:40.570 --> 00:01:41.990
+positive or negative.
+
+24
+00:01:43.250 --> 00:01:47.690
+This function initializes
+the random number generator so
+
+25
+00:01:47.690 --> 00:01:50.840
+that we can replicate
+any results that we get.
+
+26
+00:01:52.480 --> 00:01:54.610
+To get different random numbers,
+
+27
+00:01:54.610 --> 00:01:58.710
+simply change the value that
+we enter into this function.
+
+28
+00:02:00.500 --> 00:02:03.010
+To run this code, we have several options.
+
+29
+00:02:04.240 --> 00:02:07.460
+One option is to select the line of code,
+
+30
+00:02:09.430 --> 00:02:15.440
+copy it, and
+paste it directly into the console.
+
+31
+00:02:17.000 --> 00:02:18.022
+And press Return to run it.
+
+32
+00:02:20.188 --> 00:02:27.970
+Alternatively we can select the line
+of code and go to Edit > Execute.
+
+33
+00:02:29.370 --> 00:02:30.660
+Which will also run the code.
+
+34
+00:02:32.410 --> 00:02:36.850
+You may have also noticed that
+there is a keyboard shortcut.
+
+35
+00:02:36.850 --> 00:02:39.060
+Associated with execute.
+
+36
+00:02:39.060 --> 00:02:43.210
+It is to hold down the command key and
+press Return.
+
+37
+00:02:43.210 --> 00:02:48.804
+So if we want to run this line of code,
+we hold down the Cmd key and press Return.
+
+38
+00:02:51.965 --> 00:02:55.240
+Now that we've set the random seed for
+our session,
+
+39
+00:02:55.240 --> 00:02:59.570
+let's start with an example
+from the previous segment.
+
+40
+00:02:59.570 --> 00:03:04.345
+Where our random variable
+theta follows a gamma
+
+41
+00:03:04.345 --> 00:03:10.210
+distribution with parameters a = 2 and
+b = one-third.
+
+42
+00:03:10.210 --> 00:03:15.880
+This gamma distribution could represent
+the posterior distribution of theta
+
+43
+00:03:15.880 --> 00:03:21.170
+if our data came from a Poisson
+distribution with mean theta and
+
+44
+00:03:21.170 --> 00:03:23.390
+we had used a conjugate gamma prior.
+
+45
+00:03:24.690 --> 00:03:27.431
+Let's start with Monte Carlo
+sample size 100.
+
+46
+00:03:27.431 --> 00:03:33.735
+We will save that as a variable, n = 100.
+
+47
+00:03:33.735 --> 00:03:39.320
+Let's also say the parameters for
+the gamma distribution.
+
+48
+00:03:39.320 --> 00:03:41.804
+a, the shape parameter is 2.
+
+49
+00:03:43.020 --> 00:03:48.655
+And b the rate parameter is 1.0/ 3.0
+
+50
+00:03:52.784 --> 00:03:56.507
+These variables have been
+entered into our script but
+
+51
+00:03:56.507 --> 00:03:59.410
+are not currently saved in the R session.
+
+52
+00:04:00.800 --> 00:04:04.920
+To run this code,
+we need to execute each of these lines.
+
+53
+00:04:06.710 --> 00:04:11.080
+First, I'll enter n by
+pressing command and Return.
+
+54
+00:04:12.260 --> 00:04:14.710
+Now, m is saved in a workspace.
+
+55
+00:04:16.100 --> 00:04:21.096
+We can also run multiple lines of code
+by selecting multiple lines of code,
+
+56
+00:04:21.096 --> 00:04:23.489
+and then executing them together.
+
+57
+00:04:25.817 --> 00:04:29.270
+Now m, a, and b are all in our session.
+
+58
+00:04:30.610 --> 00:04:32.017
+We can verify their values.
+
+59
+00:04:36.423 --> 00:04:41.069
+To simulate, m independent samples
+from this gamma distribution,
+
+60
+00:04:41.069 --> 00:04:43.880
+we're going to use the r gamma function.
+
+61
+00:04:46.330 --> 00:04:50.239
+We will save the simulated
+values in the variable theta.
+
+62
+00:04:50.239 --> 00:04:55.913
+And we'll run rgamma,
+which creates random generations
+
+63
+00:04:55.913 --> 00:05:02.061
+from the gamma distribution, and
+we want to create m of those.
+
+64
+00:05:02.061 --> 00:05:07.818
+We also have to enter the parameters for
+
+65
+00:05:07.818 --> 00:05:11.661
+the gamma distribution.
+
+66
+00:05:11.661 --> 00:05:15.250
+shape = a and rate = b.
+
+67
+00:05:15.250 --> 00:05:18.217
+To run the simulation,
+simply run this line of code.
+
+68
+00:05:21.045 --> 00:05:26.910
+All 100 draws from this gamma distribution
+are now saved in the theta vector.
+
+69
+00:05:28.120 --> 00:05:34.560
+We can look at this by printing it,
+where we see all 100 simulated values.
+
+70
+00:05:34.560 --> 00:05:39.430
+If we don't want to see all of them,
+we can also use the head function.
+
+71
+00:05:42.040 --> 00:05:44.700
+Which shows us only the first six values.
+
+72
+00:05:45.960 --> 00:05:49.655
+If we want to see the end of the vector,
+we can use the tail function.
+
+73
+00:05:53.099 --> 00:05:56.907
+Let's plot a histogram of
+these generated values and
+
+74
+00:05:56.907 --> 00:06:00.890
+compare it to the true density
+of a gamma distribution.
+
+75
+00:06:02.100 --> 00:06:04.800
+To plot the histogram,
+let's use the hist function.
+
+76
+00:06:06.080 --> 00:06:08.290
+And give it our theta vector.
+
+77
+00:06:10.690 --> 00:06:16.670
+We're also going to use
+the frequency = false option so
+
+78
+00:06:16.670 --> 00:06:20.240
+that it gives us a probability density.
+
+79
+00:06:20.240 --> 00:06:21.210
+Rather than counts.
+
+80
+00:06:22.850 --> 00:06:28.672
+If I run this line of code, we get
+the histogram for the simulated values.
+
+81
+00:06:31.793 --> 00:06:37.127
+To compare this to the theoretical
+probability density function for the gamma
+
+82
+00:06:37.127 --> 00:06:42.640
+distribution, let's use the curve
+function, which draws a curve on our plot.
+
+83
+00:06:43.780 --> 00:06:49.930
+The curve we want to draw is the density
+of the gamma distribution, or dgamma.
+
+84
+00:06:51.150 --> 00:06:56.040
+The first argument for
+this function is x, which is generic, and
+
+85
+00:06:56.040 --> 00:06:58.770
+refers to the x-axis.
+
+86
+00:06:58.770 --> 00:07:01.915
+And then we need to give
+it our parameters for
+
+87
+00:07:01.915 --> 00:07:04.978
+the gamma distribution, shape and rate.
+
+88
+00:07:07.816 --> 00:07:12.482
+To visually distinguish this from
+our histogram, let's add some color.
+
+89
+00:07:16.100 --> 00:07:19.280
+We'll make it blue because
+it's the true value.
+
+90
+00:07:21.220 --> 00:07:24.580
+And we'll say add equals true, so
+
+91
+00:07:24.580 --> 00:07:28.670
+that it creates a plot on
+top of the existing plot.
+
+92
+00:07:30.220 --> 00:07:37.900
+So, if we run this curve, we get the true
+probability density function for
+
+93
+00:07:37.900 --> 00:07:42.796
+a gamma distribution with shape to,
+and rate 1/3.
+
+94
+00:07:42.796 --> 00:07:47.460
+We can see that the data are pretty
+good at approximating this distribution.
+
+95
+00:07:48.580 --> 00:07:51.540
+We can now use our simulated vales
+
+96
+00:07:51.540 --> 00:07:56.250
+to find a Monte Carlo approximation
+to the expected value of theta.
+
+97
+00:07:57.840 --> 00:08:02.030
+To do this, let's take an average
+of our simulated values.
+
+98
+00:08:03.460 --> 00:08:08.350
+One way to do this is to sum
+all of the theta variables and
+
+99
+00:08:08.350 --> 00:08:10.660
+divide by the total
+number that we simulated.
+
+100
+00:08:11.930 --> 00:08:16.606
+If we run this line, we get our Monte
+Carlo approximation to the mean, 5.5.
+
+101
+00:08:16.606 --> 00:08:24.320
+A faster way to calculate this would
+be to use the mean function directly.
+
+102
+00:08:27.830 --> 00:08:30.820
+We say we want the mean
+of the theta vector.
+
+103
+00:08:32.250 --> 00:08:33.410
+We get the same answer.
+
+104
+00:08:35.370 --> 00:08:40.040
+How does this compare with the true
+value of the expected value of theta?
+
+105
+00:08:41.310 --> 00:08:45.350
+If theta follows this gamma
+distribution with shape a and
+
+106
+00:08:45.350 --> 00:08:49.620
+rate b,
+the expected value will be a divided by b.
+
+107
+00:08:52.050 --> 00:08:57.080
+For this gamma distribution,
+the expected value or the mean is 6.
+
+108
+00:08:57.080 --> 00:09:01.960
+Our Monte Carlo approximation was okay,
+but not great.
+
+109
+00:09:03.070 --> 00:09:06.400
+We can improve this
+Monte Carlo approximation
+
+110
+00:09:06.400 --> 00:09:11.450
+if we simulate more values, let's do that.
+
+111
+00:09:11.450 --> 00:09:17.770
+We'll increase our m, the Monte Carlo
+sample size, up to let's say 10,000.
+
+112
+00:09:17.770 --> 00:09:22.374
+We have to rerun this line of code, so
+
+113
+00:09:22.374 --> 00:09:26.550
+that M is saved as 10,000.
+
+114
+00:09:26.550 --> 00:09:31.850
+We're not changing the parameters A and
+B, so we'll leave those as they are.
+
+115
+00:09:31.850 --> 00:09:35.120
+But we do need to re-simulate
+our theta vector.
+
+116
+00:09:38.320 --> 00:09:42.570
+We now have 10,000 samples
+from this gamma distribution.
+
+117
+00:09:44.690 --> 00:09:48.290
+Let's look at the Monte Carlo
+approximation of the mean.
+
+118
+00:09:50.395 --> 00:09:55.644
+6.02, much closer to the true
+theoretical value of 6.
+
+119
+00:09:56.850 --> 00:09:58.580
+What about the variance of theta?
+
+120
+00:10:00.710 --> 00:10:05.841
+We can calculate our Monte Carlo
+approximation to the variance using
+
+121
+00:10:05.841 --> 00:10:12.311
+the var function in R, where we calculate
+the sample variance of theta, 18.04.
+
+122
+00:10:12.311 --> 00:10:17.310
+Can you guess what the theoretical
+value for this variance would be?
+
+123
+00:10:19.550 --> 00:10:24.930
+For this gamma distribution
+the variance is a divided by b squared,
+
+124
+00:10:26.250 --> 00:10:28.030
+the true value is 18.
+
+125
+00:10:28.030 --> 00:10:31.830
+So our Monte Carlo approximation
+is actually quite close.
+
+126
+00:10:33.200 --> 00:10:36.310
+We can also use our Monte Carlo simulation
+
+127
+00:10:36.310 --> 00:10:41.340
+to approximate other characteristics
+of this gamma distribution.
+
+128
+00:10:41.340 --> 00:10:47.910
+For example, if we want to approximate
+the probability that theta is less than 5.
+
+129
+00:10:47.910 --> 00:10:53.660
+We can simply count how many of our
+simulated thetas are less than 5.
+
+130
+00:10:53.660 --> 00:10:54.160
+Let's do this.
+
+131
+00:10:55.488 --> 00:10:58.640
+First we'll create an indicator variable
+
+132
+00:11:00.120 --> 00:11:04.950
+that indicates whether
+theta is less than 5.
+
+133
+00:11:04.950 --> 00:11:09.907
+This line of code instructs
+R to look at each individual
+
+134
+00:11:09.907 --> 00:11:14.986
+drawn in the theta vector and
+compare it to the value 5.
+
+135
+00:11:14.986 --> 00:11:16.810
+Let's run it.
+
+136
+00:11:20.270 --> 00:11:21.540
+And now let's look at
+the first few values.
+
+137
+00:11:26.655 --> 00:11:32.297
+So the first value of theta that
+we simulated was not less than 5,
+
+138
+00:11:32.297 --> 00:11:36.418
+because we get a false value for
+our indicator.
+
+139
+00:11:36.418 --> 00:11:41.065
+The same is true for the second value
+of theta, it was not less than 5.
+
+140
+00:11:41.065 --> 00:11:44.760
+But the third value was less than 5.
+
+141
+00:11:44.760 --> 00:11:48.148
+Let's just confirm that this is true.
+
+142
+00:11:52.362 --> 00:11:57.324
+The first two values were not less than
+5 but the third value is less than 5.
+
+143
+00:11:59.010 --> 00:12:04.900
+Conveniently, if we calculate
+the mean of this indicator,
+
+144
+00:12:04.900 --> 00:12:08.710
+R will convert the true/false
+values into 0's and
+
+145
+00:12:08.710 --> 00:12:12.770
+1's, add them up, and
+take the mean for us.
+
+146
+00:12:14.490 --> 00:12:21.430
+This creates an approximation to
+the probability that theta is less than 5.
+
+147
+00:12:21.430 --> 00:12:27.254
+In our case, our Monte Carlo approximation
+to this probability is 0.497.
+
+148
+00:12:29.135 --> 00:12:33.455
+If we want to compare this
+to the true probability,
+
+149
+00:12:33.455 --> 00:12:36.170
+we can use the pgamma function.
+
+150
+00:12:37.280 --> 00:12:42.800
+That is, pgamma, which evaluates
+the cumulative distribution function,
+
+151
+00:12:42.800 --> 00:12:44.908
+the CDF for this gamma.
+
+152
+00:12:44.908 --> 00:12:51.434
+We want, We want
+
+153
+00:12:51.434 --> 00:12:59.104
+to know the probability of being less than
+5 if the shape is a and the rate is b.
+
+154
+00:13:02.182 --> 00:13:07.320
+And we can see that our Monte Carlo
+approximation is really quite close.
+
+155
+00:13:07.320 --> 00:13:13.691
+The true probability that this theta
+random variable is less than 5 is 0.496.
+
+156
+00:13:13.691 --> 00:13:18.401
+What if we're interested
+in the 0.9 quantile or
+
+157
+00:13:18.401 --> 00:13:22.682
+the 90th percentile of this distribution.
+
+158
+00:13:22.682 --> 00:13:25.300
+This gamma distribution for theta.
+
+159
+00:13:26.780 --> 00:13:33.468
+We can use the quantile function, In R,
+
+160
+00:13:33.468 --> 00:13:38.451
+where we give it the theta values and
+we tell it what
+
+161
+00:13:38.451 --> 00:13:43.210
+probability we want or
+which quantile we want.
+
+162
+00:13:45.270 --> 00:13:51.630
+In this case we want the 90th percentile
+or the 0.9 quantile of theta.
+
+163
+00:13:53.010 --> 00:13:55.020
+Let's run this line.
+
+164
+00:13:55.020 --> 00:14:02.680
+We see that the 90th percentile
+of a gamma to one-third Is 11.74.
+
+165
+00:14:02.680 --> 00:14:07.590
+That is our Monte Carlo
+approximation to the quantile.
+
+166
+00:14:09.000 --> 00:14:13.220
+If we want to know
+the actual true quantile,
+
+167
+00:14:13.220 --> 00:14:18.924
+we can use the qgamma function
+where we want the probability
+
+168
+00:14:18.924 --> 00:14:23.045
+of being less than this value to be 0.9.
+
+169
+00:14:23.045 --> 00:14:26.594
+Again, we need to give
+it the gamma parameters.
+
+170
+00:14:31.939 --> 00:14:38.630
+If we run this line,
+we get the true theoretical value, 11.669.
+
+171
+00:14:38.630 --> 00:14:42.430
+Again, quite close to our
+Monte Carlo approximation.
+
+172
+00:14:44.280 --> 00:14:47.100
+Of course, with the gamma distribution,
+
+173
+00:14:47.100 --> 00:14:52.190
+all of these theoretical values
+are available as functions in R.
+
+174
+00:14:52.190 --> 00:14:56.670
+And so Monte Carlo simulation
+is not as useful to us.
+
+175
+00:14:56.670 --> 00:15:01.990
+But later in the course, we will
+not have functions like the dgamma,
+
+176
+00:15:01.990 --> 00:15:06.840
+or the pgamma, or
+the qgamma available to us for
+
+177
+00:15:06.840 --> 00:15:10.610
+the distributions we'll be
+using later in the course.
+
+178
+00:15:10.610 --> 00:15:15.800
+This is where Monte Carlo estimation
+will be particularly useful to us.

@@ -1,0 +1,358 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:04.226
+[MUSIC]
+
+2
+00:00:04.226 --> 00:00:08.450
+How good is an approximation
+by Monte Carlo sampling?
+
+3
+00:00:08.450 --> 00:00:12.060
+Again, we can turn to the central
+limit theorem, which tells us
+
+4
+00:00:12.060 --> 00:00:17.590
+that the variance of our estimate is
+controlled in part by m, our sample size.
+
+5
+00:00:17.590 --> 00:00:21.140
+If we want a better estimate,
+we need to choose a larger end value.
+
+6
+00:00:22.350 --> 00:00:25.938
+For example, if we're looking for
+the expected value of theta,
+
+7
+00:00:25.938 --> 00:00:27.774
+then we can take the sample mean.
+
+8
+00:00:27.774 --> 00:00:33.643
+In the last video we call this,
+Theta star bar.
+
+9
+00:00:35.417 --> 00:00:40.608
+By the central limit theorem,
+the sample mean approximately follows,
+
+10
+00:00:40.608 --> 00:00:46.224
+I'm going to use this symbol to denote
+approximately distributed, normal,
+
+11
+00:00:46.224 --> 00:00:51.942
+where the mean of this normal distribution
+is the true expected value of theta.
+
+12
+00:00:51.942 --> 00:00:56.979
+And the variance of this
+distribution is the true variance
+
+13
+00:00:56.979 --> 00:01:03.090
+of theta, Divided by our sample size m.
+
+14
+00:01:05.150 --> 00:01:09.910
+The variance tells us how far our
+estimate might be from the true value.
+
+15
+00:01:11.840 --> 00:01:16.836
+One way to approximate this variance,
+the theoretical variance of theta,
+
+16
+00:01:16.836 --> 00:01:20.630
+is if we replace it with
+the sample variance.
+
+17
+00:01:20.630 --> 00:01:23.240
+We could calculate the sample
+variance like this.
+
+18
+00:01:24.340 --> 00:01:26.345
+Let's call it variance of theta hat.
+
+19
+00:01:26.345 --> 00:01:32.540
+We're just approximating that integral for
+the variance.
+
+20
+00:01:32.540 --> 00:01:33.719
+So this will be 1 over m.
+
+21
+00:01:37.473 --> 00:01:43.804
+So it's just the sample mean of theta
+i star minus the expected value,
+
+22
+00:01:43.804 --> 00:01:49.830
+which we're also approximating
+with the sample mean.
+
+23
+00:01:49.830 --> 00:01:51.240
+So let's plug that in here.
+
+24
+00:01:53.420 --> 00:01:56.039
+Sometimes people also divide by m minus 1,
+but
+
+25
+00:01:56.039 --> 00:01:58.927
+if m is really large then
+it won't matter that much.
+
+26
+00:02:00.843 --> 00:02:05.345
+[COUGH] The standard deviation of our
+Monte Carlo estimate is the square root
+
+27
+00:02:05.345 --> 00:02:05.924
+of that.
+
+28
+00:02:05.924 --> 00:02:10.858
+The square root and
+if we're plugging in the value,
+
+29
+00:02:10.858 --> 00:02:17.378
+we'll have variance hat of theta
+divided by m under the square root.
+
+30
+00:02:20.099 --> 00:02:24.974
+If m is large, it is reasonable to assume
+that the true value will likely be
+
+31
+00:02:24.974 --> 00:02:30.890
+within about two of these standard
+deviations from your Monte Carlo estimate.
+
+32
+00:02:30.890 --> 00:02:33.340
+We're going to call this, the standard
+
+33
+00:02:35.640 --> 00:02:39.620
+error of your Monte Carlo estimate.
+
+34
+00:02:41.560 --> 00:02:45.895
+We can also obtain Monte Carlo
+samples from hierarchical models.
+
+35
+00:02:45.895 --> 00:02:51.497
+As a simple example, let's go ahead and
+consider a binomial random variable y.
+
+36
+00:02:51.497 --> 00:02:59.535
+So y given phi is going to follow
+a binomial distribution with 10 trials and
+
+37
+00:02:59.535 --> 00:03:05.950
+on each trial a probability of
+success that's equal to phi.
+
+38
+00:03:07.670 --> 00:03:12.670
+Let's further assume that phi comes from
+its own distribution, that it's random.
+
+39
+00:03:12.670 --> 00:03:15.340
+So this would be, for example,
+if we had a prior for phi.
+
+40
+00:03:16.950 --> 00:03:23.060
+Let's say it comes from a beta
+distribution with parameters 2 and 2.
+
+41
+00:03:23.060 --> 00:03:25.534
+Given any hierarchical model,
+
+42
+00:03:25.534 --> 00:03:30.120
+we can always write out the joint
+distribution of y and phi.
+
+43
+00:03:32.410 --> 00:03:38.650
+The joint distribution of y and phi using
+the chain rule of probability will be
+
+44
+00:03:39.820 --> 00:03:45.900
+the distribution of phi times
+the distribution of y given phi.
+
+45
+00:03:45.900 --> 00:03:48.884
+This should look familiar,
+it's like the prior times the likelihood.
+
+46
+00:03:51.391 --> 00:03:54.628
+To simulate from this joint distribution,
+
+47
+00:03:54.628 --> 00:04:00.319
+we're going to repeat the following
+steps for a large number of samples, m.
+
+48
+00:04:02.346 --> 00:04:04.890
+The first step to simulate from this.
+
+49
+00:04:09.428 --> 00:04:15.424
+The first step we're going to take to
+simulate would be to draw a theta star i.
+
+50
+00:04:18.985 --> 00:04:20.730
+From its beta distribution.
+
+51
+00:04:23.360 --> 00:04:27.904
+Then the second step is given this
+value that we just drew for phi.
+
+52
+00:04:33.747 --> 00:04:37.434
+We would draw a sample from
+this binomial distribution.
+
+53
+00:04:37.434 --> 00:04:40.773
+We'll call this sample y star i,
+
+54
+00:04:40.773 --> 00:04:46.266
+from this binomial distribution,
+with 10 trials.
+
+55
+00:04:46.266 --> 00:04:51.137
+And the success probability
+would be the success
+
+56
+00:04:51.137 --> 00:04:55.080
+probability we just drew, phi i star.
+
+57
+00:04:55.080 --> 00:04:59.260
+If we repeat this process for
+many samples,
+
+58
+00:04:59.260 --> 00:05:02.405
+we're going to produce
+m independent pairs.
+
+59
+00:05:02.405 --> 00:05:06.392
+Yi phi i pairs.
+
+60
+00:05:10.660 --> 00:05:15.079
+These pairs right here are drawn
+from their joint distribution.
+
+61
+00:05:16.420 --> 00:05:20.340
+One major advantage of
+Monte Carlo simulation
+
+62
+00:05:20.340 --> 00:05:24.220
+is that marginalizing these
+distributions is easy.
+
+63
+00:05:24.220 --> 00:05:28.410
+Calculating the marginal distribution
+of y might be difficult here.
+
+64
+00:05:28.410 --> 00:05:32.910
+It would require that we integrate
+this expression with respect to phi,
+
+65
+00:05:32.910 --> 00:05:34.174
+to integrate out the phis.
+
+66
+00:05:35.210 --> 00:05:40.740
+But, if we have draws from the joint
+distribution, then we can just discard
+
+67
+00:05:40.740 --> 00:05:47.480
+the phi i stars and use the y i stars as
+samples from their marginal distribution.
+
+68
+00:05:47.480 --> 00:05:51.190
+This is also called prior
+predictive distributions
+
+69
+00:05:51.190 --> 00:05:53.239
+which was introduced in
+the previous course.
+
+70
+00:05:54.750 --> 00:05:58.570
+In the next segment, we're going to
+demonstrate some of these principles.
+
+71
+00:05:58.570 --> 00:06:03.470
+Remember, we don't yet know how to sample
+from complicated posterior distributions
+
+72
+00:06:03.470 --> 00:06:05.900
+that were introduced in
+the previous lesson.
+
+73
+00:06:05.900 --> 00:06:10.598
+But once we learn that, we're going to
+be able to use the principles from this
+
+74
+00:06:10.598 --> 00:06:15.312
+lesson to make approximate inferences for
+those posterior distributions.
+
+75
+00:06:15.312 --> 00:06:21.849
+[MUSIC]

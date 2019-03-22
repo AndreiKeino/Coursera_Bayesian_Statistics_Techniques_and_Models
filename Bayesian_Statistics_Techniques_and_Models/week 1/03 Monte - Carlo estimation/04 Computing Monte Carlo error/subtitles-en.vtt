@@ -1,0 +1,724 @@
+WEBVTT
+
+1
+00:00:00.740 --> 00:00:05.294
+We can use the central limit
+theorem to approximate how
+
+2
+00:00:05.294 --> 00:00:08.765
+accurate our Monte Carlo estimates are.
+
+3
+00:00:08.765 --> 00:00:13.537
+For example,
+if we seek the expected value of theta or
+
+4
+00:00:13.537 --> 00:00:16.941
+the mean of this gamma distribution.
+
+5
+00:00:16.941 --> 00:00:22.808
+Then we can use the sample mean
+from our simulated values,
+
+6
+00:00:22.808 --> 00:00:25.572
+the simulated theta here.
+
+7
+00:00:25.572 --> 00:00:30.239
+The sample mean of these
+thetas approximately follows
+
+8
+00:00:30.239 --> 00:00:32.375
+a normal distribution.
+
+9
+00:00:32.375 --> 00:00:38.660
+Where the mean of that normal distribution
+is the true expected value of theta.
+
+10
+00:00:38.660 --> 00:00:43.500
+And the variance of that normal
+distribution is the true
+
+11
+00:00:43.500 --> 00:00:48.200
+variance of theta divided by m,
+our Monte Carlo sample size.
+
+12
+00:00:49.840 --> 00:00:54.590
+That means that if we increase
+m to be a very large number,
+
+13
+00:00:54.590 --> 00:00:59.550
+the variance of our Monte Carlo
+estimate gets very small.
+
+14
+00:00:59.550 --> 00:01:03.019
+In other word, our Monte Carlo
+estimate will be very accurate.
+
+15
+00:01:04.850 --> 00:01:09.580
+To create a standard error for
+our Monte Carlo estimate,
+
+16
+00:01:09.580 --> 00:01:15.530
+we will use the sample standard deviation
+divided by the square root of m.
+
+17
+00:01:17.260 --> 00:01:18.740
+So, let's create this variable.
+
+18
+00:01:20.460 --> 00:01:25.840
+The standard error will be
+the sample standard deviation
+
+19
+00:01:25.840 --> 00:01:28.050
+which is the sd function in r.
+
+20
+00:01:29.510 --> 00:01:34.630
+The sample standard deviation of
+our simulated values divided by
+
+21
+00:01:34.630 --> 00:01:37.830
+square root of m, or
+Monte Carlo sample size.
+
+22
+00:01:40.050 --> 00:01:44.990
+We can run this line of code and
+print off the standard error.
+
+23
+00:01:44.990 --> 00:01:48.971
+This is the standard error
+of our approximation to
+
+24
+00:01:48.971 --> 00:01:51.350
+the expected value of theta.
+
+25
+00:01:51.350 --> 00:01:55.360
+If we wanted to create
+a confidence interval for
+
+26
+00:01:55.360 --> 00:01:58.174
+our Monte Carlo approximation.
+
+27
+00:01:58.174 --> 00:02:03.905
+We could look at, for example,
+two times the standard error.
+
+28
+00:02:03.905 --> 00:02:10.707
+That is, we are reasonably confident,
+about 95% confident.
+
+29
+00:02:10.707 --> 00:02:15.969
+That the Monte Carlo estimate for
+the expected value of theta
+
+30
+00:02:15.969 --> 00:02:22.380
+is no more than this far from the true
+value of the expected value of theta.
+
+31
+00:02:24.280 --> 00:02:27.710
+We can create this
+confidence interval here.
+
+32
+00:02:29.600 --> 00:02:32.000
+We'll start with our Monte Carlo estimate.
+
+33
+00:02:35.340 --> 00:02:38.660
+And we can take away two standard errors.
+
+34
+00:02:40.180 --> 00:02:40.790
+We'll run that.
+
+35
+00:02:43.580 --> 00:02:48.110
+That gives us the lower edge
+of our confidence interval.
+
+36
+00:02:48.110 --> 00:02:53.946
+To get the higher,
+upper edge of our confidence interval,
+
+37
+00:02:53.946 --> 00:02:59.093
+let's change this minus to a plus and
+run this line.
+
+38
+00:02:59.093 --> 00:03:05.072
+That is, we are reasonably confident
+after running our Monte Carlo simulation.
+
+39
+00:03:05.072 --> 00:03:13.042
+That the true mean of this gamma
+distribution is between 5.9 and 6.1.
+
+40
+00:03:13.042 --> 00:03:17.450
+Of course, we've already seen
+that the true value is 6.
+
+41
+00:03:17.450 --> 00:03:22.800
+These standard errors give
+us a reasonable range for
+
+42
+00:03:22.800 --> 00:03:26.180
+the quantity we are estimating
+with Monte Carlo.
+
+43
+00:03:27.310 --> 00:03:30.740
+The same applies for
+other Monte Carlo estimates.
+
+44
+00:03:30.740 --> 00:03:34.470
+For example, the probability
+that theta is less than five.
+
+45
+00:03:35.560 --> 00:03:42.620
+Let's recreate that indicator
+variable that theta is less than 5.
+
+46
+00:03:42.620 --> 00:03:47.615
+We approximated the probability
+that theta is less than
+
+47
+00:03:47.615 --> 00:03:51.450
+5 by taking the mean of those indicators.
+
+48
+00:03:53.020 --> 00:03:58.780
+And of course,
+the true value we can get with the CDF,
+
+49
+00:03:58.780 --> 00:04:02.860
+or pgamma of being less than 5.
+
+50
+00:04:02.860 --> 00:04:08.360
+Where the shape parameter is a and
+the rate parameter is b.
+
+51
+00:04:10.140 --> 00:04:16.560
+Now, if we want the Monte Carlo standard
+error for our Monte Carlo estimate.
+
+52
+00:04:17.620 --> 00:04:22.916
+We can calculate it as
+the standard error is the sample
+
+53
+00:04:22.916 --> 00:04:30.370
+standard deviation of our indicator
+variables divided by the sqrt(m).
+
+54
+00:04:30.370 --> 00:04:34.180
+Very similar to our standard error
+that we calculated before but
+
+55
+00:04:34.180 --> 00:04:36.580
+now we're using our new
+indicator variable.
+
+56
+00:04:37.640 --> 00:04:42.050
+Let's run this and
+print the value of the standard error.
+
+57
+00:04:44.080 --> 00:04:49.429
+If we look at two times
+the standard error, We
+
+58
+00:04:49.429 --> 00:04:55.048
+can say that we are quite
+confident that our Monte Carlo
+
+59
+00:04:55.048 --> 00:05:03.003
+estimate of the probability right here
+is within 0.01 of the true value.
+
+60
+00:05:03.003 --> 00:05:04.711
+Which is right here.
+
+61
+00:05:04.711 --> 00:05:07.848
+And it looks like, in this case,
+
+62
+00:05:07.848 --> 00:05:13.810
+our Monte Carlo estimate is
+within 0.01 of the true value.
+
+63
+00:05:13.810 --> 00:05:18.550
+Let's also do the second example where
+we simulate from a hierarchical model.
+
+64
+00:05:19.890 --> 00:05:25.540
+In our example,
+we had a binomial random variable where y
+
+65
+00:05:25.540 --> 00:05:32.920
+followed a binomial distribution with
+ten trials and success probability phi.
+
+66
+00:05:32.920 --> 00:05:38.839
+And phi followed a beta distribution
+with parameters 2 and 2.
+
+67
+00:05:40.570 --> 00:05:46.600
+To simulate from this joint distribution,
+we will repeat the following two steps.
+
+68
+00:05:47.800 --> 00:05:48.839
+Here are the two steps.
+
+69
+00:05:48.839 --> 00:05:52.704
+I have written them as
+two lines of code and
+
+70
+00:05:52.704 --> 00:05:57.351
+commented them out with the pound or
+hashtag key.
+
+71
+00:05:57.351 --> 00:06:05.531
+The first step is to simulate a phi
+variable from a beta distribution.
+
+72
+00:06:05.531 --> 00:06:10.406
+And then given that phi variable,
+we will simulate the ith iteration
+
+73
+00:06:10.406 --> 00:06:14.112
+of the y variable from its
+corresponding binomial.
+
+74
+00:06:14.112 --> 00:06:19.611
+Where the success probability is
+the phi that we just drew in step 1.
+
+75
+00:06:19.611 --> 00:06:26.693
+We will repeat these two steps
+many times to create a Monte Carlo
+
+76
+00:06:26.693 --> 00:06:32.184
+sample from the joint
+distribution of phi and y.
+
+77
+00:06:32.184 --> 00:06:37.573
+Let's choose the Monte Carlo
+sample size of 100,000,
+
+78
+00:06:37.573 --> 00:06:40.938
+that is 1 times 10 to the 5th power.
+
+79
+00:06:40.938 --> 00:06:44.396
+That's shorthand for writing 100,000.
+
+80
+00:06:44.396 --> 00:06:49.512
+We can run this line of code
+to save m in our r session.
+
+81
+00:06:49.512 --> 00:06:56.430
+And before we simulate, let's create
+the variables before we populate them.
+
+82
+00:06:58.740 --> 00:07:04.489
+The y variable will be a numeric
+vector with m entries.
+
+83
+00:07:06.320 --> 00:07:11.280
+To see what we just did,
+let's take a look at the head of y.
+
+84
+00:07:11.280 --> 00:07:17.640
+We initialized a vector of
+zeroes that has 100,000 entries.
+
+85
+00:07:17.640 --> 00:07:19.730
+We'll populate these with our simulations.
+
+86
+00:07:21.550 --> 00:07:28.330
+Let's do the same with phi And
+run that line.
+
+87
+00:07:30.755 --> 00:07:32.330
+To follow our algorithm for
+
+88
+00:07:32.330 --> 00:07:37.430
+this joint simulation,
+we're going to first write a loop in R.
+
+89
+00:07:38.440 --> 00:07:42.227
+To perform a loop in R,
+we use the keyword for and
+
+90
+00:07:42.227 --> 00:07:45.752
+then we tell it what we're iterating over.
+
+91
+00:07:45.752 --> 00:07:48.823
+We'll iterate over the variable i.
+
+92
+00:07:48.823 --> 00:07:55.662
+For i in 1 to m, repeat the following.
+
+93
+00:07:55.662 --> 00:08:01.090
+To put things inside a loop with many
+lines of code, we use curly braces.
+
+94
+00:08:01.090 --> 00:08:04.860
+So we'll enter the loop code
+inside these two curly braces.
+
+95
+00:08:06.510 --> 00:08:09.730
+The first step is to
+simulate the value of phi.
+
+96
+00:08:10.970 --> 00:08:14.570
+So phi, the i th value of phi
+
+97
+00:08:16.860 --> 00:08:20.120
+will be drawn from a beta distribution.
+
+98
+00:08:21.580 --> 00:08:29.459
+We'll take a single draw with
+shape1 parameter being equal to 2.
+
+99
+00:08:29.459 --> 00:08:35.420
+And the second shape
+parameter being equal to 2.
+
+100
+00:08:35.420 --> 00:08:41.888
+Now given that draw for phi,
+we can simulate a draw for y.
+
+101
+00:08:41.888 --> 00:08:47.791
+The ith simulation for
+y will come from a binomial distribution.
+
+102
+00:08:49.816 --> 00:08:54.511
+And we want to simulate, so rbinomial.
+
+103
+00:08:54.511 --> 00:08:59.989
+We'll simulate a single draw
+of a binomial for ten trials.
+
+104
+00:09:02.140 --> 00:09:06.958
+And success probability phi, specifically
+
+105
+00:09:06.958 --> 00:09:12.060
+the phi that we just drew for
+the ith iteration.
+
+106
+00:09:12.060 --> 00:09:18.140
+This loop will perform this algorithm,
+we select the entire loop
+
+107
+00:09:19.560 --> 00:09:25.030
+and hold Command and
+press Return, that runs the code.
+
+108
+00:09:25.030 --> 00:09:29.780
+This took about one half
+of a second to run in R.
+
+109
+00:09:29.780 --> 00:09:31.970
+However, we can improve on this code.
+
+110
+00:09:33.170 --> 00:09:37.300
+R tends to be very slow with loops.
+
+111
+00:09:37.300 --> 00:09:41.530
+And so one way to speed it up
+Is to write vectorized code.
+
+112
+00:09:43.010 --> 00:09:47.936
+Here is an example of doing the same
+simulation with vectorized code.
+
+113
+00:09:47.936 --> 00:09:51.828
+We will first draw all of
+the phi variables at once,
+
+114
+00:09:55.091 --> 00:09:59.587
+From the beta distribution, but
+this time we will take m draws
+
+115
+00:10:06.853 --> 00:10:08.340
+From this beta distribution.
+
+116
+00:10:09.450 --> 00:10:16.812
+That will create a vector of phis
+with those 100,000 simulations.
+
+117
+00:10:16.812 --> 00:10:25.527
+Now, we can simulate y with one
+line of code by running r binomial.
+
+118
+00:10:25.527 --> 00:10:28.526
+We want m simulations again.
+
+119
+00:10:28.526 --> 00:10:34.194
+Where each simulation has ten trials.
+
+120
+00:10:34.194 --> 00:10:40.413
+And success probability, here we would
+give it the entire vector of these.
+
+121
+00:10:40.413 --> 00:10:45.274
+In other words we want to
+draw 100,000 binomials,
+
+122
+00:10:45.274 --> 00:10:50.740
+all with the same number of trials,
+but all with a different phi.
+
+123
+00:10:51.930 --> 00:10:55.300
+These phis come from our
+previous simulation.
+
+124
+00:10:58.000 --> 00:11:00.000
+Let's run both of these lines together.
+
+125
+00:11:03.070 --> 00:11:05.080
+And they were almost instantaneous.
+
+126
+00:11:07.870 --> 00:11:16.171
+It is good to avoid writing loops in R if
+we can by using vectorized code like this.
+
+127
+00:11:16.171 --> 00:11:21.871
+If we are interested only in
+the marginal distribution of y,
+
+128
+00:11:21.871 --> 00:11:25.798
+we can just ignore the draws for the phis.
+
+129
+00:11:25.798 --> 00:11:31.150
+And treat the draws of y as a sample
+of its marginal distribution.
+
+130
+00:11:32.790 --> 00:11:36.980
+That distribution will not
+be a binomial distribution,
+
+131
+00:11:36.980 --> 00:11:39.930
+it'll actually be a beta
+binomial distribution.
+
+132
+00:11:41.140 --> 00:11:45.830
+Conditional on phi,
+y follows a binomial distribution.
+
+133
+00:11:45.830 --> 00:11:52.330
+But unconditionally, the marginal
+distribution of y is not binomial.
+
+134
+00:11:52.330 --> 00:11:54.860
+Let's take a look at that distribution.
+
+135
+00:11:54.860 --> 00:12:00.260
+First, we can do a table
+of the values of y.
+
+136
+00:12:00.260 --> 00:12:05.250
+This will tell us how often each of
+the different values of y were drawn in
+
+137
+00:12:05.250 --> 00:12:06.505
+our simulation.
+
+138
+00:12:06.505 --> 00:12:11.068
+So if we run this table we can
+see how many of the simulations
+
+139
+00:12:11.068 --> 00:12:14.621
+resulted in seven successes, for example.
+
+140
+00:12:16.573 --> 00:12:21.277
+We can divide this by
+the Monte Carlo sample size to
+
+141
+00:12:21.277 --> 00:12:25.540
+get an approximation of the probabilities.
+
+142
+00:12:26.590 --> 00:12:31.220
+So for example,
+under the marginal distribution of y,
+
+143
+00:12:31.220 --> 00:12:36.390
+there is approximately 11%
+chance of three successes.
+
+144
+00:12:38.990 --> 00:12:41.130
+Let's plot this distribution.
+
+145
+00:12:43.060 --> 00:12:51.226
+We'll create a plot of this table And
+run it.
+
+146
+00:12:55.900 --> 00:13:00.300
+Here is our Monte Carlo approximation
+of the distribution of y.
+
+147
+00:13:01.340 --> 00:13:05.210
+Again, this is not
+a binomial distribution.
+
+148
+00:13:05.210 --> 00:13:08.514
+It is actually a beta
+binomial distribution,
+
+149
+00:13:08.514 --> 00:13:10.896
+the marginal distribution of y.
+
+150
+00:13:15.023 --> 00:13:19.787
+If we're interested in
+the marginal expected value of y,
+
+151
+00:13:19.787 --> 00:13:24.370
+again we can just ignore
+the phi variables that we drew.
+
+152
+00:13:24.370 --> 00:13:28.772
+And calculate the mean
+of our simulated ys,
+
+153
+00:13:30.925 --> 00:13:34.589
+Approximately 5.
