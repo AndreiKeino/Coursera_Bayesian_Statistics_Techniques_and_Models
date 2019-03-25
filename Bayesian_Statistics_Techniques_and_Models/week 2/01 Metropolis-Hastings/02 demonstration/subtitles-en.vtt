@@ -1,0 +1,704 @@
+WEBVTT
+
+1
+00:00:00.670 --> 00:00:04.476
+[MUSIC]
+
+2
+00:00:04.476 --> 00:00:05.342
+Hello.
+
+3
+00:00:05.342 --> 00:00:06.160
+My name is Lee.
+
+4
+00:00:06.160 --> 00:00:08.730
+You may remember me from
+the previous course.
+
+5
+00:00:08.730 --> 00:00:12.491
+I'm a professor of statistics and applied
+math here at University of California,
+
+6
+00:00:12.491 --> 00:00:13.090
+Santa Cruz.
+
+7
+00:00:14.180 --> 00:00:17.940
+Here I'm going to give you a demonstration
+of using Markov chain Monte Carlo,
+
+8
+00:00:19.000 --> 00:00:22.430
+to estimate posterior
+probabilities in a simplified case,
+
+9
+00:00:22.430 --> 00:00:25.880
+where we can actually work out
+the correct answer in closed form, and
+
+10
+00:00:25.880 --> 00:00:29.730
+show that the Metropolis–Hastings
+algorithm is indeed working, and
+
+11
+00:00:29.730 --> 00:00:30.670
+giving us the right answer.
+
+12
+00:00:30.670 --> 00:00:35.930
+If you recall from the previous course,
+the example where your brother or maybe
+
+13
+00:00:35.930 --> 00:00:41.361
+your sister, has a loaded coin that you
+know will come up heads 70% of the time.
+
+14
+00:00:41.361 --> 00:00:45.023
+But they come to you with some coin,
+you're not sure if it's the loaded coin or
+
+15
+00:00:45.023 --> 00:00:48.050
+a fair coin, and
+they want to make a bet with you.
+
+16
+00:00:48.050 --> 00:00:49.920
+And you have to figure
+out which coin this is.
+
+17
+00:00:51.020 --> 00:00:56.250
+Suppose you have a prior probability
+that it's a 60% probability,
+
+18
+00:00:56.250 --> 00:00:58.430
+that they'll bring a loaded coin to you.
+
+19
+00:00:58.430 --> 00:01:02.310
+They let you flip it five times, and
+you get two heads and three tails.
+
+20
+00:01:02.310 --> 00:01:03.490
+And then you need to figure out,
+
+21
+00:01:03.490 --> 00:01:06.170
+what's your posterior probability
+that this is a loaded coin.
+
+22
+00:01:07.730 --> 00:01:09.070
+I've written this all out in advance.
+
+23
+00:01:11.100 --> 00:01:15.719
+Our unknown parameter theta,
+can either take the values fair or loaded.
+
+24
+00:01:17.110 --> 00:01:21.189
+Our prior for theta is the probability
+of theta equals loaded, is 0.6.
+
+25
+00:01:21.189 --> 00:01:24.130
+Our prior for probability that we think
+they're bringing us the loaded coin.
+
+26
+00:01:25.130 --> 00:01:28.410
+Our likelihood will follow
+a binomial distribution,
+
+27
+00:01:28.410 --> 00:01:29.790
+depending upon the value of theta.
+
+28
+00:01:31.850 --> 00:01:34.450
+Our posterior then,
+we can look at posterior for
+
+29
+00:01:34.450 --> 00:01:39.630
+theta, given that we saw x
+equals two heads, posterior is
+
+30
+00:01:39.630 --> 00:01:44.150
+the likelihood times the prior,
+divided by a normalizing constant.
+
+31
+00:01:44.150 --> 00:01:47.590
+In this case, we can work out
+the binomial and our prior.
+
+32
+00:01:49.270 --> 00:01:52.310
+And we see that we get these
+expressions at the end.
+
+33
+00:01:54.489 --> 00:02:00.579
+We get posterior probability of theta
+is loaded given that we saw two heads,
+
+34
+00:02:00.579 --> 00:02:02.113
+to be 0.388.
+
+35
+00:02:02.113 --> 00:02:04.120
+This is all review from
+the previous course so far.
+
+36
+00:02:05.180 --> 00:02:07.420
+But suppose we had a more
+complicated problem,
+
+37
+00:02:07.420 --> 00:02:10.010
+where we couldn't work this
+all out in closed form?
+
+38
+00:02:10.010 --> 00:02:11.330
+We'll know the likelihood and the prior,
+
+39
+00:02:11.330 --> 00:02:14.350
+but we may not be able to get
+this normalizing constant.
+
+40
+00:02:14.350 --> 00:02:17.670
+Can we instead do this by simulation?
+
+41
+00:02:17.670 --> 00:02:19.320
+And indeed, yes we can.
+
+42
+00:02:19.320 --> 00:02:22.150
+We can do this with
+Markov chain Monte Carlo.
+
+43
+00:02:22.150 --> 00:02:24.740
+In particular,
+using the Metropolis–Hastings algorithm.
+
+44
+00:02:26.200 --> 00:02:30.020
+What we'll do is, we'll set up a Markov
+chain whose equilibrium distribution
+
+45
+00:02:30.020 --> 00:02:31.660
+has this posterior distribution.
+
+46
+00:02:33.831 --> 00:02:38.711
+So we'll consider a Markov chain with
+two states, theta equals fair and
+
+47
+00:02:38.711 --> 00:02:40.238
+theta equals loaded.
+
+48
+00:02:40.238 --> 00:02:42.419
+And we'll allow the chain to
+move between those two states,
+
+49
+00:02:42.419 --> 00:02:44.330
+with certain transition probabilities.
+
+50
+00:02:44.330 --> 00:02:47.120
+We set this up using this using
+the Metropolis–Hastings algorithm.
+
+51
+00:02:47.120 --> 00:02:50.403
+So under the Metropolis–Hastings
+algorithm,
+
+52
+00:02:50.403 --> 00:02:53.530
+step one is we start at
+an arbitrary location.
+
+53
+00:02:56.618 --> 00:03:02.059
+And in this case we can start
+at either theta not equals fair,
+
+54
+00:03:02.059 --> 00:03:04.630
+or theta not equals loaded.
+
+55
+00:03:06.630 --> 00:03:09.830
+It doesn't really matter where we start,
+we'll be moving back and forth and we're
+
+56
+00:03:09.830 --> 00:03:13.599
+going to look at the long term running
+average, the long term simulations.
+
+57
+00:03:15.440 --> 00:03:16.920
+So the key is we'll be simulating.
+
+58
+00:03:21.264 --> 00:03:24.105
+So we'll run m simulations and
+in each iteration,
+
+59
+00:03:24.105 --> 00:03:28.510
+we'll propose a candidate and
+either accept it or reject it.
+
+60
+00:03:28.510 --> 00:03:30.859
+So the first part is we're
+proposing a new candidate.
+
+61
+00:03:35.539 --> 00:03:38.793
+We'll call this candidate theta star.
+
+62
+00:03:38.793 --> 00:03:43.670
+And we're going to propose it be the other
+state compared to where we are now.
+
+63
+00:03:50.058 --> 00:03:57.825
+So where we are now is
+theta sub i minus one.
+
+64
+00:04:00.903 --> 00:04:02.768
+And so we'll propose to move.
+
+65
+00:04:02.768 --> 00:04:06.650
+If our current state is fair,
+we'll propose theta star to be loaded.
+
+66
+00:04:06.650 --> 00:04:09.700
+If our current state is loaded,
+we'll propose theta star to be fair.
+
+67
+00:04:11.080 --> 00:04:15.180
+Then we want to think about,
+what's our acceptance probability alpha?
+
+68
+00:04:15.180 --> 00:04:20.010
+The general form for
+alpha is g of theta star divided by q of
+
+69
+00:04:21.010 --> 00:04:26.240
+theta star given i minus one, over g
+
+70
+00:04:26.240 --> 00:04:32.020
+of theta i minus one divided by q of
+theta i minus one given theta star.
+
+71
+00:04:33.727 --> 00:04:39.850
+In this case, we're going to be using our
+un-normalized likelihood times prior,
+
+72
+00:04:39.850 --> 00:04:41.010
+this section.
+
+73
+00:04:43.230 --> 00:04:48.380
+So this is f(x=2) given theta star,
+
+74
+00:04:48.380 --> 00:04:54.742
+times f(theta star)
+divided by the q function,
+
+75
+00:04:54.742 --> 00:04:59.145
+in this case the q function is one.
+
+76
+00:04:59.145 --> 00:05:05.322
+This would be over the likelihood for
+theta i minus one,
+
+77
+00:05:05.322 --> 00:05:09.540
+times the prior for theta i minus one.
+
+78
+00:05:09.540 --> 00:05:12.564
+Our q function here is
+always going to be one,
+
+79
+00:05:12.564 --> 00:05:15.673
+because we have a deterministic proposal.
+
+80
+00:05:15.673 --> 00:05:18.288
+We're proposing it to be the other thing.
+
+81
+00:05:18.288 --> 00:05:22.890
+So with probability one we're going to
+propose theta to be the other state.
+
+82
+00:05:22.890 --> 00:05:27.725
+And so it's really easy here,
+it's just a one.
+
+83
+00:05:30.519 --> 00:05:34.792
+So if theta star equals loaded,
+
+84
+00:05:34.792 --> 00:05:40.174
+then we can see alpha equals this value,
+
+85
+00:05:40.174 --> 00:05:44.765
+0.007794 divided by this
+
+86
+00:05:44.765 --> 00:05:49.844
+value here for fair, 0.0125.
+
+87
+00:05:53.670 --> 00:06:00.520
+If theta star equals fair then alpha
+is just the reciprocal of this.
+
+88
+00:06:08.704 --> 00:06:12.950
+So when theta star is loaded,
+we get a 0.635.
+
+89
+00:06:12.950 --> 00:06:17.334
+If it's fair, we get a 1.574.
+
+90
+00:06:20.274 --> 00:06:24.950
+Given these probabilities, we then can
+do the acceptance or rejection step.
+
+91
+00:06:27.003 --> 00:06:31.929
+The easier one is that a theta star
+equals fair, alpha is bigger than one,
+
+92
+00:06:31.929 --> 00:06:33.370
+so we always accept.
+
+93
+00:06:38.896 --> 00:06:45.010
+And so in setting accepting we then set,
+theta i equals fair.
+
+94
+00:06:50.770 --> 00:06:52.130
+If the theta star equals loaded.
+
+95
+00:06:54.608 --> 00:06:59.145
+Alpha equals 0.635.
+
+96
+00:07:03.184 --> 00:07:07.781
+So we accept theta star
+with probability 0.635.
+
+97
+00:07:07.781 --> 00:07:09.868
+And if we accept it.
+
+98
+00:07:12.480 --> 00:07:14.902
+Set theta i = loaded.
+
+99
+00:07:17.972 --> 00:07:19.493
+Otherwise.
+
+100
+00:07:22.158 --> 00:07:25.894
+Set theta i = theta i- 1,
+it doesn't accept,
+
+101
+00:07:25.894 --> 00:07:28.730
+it stays in that same old fair state.
+
+102
+00:07:30.220 --> 00:07:34.440
+We can draw this out as
+a Markov chain with two states.
+
+103
+00:07:39.219 --> 00:07:39.942
+Fair and loaded.
+
+104
+00:07:42.785 --> 00:07:47.920
+If it's in the loaded state, it will move
+with probability one to the fair state.
+
+105
+00:07:47.920 --> 00:07:49.770
+If it's in the fair state,
+
+106
+00:07:49.770 --> 00:07:54.050
+it will move with probability
+0.635 to the loaded state.
+
+107
+00:07:54.050 --> 00:07:58.520
+And with probability 0.365 it
+will stay in the fair state.
+
+108
+00:08:02.611 --> 00:08:06.720
+And so here's a little diagram for
+this Markov chain with two states.
+
+109
+00:08:06.720 --> 00:08:10.790
+In which case it will move back and
+forth with certain probabilities.
+
+110
+00:08:11.850 --> 00:08:19.097
+Thus if we wanted to find
+our posterior probability,
+
+111
+00:08:19.097 --> 00:08:23.934
+f(theta=loaded given x=2).
+
+112
+00:08:23.934 --> 00:08:28.150
+We can simulate from this Markov chain
+using these transition probabilities.
+
+113
+00:08:28.150 --> 00:08:32.550
+And observe the fraction of time that it
+spends in the state theta equals loaded.
+
+114
+00:08:32.550 --> 00:08:36.660
+And this gives us a good estimate
+of the posterior probability
+
+115
+00:08:36.660 --> 00:08:37.600
+that it's the loaded coin.
+
+116
+00:08:39.777 --> 00:08:41.202
+In this particular case,
+
+117
+00:08:41.202 --> 00:08:44.780
+we can also show that this gives
+us the theoretical right answer.
+
+118
+00:08:44.780 --> 00:08:48.029
+If you've seen a little bit
+of theory of Markov chains.
+
+119
+00:08:49.400 --> 00:08:53.356
+We can say that a Markov chain with
+transition probability capital P,
+
+120
+00:08:53.356 --> 00:08:55.310
+has stationary distribution pi.
+
+121
+00:08:57.130 --> 00:09:00.370
+If pi times P equals pi.
+
+122
+00:09:00.370 --> 00:09:02.450
+That's the definition of
+a stationary distribution.
+
+123
+00:09:03.700 --> 00:09:07.541
+Here we have a transition
+probability matrix P,
+
+124
+00:09:07.541 --> 00:09:10.570
+where we can think about fair and loaded.
+
+125
+00:09:10.570 --> 00:09:12.480
+Moving from the fair state,
+
+126
+00:09:12.480 --> 00:09:15.420
+remaining in the fair state
+happens with probability 0.365.
+
+127
+00:09:15.420 --> 00:09:20.717
+And it moves from fair to loaded,
+with probability 0.635.
+
+128
+00:09:20.717 --> 00:09:23.928
+If it's in the loaded state, we'll move to
+the fair state with probability one, and
+
+129
+00:09:23.928 --> 00:09:26.035
+it will stay in the loaded
+state with probability zero.
+
+130
+00:09:27.479 --> 00:09:31.598
+In this case we want our stationary
+distribution to be the posterior
+
+131
+00:09:31.598 --> 00:09:33.080
+probabilities.
+
+132
+00:09:33.080 --> 00:09:39.470
+Which you can recall are 0.612 of
+being fair and 0.388 of being loaded.
+
+133
+00:09:41.400 --> 00:09:45.210
+And so indeed, if you do just
+the minimal amount of matrix algebra,
+
+134
+00:09:45.210 --> 00:09:48.924
+you can see that 0.612, 0.388
+
+135
+00:09:52.060 --> 00:09:57.904
+Multiplied by this matrix, 0.365, 0.635,
+
+136
+00:09:57.904 --> 00:10:02.529
+1, 0, does indeed give you 0.612 and
+
+137
+00:10:02.529 --> 00:10:07.660
+0.388, at least to within rounding error.
+
+138
+00:10:10.500 --> 00:10:14.658
+Thus in this case we can see, that we do
+get the correct stationary distribution
+
+139
+00:10:14.658 --> 00:10:18.150
+for the Markov chain using
+the Metropolis–Hastings algorithm.
+
+140
+00:10:18.150 --> 00:10:20.000
+And that when we simulate it,
+
+141
+00:10:20.000 --> 00:10:23.949
+we do get correct estimates then
+of the posterior probabilities.
+
+142
+00:10:25.260 --> 00:10:28.100
+This is a nice simple
+example where we can work out
+
+143
+00:10:28.100 --> 00:10:30.180
+the posterior probabilities
+in closed form.
+
+144
+00:10:30.180 --> 00:10:32.830
+We don't actually need to run
+Markov chain Monte Carlo.
+
+145
+00:10:32.830 --> 00:10:36.170
+But this method is very powerful, because
+all we need is to be able to evaluate
+
+146
+00:10:36.170 --> 00:10:39.840
+the likelihood and the prior, we don't
+need to evaluate the full posterior and
+
+147
+00:10:39.840 --> 00:10:41.810
+getting that normalizing constant.
+
+148
+00:10:41.810 --> 00:10:45.680
+And so this applies to a much broader
+range of more complicated problems.
+
+149
+00:10:45.680 --> 00:10:48.698
+Where we can use Markov chain
+Monte Carlo to simulate,
+
+150
+00:10:48.698 --> 00:10:50.868
+to be able to get these probabilities.
+
+151
+00:10:50.868 --> 00:10:53.249
+We'll make good use of this
+in the rest of this course.
+
+152
+00:10:53.249 --> 00:10:59.379
+[MUSIC]
