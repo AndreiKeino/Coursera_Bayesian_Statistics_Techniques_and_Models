@@ -1,0 +1,569 @@
+WEBVTT
+
+1
+00:00:00.420 --> 00:00:04.133
+[MUSIC]
+
+2
+00:00:04.133 --> 00:00:08.326
+Let's return to the example at the end
+of lesson two where we have a normal
+
+3
+00:00:08.326 --> 00:00:12.540
+likelihood, with unknown mean and
+unknown variance.
+
+4
+00:00:12.540 --> 00:00:14.590
+To remind ourselves,
+let's write the model.
+
+5
+00:00:14.590 --> 00:00:19.010
+The response for individual I given mu and
+
+6
+00:00:19.010 --> 00:00:24.690
+sigma squared is independent and
+identically distributed normal,
+
+7
+00:00:24.690 --> 00:00:29.020
+with mean mu and
+variance sigma squared, for
+
+8
+00:00:29.020 --> 00:00:33.650
+observations i being 1 up to n.
+
+9
+00:00:34.940 --> 00:00:38.700
+We're also going to assume
+independent priors.
+
+10
+00:00:38.700 --> 00:00:45.020
+A normal prior for mu,
+with these hyper parameters, and
+
+11
+00:00:45.020 --> 00:00:50.190
+an inverse gamma prior for sigma squared,
+with these hyper parameters.
+
+12
+00:00:54.207 --> 00:00:59.363
+In this case, we chose a normal prior for
+mu because when sigma squared is
+
+13
+00:00:59.363 --> 00:01:04.700
+a known constant, the normal distribution
+is the conjugate prior for mu.
+
+14
+00:01:05.760 --> 00:01:08.360
+Likewise, in the case where mu is known,
+
+15
+00:01:08.360 --> 00:01:12.900
+the inverse gamma is the conjugate
+prior for sigma squared.
+
+16
+00:01:12.900 --> 00:01:14.490
+This will give us convenient,
+
+17
+00:01:14.490 --> 00:01:17.280
+full conditional distributions
+in a Gibbs sampler.
+
+18
+00:01:18.820 --> 00:01:23.780
+Let's first work out the form of
+the full posterior distribution.
+
+19
+00:01:23.780 --> 00:01:29.080
+When we begin analyzing data, the jag
+software will complete this step for us.
+
+20
+00:01:29.080 --> 00:01:33.840
+However, I believe it's extremely
+valuable for us to see and
+
+21
+00:01:33.840 --> 00:01:35.499
+understand how this works.
+
+22
+00:01:37.820 --> 00:01:41.740
+The joint posterior
+distribution from mu and
+
+23
+00:01:41.740 --> 00:01:45.720
+sigma squared, given all the data,
+
+24
+00:01:47.920 --> 00:01:52.740
+is going to be proportional to
+the joint distribution of everything,
+
+25
+00:01:52.740 --> 00:01:56.780
+which starts with our likelihood,
+the joint distribution of the data,
+
+26
+00:01:58.540 --> 00:02:04.250
+given the parameters,
+times those respective priors.
+
+27
+00:02:09.363 --> 00:02:14.055
+So let's write out what
+these densities look like.
+
+28
+00:02:14.055 --> 00:02:19.560
+First the likelihood because we
+assume that they're independent.
+
+29
+00:02:19.560 --> 00:02:24.800
+We're going to write their densities
+as a product of normal densities
+
+30
+00:02:26.350 --> 00:02:31.270
+for each individual y,
+given those two parameters.
+
+31
+00:02:33.340 --> 00:02:38.915
+Then we have the prior for mu,
+which is a normal density for
+
+32
+00:02:38.915 --> 00:02:40.985
+mu given those hyper parameters.
+
+33
+00:02:42.850 --> 00:02:46.870
+And finally, a density for sigma squared.
+
+34
+00:02:46.870 --> 00:02:54.400
+This inverse gamma,
+given its hyper parameters here.
+
+35
+00:02:57.429 --> 00:03:02.379
+I'm going to keep writing these steps,
+but so that you don't have to write and
+
+36
+00:03:02.379 --> 00:03:06.590
+watch the math happen in real time,
+we're going to skip forward.
+
+37
+00:03:08.640 --> 00:03:13.500
+Okay, I've now done a little bit of
+math to complete these next two lines.
+
+38
+00:03:13.500 --> 00:03:17.600
+All I did was replace these densities for
+
+39
+00:03:17.600 --> 00:03:21.690
+these distributions with
+their actual densities.
+
+40
+00:03:21.690 --> 00:03:26.545
+So we have the likelihood piece right
+here, the normal distribution for
+
+41
+00:03:26.545 --> 00:03:32.490
+mu right here, and the inverse gamma
+distribution for sigma squared right here.
+
+42
+00:03:32.490 --> 00:03:36.000
+We could also include an indicator
+function that sigma squared has to be
+
+43
+00:03:36.000 --> 00:03:38.740
+greater than zero, but
+we know that's true.
+
+44
+00:03:40.451 --> 00:03:42.655
+To get from this line to this line,
+
+45
+00:03:42.655 --> 00:03:47.400
+we remember that we're only working
+up to proportionality anyway.
+
+46
+00:03:47.400 --> 00:03:52.520
+So we don't need the multiplying
+constants that don't involve mu or
+
+47
+00:03:52.520 --> 00:03:53.660
+sigma squared here.
+
+48
+00:03:54.720 --> 00:03:59.560
+So, I was able to remove these 1 over 2 pi
+
+49
+00:03:59.560 --> 00:04:04.310
+pieces right here,
+those are just a multiplicative constant.
+
+50
+00:04:04.310 --> 00:04:07.530
+But I did have to keep the sigma
+squareds because this is a function
+
+51
+00:04:07.530 --> 00:04:08.450
+of sigma squared.
+
+52
+00:04:09.750 --> 00:04:13.980
+I brought in this exponential
+piece that contains both mu and
+
+53
+00:04:13.980 --> 00:04:17.310
+sigma squared,
+bringing the product inside the exponent.
+
+54
+00:04:18.840 --> 00:04:22.730
+Then in the normal prior right here,
+this piece doesn't contain any mu or
+
+55
+00:04:22.730 --> 00:04:26.710
+sigma squared, so that can drop
+out when we make it proportional.
+
+56
+00:04:28.140 --> 00:04:32.870
+And this normalizing constant for
+the inverse gamma distribution
+
+57
+00:04:32.870 --> 00:04:38.230
+also does not contain a sigma squared or
+a mu, so it can be dropped as well.
+
+58
+00:04:38.230 --> 00:04:40.430
+So this is the function
+we're going to work with.
+
+59
+00:04:43.058 --> 00:04:48.689
+I've now moved this distribution that
+we just derived, the joint distribution
+
+60
+00:04:48.689 --> 00:04:54.270
+of mu and sigma squared up to
+proportionality, up here to the top.
+
+61
+00:04:54.270 --> 00:04:57.960
+From here it's easy to
+continue on to find the two
+
+62
+00:04:57.960 --> 00:05:01.120
+full conditional
+distributions that we need.
+
+63
+00:05:01.120 --> 00:05:04.010
+The first one we'll look at is mu,
+
+64
+00:05:04.010 --> 00:05:07.180
+assuming sigma squared
+is a known constant.
+
+65
+00:05:07.180 --> 00:05:13.640
+In which case, it becomes a constant and
+is absorbed into the normalizing constant.
+
+66
+00:05:13.640 --> 00:05:18.050
+So we're going to work on the full
+conditional distribution of mu,
+
+67
+00:05:18.050 --> 00:05:23.170
+given sigma squared, pretending it's
+a constant number, and all of the data,
+
+68
+00:05:26.510 --> 00:05:33.102
+This will be proportional to our full
+joint posterior distribution of mu and
+
+69
+00:05:33.102 --> 00:05:40.482
+sigma squared,
+given all the data, Like this.
+
+70
+00:05:42.763 --> 00:05:48.865
+So we need to take the pieces from
+this full joint posterior distribution
+
+71
+00:05:48.865 --> 00:05:54.800
+that involve mu only,
+because now sigma squared is a constant.
+
+72
+00:05:54.800 --> 00:05:56.370
+So we can drop this piece.
+
+73
+00:06:09.800 --> 00:06:12.145
+And keep this piece in a likelihood.
+
+74
+00:06:12.145 --> 00:06:15.289
+This piece also has a mu,
+so we need to keep it.
+
+75
+00:06:24.374 --> 00:06:27.230
+And none of the rest of these contain mu.
+
+76
+00:06:27.230 --> 00:06:29.860
+They're all multiplied
+by this distribution.
+
+77
+00:06:29.860 --> 00:06:32.700
+So we don't need to keep
+any of these pieces here.
+
+78
+00:06:32.700 --> 00:06:34.510
+This is all we need.
+
+79
+00:06:34.510 --> 00:06:36.238
+Again, I'm going to skip forward so
+
+80
+00:06:36.238 --> 00:06:38.650
+we don't have to watch all
+of the math in real time.
+
+81
+00:06:40.300 --> 00:06:44.808
+I've now completed these next two steps,
+where we did a little bit more algebra.
+
+82
+00:06:44.808 --> 00:06:49.080
+In this step, we combined
+the two exponents into one, and
+
+83
+00:06:49.080 --> 00:06:53.960
+in the final step we recognized
+that this piece right here is
+
+84
+00:06:53.960 --> 00:06:58.900
+proportional to a normal density
+with this mean and this variance.
+
+85
+00:07:00.150 --> 00:07:03.380
+There are a lot of intermediate
+calculations required right here, but
+
+86
+00:07:03.380 --> 00:07:07.780
+they're all provided in the supplementary
+material from the previous course.
+
+87
+00:07:07.780 --> 00:07:14.450
+This is just the conjugate update for
+a normal mean when the variance is known.
+
+88
+00:07:14.450 --> 00:07:20.730
+So, given the data and sigma squared,
+mu follows this normal distribution.
+
+89
+00:07:22.710 --> 00:07:26.381
+Now let's look at sigma squared and
+we'll assume that mu is known.
+
+90
+00:07:26.381 --> 00:07:31.330
+So we're going to look at
+the full conditional distribution
+
+91
+00:07:31.330 --> 00:07:35.220
+at sigma squared,
+given mu and all of the data.
+
+92
+00:07:39.234 --> 00:07:44.184
+Again, that is proportional
+
+93
+00:07:44.184 --> 00:07:48.741
+to our full joint posterior
+
+94
+00:07:57.177 --> 00:08:02.425
+So we're going to take the pieces
+from this expression that involves
+
+95
+00:08:02.425 --> 00:08:07.049
+sigma squared, and
+now mu is thought of as being a constant.
+
+96
+00:08:08.180 --> 00:08:10.790
+So we're going to keep this first piece,
+of course.
+
+97
+00:08:13.780 --> 00:08:14.810
+And this one as well.
+
+98
+00:08:14.810 --> 00:08:16.480
+It contains a sigma squared.
+
+99
+00:08:26.244 --> 00:08:30.062
+This piece right here contains
+the hyper parameter for mu, but
+
+100
+00:08:30.062 --> 00:08:33.460
+not actual sigma squared
+parameter is observed there.
+
+101
+00:08:33.460 --> 00:08:34.950
+So we skip that one.
+
+102
+00:08:34.950 --> 00:08:37.670
+That gets absorbed into
+the normalizing constant.
+
+103
+00:08:38.680 --> 00:08:45.440
+And we keep this one, which involves
+sigma squared And the last piece.
+
+104
+00:08:53.186 --> 00:08:56.570
+Again, I'll do a couple more
+steps on this piece right here.
+
+105
+00:08:58.560 --> 00:09:01.670
+Let's examine these last two steps.
+
+106
+00:09:01.670 --> 00:09:07.550
+Here, I combined these two sigma
+squared expressions right here,
+
+107
+00:09:07.550 --> 00:09:10.270
+since they were being
+multiplied by each other.
+
+108
+00:09:10.270 --> 00:09:14.540
+And I combined the two
+exponential pieces right here.
+
+109
+00:09:16.020 --> 00:09:21.570
+If you look at this expression right here,
+it turns out this is,
+
+110
+00:09:21.570 --> 00:09:27.480
+except for a normalizing constant, the
+density of an inverse gamma distribution.
+
+111
+00:09:27.480 --> 00:09:32.580
+So this in fact is proportional
+to an inverse gamma density for
+
+112
+00:09:32.580 --> 00:09:38.810
+sigma squared, with an updated shape
+parameter and an updated scale parameter.
+
+113
+00:09:41.120 --> 00:09:45.680
+These two distributions provide
+the basis of a Gibbs sampler to
+
+114
+00:09:45.680 --> 00:09:49.880
+simulate from a Markov chain,
+whose stationary distribution
+
+115
+00:09:49.880 --> 00:09:55.000
+is the full posterior distribution for
+mu and sigma squared.
+
+116
+00:09:55.000 --> 00:09:59.010
+We simply alternate draws
+between these two parameters,
+
+117
+00:09:59.010 --> 00:10:03.260
+using the most recent draw of one
+parameter to update the other.
+
+118
+00:10:04.520 --> 00:10:09.686
+We're now going to do this
+in r in the next segment.
+
+119
+00:10:09.686 --> 00:10:12.659
+[MUSIC]

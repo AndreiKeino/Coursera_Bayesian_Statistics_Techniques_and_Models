@@ -1,0 +1,527 @@
+WEBVTT
+
+1
+00:00:00.140 --> 00:00:03.873
+[MUSIC]
+
+2
+00:00:03.873 --> 00:00:08.060
+So far we've demonstrated MCMC for
+just one single parameter.
+
+3
+00:00:09.130 --> 00:00:13.800
+What happens if we seek the posterior
+distribution of multiple parameters and
+
+4
+00:00:13.800 --> 00:00:17.100
+that posterior distribution
+doesn't have a standard form.
+
+5
+00:00:18.750 --> 00:00:23.220
+One option is to perform Metropolis
+Hastings by sampling candidates for
+
+6
+00:00:23.220 --> 00:00:24.700
+all the parameters at once.
+
+7
+00:00:24.700 --> 00:00:28.750
+And accepting or rejecting all
+of those candidates together.
+
+8
+00:00:28.750 --> 00:00:31.410
+While this is possible,
+it can get complicated.
+
+9
+00:00:32.480 --> 00:00:37.840
+Another simpler option is,
+to sample the parameters one at a time.
+
+10
+00:00:37.840 --> 00:00:42.950
+As a simple example, suppose we have
+a joint postilion distribution for
+
+11
+00:00:42.950 --> 00:00:49.910
+two parameters, theta and
+phi, given our data Y.
+
+12
+00:00:51.692 --> 00:00:55.150
+And let's suppose we only know
+this up to proportionality.
+
+13
+00:00:55.150 --> 00:00:57.987
+We are missing the normalizing constant.
+
+14
+00:00:57.987 --> 00:01:03.620
+What we've calculated is
+the function g of theta and phi.
+
+15
+00:01:05.780 --> 00:01:10.760
+If we knew the value of phi,
+then we could just draw a candidate for
+
+16
+00:01:10.760 --> 00:01:16.730
+theta and use this g function to compute
+our Metropolis Hastings ratio and
+
+17
+00:01:16.730 --> 00:01:18.610
+possibly accept the candidate.
+
+18
+00:01:19.970 --> 00:01:22.620
+Before moving on to the next iteration,
+
+19
+00:01:22.620 --> 00:01:27.610
+if we don't know the value of phi, then
+we could perform a similar update for it.
+
+20
+00:01:28.670 --> 00:01:32.930
+We would draw a candidate for
+phi using some proposal distribution.
+
+21
+00:01:32.930 --> 00:01:38.842
+And again, use this g function where
+we plug in the value of theta.
+
+22
+00:01:40.532 --> 00:01:43.040
+To compute our Metropolis-Hastings ratio.
+
+23
+00:01:44.140 --> 00:01:49.480
+We pretend we know the value of theta
+by substituting in its current value or
+
+24
+00:01:49.480 --> 00:01:51.560
+current iteration from the Markov chain.
+
+25
+00:01:52.800 --> 00:01:58.310
+Once we've drawn for both theta and
+phi, that completes one iteration and
+
+26
+00:01:58.310 --> 00:02:02.085
+we begin the next iteration
+by drawing a new theta.
+
+27
+00:02:02.085 --> 00:02:06.971
+In other words we are just going back and
+forth,updating the parameters one at
+
+28
+00:02:06.971 --> 00:02:12.090
+a time,plugging in the current value of
+the other parameter into the g function.
+
+29
+00:02:13.620 --> 00:02:20.610
+This idea of one at a time updates is
+used in what we call Gibbs sampling.
+
+30
+00:02:20.610 --> 00:02:23.410
+It also produces
+a stationary Markov chain,
+
+31
+00:02:23.410 --> 00:02:27.600
+whose stationary distribution is
+the target or posterior distribution.
+
+32
+00:02:28.970 --> 00:02:34.290
+If you recall, this is the namesake of
+JAGS, which is Just Another Gibbs Sampler.
+
+33
+00:02:35.910 --> 00:02:39.380
+Before describing the full
+Gibbs sampling algorithm
+
+34
+00:02:39.380 --> 00:02:40.680
+there's one more thing we can do.
+
+35
+00:02:41.730 --> 00:02:45.060
+Again using the chain rule of probability.
+
+36
+00:02:45.060 --> 00:02:50.734
+We know that the joint posterior
+distribution of theta and
+
+37
+00:02:50.734 --> 00:02:52.330
+phi can be factored.
+
+38
+00:02:53.530 --> 00:02:55.900
+First into the marginal.
+
+39
+00:02:55.900 --> 00:03:01.535
+Posterior distribution of phi
+times the full conditional
+
+40
+00:03:01.535 --> 00:03:06.023
+distribution of theta given phi and
+the data.
+
+41
+00:03:08.647 --> 00:03:13.703
+Notice that the only difference
+between this full joint posterior
+
+42
+00:03:13.703 --> 00:03:18.399
+distribution and
+this full conditional distribution here,
+
+43
+00:03:18.399 --> 00:03:23.380
+is multiplication by a factor that
+does not involve theta at all.
+
+44
+00:03:24.770 --> 00:03:30.517
+Since this g function when viewed as
+a function of theta is proportional
+
+45
+00:03:30.517 --> 00:03:35.705
+to both the full posterior and
+this full conditional for theta.
+
+46
+00:03:35.705 --> 00:03:40.293
+We might as well have replaced g with
+this distribution when we performed
+
+47
+00:03:40.293 --> 00:03:41.730
+the update for theta.
+
+48
+00:03:42.950 --> 00:03:47.120
+This distribution of theta
+given everything else is called
+
+49
+00:03:47.120 --> 00:03:50.440
+the full conditional distribution for
+theta.
+
+50
+00:03:50.440 --> 00:03:52.230
+Why would we use it instead of g?
+
+51
+00:03:53.320 --> 00:03:56.750
+In some cases the full
+conditional distribution
+
+52
+00:03:56.750 --> 00:03:59.720
+is a standard distribution
+that we know how to sample.
+
+53
+00:04:01.070 --> 00:04:05.030
+If that happens,
+we no longer need to draw a candidate and
+
+54
+00:04:05.030 --> 00:04:07.250
+decide whether to accept it.
+
+55
+00:04:07.250 --> 00:04:10.410
+In fact, if we treat the full
+conditional distribution
+
+56
+00:04:10.410 --> 00:04:15.030
+as a candidate proposal distribution,
+the resulting Metropolis-Hastings
+
+57
+00:04:15.030 --> 00:04:18.180
+acceptance probability
+becomes exactly one.
+
+58
+00:04:20.010 --> 00:04:24.820
+Gibbs Samplers require a little bit more
+work up front because you need to find
+
+59
+00:04:24.820 --> 00:04:28.560
+the full conditional distribution for
+each parameter.
+
+60
+00:04:28.560 --> 00:04:29.840
+The good news is,
+
+61
+00:04:29.840 --> 00:04:33.820
+that all full conditional distributions
+have the same starting point.
+
+62
+00:04:33.820 --> 00:04:35.700
+The full posterior distribution.
+
+63
+00:04:36.780 --> 00:04:39.711
+So, using the example above,
+
+64
+00:04:39.711 --> 00:04:45.349
+we have that the full conditional
+distribution for theta,
+
+65
+00:04:45.349 --> 00:04:50.421
+given phi, and y,
+will be proportional to full joint
+
+66
+00:04:50.421 --> 00:04:55.407
+posterior distribution of theta and
+phi, given y.
+
+67
+00:04:55.407 --> 00:04:58.360
+Which is also proportional
+to this g function up above.
+
+68
+00:05:03.130 --> 00:05:07.741
+Here we would simply treat phi as a known
+
+69
+00:05:07.741 --> 00:05:12.495
+constant number likewise the other full
+
+70
+00:05:12.495 --> 00:05:17.547
+conditional will be phi given theta and y.
+
+71
+00:05:17.547 --> 00:05:22.354
+Which again will be proportional
+to the full joint posterior
+
+72
+00:05:22.354 --> 00:05:25.660
+distribution, or this g function here.
+
+73
+00:05:27.400 --> 00:05:30.972
+We always start with the full
+posterior distribution,
+
+74
+00:05:30.972 --> 00:05:35.000
+thus the process of finding
+full conditional distributions,
+
+75
+00:05:35.000 --> 00:05:39.493
+is the same as finding the posterior
+distribution of each parameter.
+
+76
+00:05:39.493 --> 00:05:47.070
+And pretending that all of the other
+parameters are known constants.
+
+77
+00:05:47.070 --> 00:05:52.640
+The idea of Gibbs sampling is that we can
+update multiple parameters by sampling
+
+78
+00:05:52.640 --> 00:05:57.930
+just one parameter at a time and cycling
+through all parameters and then repeating.
+
+79
+00:05:58.940 --> 00:06:03.706
+To perform the update for
+one particular parameter we substitute in
+
+80
+00:06:03.706 --> 00:06:07.142
+the current values of all
+the other parameters.
+
+81
+00:06:07.142 --> 00:06:12.505
+So let's call this our Gibbs
+
+82
+00:06:12.505 --> 00:06:16.753
+sampling algorithm.
+
+83
+00:06:16.753 --> 00:06:18.700
+Here's the algorithm.
+
+84
+00:06:18.700 --> 00:06:22.050
+Let's suppose we have the joint
+posterior distribution for
+
+85
+00:06:22.050 --> 00:06:24.980
+two parameters, phi and
+theta, like we do here.
+
+86
+00:06:26.470 --> 00:06:31.720
+If we can find the distribution for
+each of the parameters given
+
+87
+00:06:31.720 --> 00:06:36.870
+all the other parameters and data,
+the full conditional distributions,
+
+88
+00:06:36.870 --> 00:06:40.620
+then we'll take turns
+sampling the distributions.
+
+89
+00:06:40.620 --> 00:06:43.288
+The first step in
+the Gibbs sampler will be
+
+90
+00:06:43.288 --> 00:06:47.800
+just like the first step in
+Metropolis Hastings where we initialize.
+
+91
+00:06:54.392 --> 00:06:59.210
+So we'll start with a draw for
+Theta not and phi not.
+
+92
+00:07:01.750 --> 00:07:06.320
+The next step is to iterate so for
+
+93
+00:07:06.320 --> 00:07:11.590
+I in 1 up to M we are going
+to repeat the following.
+
+94
+00:07:16.750 --> 00:07:24.983
+The first thing we'll do Is using
+the previous iterations draw for Phi.
+
+95
+00:07:24.983 --> 00:07:29.399
+So Phi, i -1, we're going to draw,
+
+96
+00:07:31.810 --> 00:07:36.418
+Theta i from it's full conditional.
+
+97
+00:07:39.639 --> 00:07:42.585
+By plugging in the old value of phi.
+
+98
+00:07:46.080 --> 00:07:48.285
+Then, once we've completed this draw for
+phi.
+
+99
+00:07:49.380 --> 00:07:51.580
+I'm sorry, this draw for theta i.
+
+100
+00:07:52.780 --> 00:07:53.540
+We're going to use it.
+
+101
+00:07:55.220 --> 00:07:59.740
+So using Theta i,
+the most recent draw for theta,
+
+102
+00:07:59.740 --> 00:08:07.290
+we're going to complete a draw for phi i
+using its full conditional distribution.
+
+103
+00:08:09.135 --> 00:08:11.994
+And we're going to condition on theta i.
+
+104
+00:08:15.717 --> 00:08:21.499
+Together, these two steps complete
+one cycle of the Gibbs sampler and
+
+105
+00:08:21.499 --> 00:08:23.270
+they produce a pair.
+
+106
+00:08:23.270 --> 00:08:28.560
+We'll get a theta i, phi i pair.
+
+107
+00:08:30.160 --> 00:08:33.919
+That completes one iteration
+of the MCMC sampler.
+
+108
+00:08:34.940 --> 00:08:38.740
+If there are more than two
+parameters we can handle that also.
+
+109
+00:08:38.740 --> 00:08:42.610
+One Gibbs cycle would include
+an update for each of the parameters.
+
+110
+00:08:43.960 --> 00:08:48.568
+In the following segments we're going
+to provide a concrete example of
+
+111
+00:08:48.568 --> 00:08:53.423
+finding full conditional distributions and
+constructing a Gibbs sampler
+
+112
+00:08:53.423 --> 00:08:58.085
+[MUSIC]

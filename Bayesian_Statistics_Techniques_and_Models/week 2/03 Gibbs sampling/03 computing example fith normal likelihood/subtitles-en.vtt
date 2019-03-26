@@ -1,0 +1,870 @@
+WEBVTT
+
+1
+00:00:01.220 --> 00:00:04.870
+To implement the Gibbs sampler
+we have just described,
+
+2
+00:00:04.870 --> 00:00:09.920
+let's return to our running example
+where the data, or the percent change,
+
+3
+00:00:09.920 --> 00:00:16.050
+in total personnel from last year
+to this year for ten companies.
+
+4
+00:00:16.050 --> 00:00:19.240
+We're still going to use
+the normal likelihood.
+
+5
+00:00:19.240 --> 00:00:22.698
+Up until now, we have fixed the variance,
+
+6
+00:00:22.698 --> 00:00:28.430
+the variance of the growth between
+companies, sigma squared, at 1.
+
+7
+00:00:28.430 --> 00:00:30.550
+Now we're going to relax that assumption.
+
+8
+00:00:30.550 --> 00:00:33.260
+We will not assume we know sigma squared,
+
+9
+00:00:33.260 --> 00:00:37.310
+we're going to estimate it,
+like we do for mu, the mean.
+
+10
+00:00:39.390 --> 00:00:42.180
+Instead of a t prior from earlier,
+
+11
+00:00:42.180 --> 00:00:47.048
+we're going to use the conditionally
+conjugate priors, normal for the mean, mu,
+
+12
+00:00:47.048 --> 00:00:52.300
+and inverse gamma for
+the variance, sigma squared.
+
+13
+00:00:53.320 --> 00:00:59.260
+The first step is going to be to
+write functions in R that simulate
+
+14
+00:00:59.260 --> 00:01:03.040
+from the full conditional distributions
+we derived in the previous segment.
+
+15
+00:01:05.120 --> 00:01:09.830
+Here's the full conditional update for
+the mean mu,
+
+16
+00:01:09.830 --> 00:01:14.890
+and here is the full conditional update
+for the variance, sigma squared.
+
+17
+00:01:14.890 --> 00:01:18.730
+We need to write functions
+to simulate from these in R.
+
+18
+00:01:18.730 --> 00:01:26.985
+We'll call the first one update_mu, and
+the second one we'll call update_sig2.
+
+19
+00:01:28.877 --> 00:01:32.210
+I've now written these two functions in R.
+
+20
+00:01:33.480 --> 00:01:39.420
+The first one, update_mu,
+needs arguments n, ybar,
+
+21
+00:01:39.420 --> 00:01:45.680
+the value of the current sigma squared,
+and then the prior hyperparameters for mu.
+
+22
+00:01:47.830 --> 00:01:53.320
+I first calculate this variance,
+and then I calculate this mean,
+
+23
+00:01:53.320 --> 00:01:58.180
+which uses this variance in
+the denominator, and, finally,
+
+24
+00:01:58.180 --> 00:02:02.880
+take a draw from a normal distribution
+with the correct mean and variance.
+
+25
+00:02:05.230 --> 00:02:09.920
+In the update for
+sigma squared, we need n,
+
+26
+00:02:11.550 --> 00:02:17.808
+the full data vector, all of the y values,
+the current value of mu,
+
+27
+00:02:17.808 --> 00:02:23.040
+and the hyperparameters for
+the prior on sigma squared.
+
+28
+00:02:24.630 --> 00:02:29.260
+In the first three lines, we performed the
+calculations described by this formula.
+
+29
+00:02:31.160 --> 00:02:36.970
+And in the fourth line, we draw from
+a gamma distribution, because R does
+
+30
+00:02:36.970 --> 00:02:42.750
+not create draws from the inverse gamma
+distribution, we have to do it manually.
+
+31
+00:02:42.750 --> 00:02:47.060
+This is done by first drawing
+from a gamma distribution and
+
+32
+00:02:47.060 --> 00:02:49.300
+then taking the reciprocal.
+
+33
+00:02:49.300 --> 00:02:53.710
+The output of this function will be
+the reciprocal of the drawn gamma,
+
+34
+00:02:53.710 --> 00:02:56.940
+which will be a draw from
+an inverse gamma distribution.
+
+35
+00:02:59.439 --> 00:03:03.487
+Now that we have functions that
+draw from these full conditionals,
+
+36
+00:03:03.487 --> 00:03:07.330
+we're ready to write a function
+that performs Gibbs sampling.
+
+37
+00:03:08.830 --> 00:03:10.490
+Let's call that function gibbs.
+
+38
+00:03:12.724 --> 00:03:16.442
+We'll take four arguments,
+the data vector y,
+
+39
+00:03:16.442 --> 00:03:20.080
+the number of iterations
+we want to sample for.
+
+40
+00:03:22.178 --> 00:03:29.004
+Initial values from the parameters, and a
+list containing the prior hyperparameters.
+
+41
+00:03:30.030 --> 00:03:30.880
+We'll call that prior.
+
+42
+00:03:33.378 --> 00:03:35.842
+Since ybar and n get used frequently,
+
+43
+00:03:35.842 --> 00:03:39.620
+let's calculate those at
+the beginning of the function.
+
+44
+00:03:51.529 --> 00:03:55.722
+This function is going
+to output two variables,
+
+45
+00:03:55.722 --> 00:04:00.539
+a vector for the draws of mu,
+let's call that mu_out.
+
+46
+00:04:03.585 --> 00:04:08.764
+It'll be a vector that has length n_iter.
+
+47
+00:04:10.576 --> 00:04:13.867
+And we'll also have sig2_out,
+
+48
+00:04:13.867 --> 00:04:18.639
+which will also be a vector
+with n_iter entries.
+
+49
+00:04:20.538 --> 00:04:25.700
+The Gibbs sampler will update mu and
+sigma squared by trading off,
+
+50
+00:04:25.700 --> 00:04:31.520
+sampling back and forth, given
+the current value of the other parameter.
+
+51
+00:04:32.850 --> 00:04:36.440
+We need to initialize one of
+the variables to get this started.
+
+52
+00:04:37.670 --> 00:04:39.080
+Let's start with mu.
+
+53
+00:04:40.290 --> 00:04:45.266
+That will be from the initial value of mu.
+
+54
+00:04:47.748 --> 00:04:49.610
+That comes from the argument
+to the function.
+
+55
+00:04:51.720 --> 00:04:54.810
+Now we're ready to create
+the Gibbs sampler.
+
+56
+00:04:57.821 --> 00:04:59.118
+This will be a loop.
+
+57
+00:05:05.375 --> 00:05:08.475
+Since we started with
+the current draw from mu,
+
+58
+00:05:08.475 --> 00:05:11.660
+let's update sigma squared
+first in this loop.
+
+59
+00:05:16.519 --> 00:05:20.440
+To update it, we need to take a draw
+from the full conditional distribution.
+
+60
+00:05:23.421 --> 00:05:28.890
+That is, we need to evaluate this
+function that we created here.
+
+61
+00:05:30.740 --> 00:05:36.130
+The arguments are the data length,
+the date themselves,
+
+62
+00:05:36.130 --> 00:05:39.430
+the current value of mu, mu_now,
+
+63
+00:05:39.430 --> 00:05:44.600
+which we saved up here, and
+then the hyperparameters.
+
+64
+00:05:49.392 --> 00:05:54.080
+These hyperparameters are saved
+in our object called prior.
+
+65
+00:05:54.080 --> 00:05:55.670
+It's going to be a list.
+
+66
+00:05:55.670 --> 00:06:02.800
+So we're going to access
+the nu_0 element or
+
+67
+00:06:02.800 --> 00:06:09.220
+object in the prior with the dollar sign,
+prior$nu_0.
+
+68
+00:06:09.220 --> 00:06:14.442
+The same goes for
+our other hyperparameter, beta_0,
+
+69
+00:06:14.442 --> 00:06:20.225
+which will also come from our list for
+prior hyperparameters.
+
+70
+00:06:22.537 --> 00:06:27.580
+Now that we've updated sig2, we're
+going to go back and update mu again.
+
+71
+00:06:31.378 --> 00:06:35.700
+Using the draw from the full
+conditional that we wrote up here.
+
+72
+00:06:47.969 --> 00:06:52.600
+We'll use sig2_now, as the value for
+sigma squared in this update.
+
+73
+00:06:54.689 --> 00:06:59.570
+And again the priorhyper parameters
+will come from the prior list.
+
+74
+00:07:02.370 --> 00:07:04.170
+We're still in iteration i.
+
+75
+00:07:04.170 --> 00:07:08.555
+We've now updated both sigma squared and
+mu, so let's save them,
+
+76
+00:07:08.555 --> 00:07:15.843
+sig2_out Where we fill
+in the [i] iteration or
+
+77
+00:07:15.843 --> 00:07:20.190
+the [i] element of this vector,
+it will be sig2_now.
+
+78
+00:07:20.190 --> 00:07:25.079
+The same goes for mu, the [i] iteration or
+
+79
+00:07:25.079 --> 00:07:29.580
+[i] element of mu, will get mu_now.
+
+80
+00:07:32.459 --> 00:07:36.153
+The loop will now go through
+this sequence repeatedly,
+
+81
+00:07:36.153 --> 00:07:38.756
+where we take a draw for sigma squared.
+
+82
+00:07:38.756 --> 00:07:44.290
+Then given the value of sigma squared,
+we take a draw for mu.
+
+83
+00:07:44.290 --> 00:07:48.390
+And then given the value of mu,
+we take a draw for sigma squared.
+
+84
+00:07:48.390 --> 00:07:52.710
+We collect the results and
+repeat this process for n iterations, and
+
+85
+00:07:52.710 --> 00:07:56.250
+finally we'll need to output our results.
+
+86
+00:07:56.250 --> 00:08:03.480
+We can combine two vectors into
+a matrix using the cbind function in R.
+
+87
+00:08:03.480 --> 00:08:08.350
+We'll give it mu_out and call it mu.
+
+88
+00:08:09.440 --> 00:08:13.057
+And sigma squared will be our sig2_out.
+
+89
+00:08:14.578 --> 00:08:17.615
+Cbind refers to column bind, so
+
+90
+00:08:17.615 --> 00:08:23.580
+we're going to have a matrix of
+two columns with n_iter rows.
+
+91
+00:08:25.340 --> 00:08:27.360
+This completes our gibbs function.
+
+92
+00:08:28.760 --> 00:08:32.800
+Let's read all of these
+functions into our R session.
+
+93
+00:08:37.216 --> 00:08:40.392
+Now that we have functions
+to perform Gibbs sampling,
+
+94
+00:08:40.392 --> 00:08:42.470
+we're ready to set up the problem.
+
+95
+00:08:43.510 --> 00:08:48.852
+I've begun a new script, where I've
+collected the data, created a variable
+
+96
+00:08:48.852 --> 00:08:54.570
+ybar, which calculates the sample mean of
+the data as well as n, the sample size.
+
+97
+00:08:55.650 --> 00:08:58.230
+The next step will be to create the prior.
+
+98
+00:08:59.840 --> 00:09:02.928
+The Gibbs sampling function
+accepts the prior as a list, so
+
+99
+00:09:02.928 --> 00:09:04.364
+let's create it as a list.
+
+100
+00:09:10.330 --> 00:09:14.160
+Now to help us remember,
+here is the model we're fitting.
+
+101
+00:09:14.160 --> 00:09:18.220
+The prior for
+mu is normal with these hyperparameters.
+
+102
+00:09:18.220 --> 00:09:22.610
+And the prior for sigma squared is
+inverse gamma with these hyperparameters.
+
+103
+00:09:23.660 --> 00:09:25.540
+Let's start with the prior for mu.
+
+104
+00:09:30.042 --> 00:09:34.900
+First, we need to give it mu_0,
+the prior mean on mu.
+
+105
+00:09:34.900 --> 00:09:37.250
+Let's say this is 0.
+
+106
+00:09:39.742 --> 00:09:44.809
+We also need a variance for
+this prior, sig2_0.
+
+107
+00:09:47.548 --> 00:09:52.840
+Which we can interpret as our prior
+confidence in this initial prior mean.
+
+108
+00:09:54.610 --> 00:09:56.820
+We're going to set it to 1, so
+
+109
+00:09:56.820 --> 00:10:01.660
+that this prior is similar to the t prior
+that we used in an earlier example.
+
+110
+00:10:04.164 --> 00:10:11.696
+We also need to create
+the prior hyperparameters for
+
+111
+00:10:11.696 --> 00:10:17.360
+sigma squared, nu_0 and beta_0.
+
+112
+00:10:17.360 --> 00:10:21.048
+If we chose these
+hyperperameters carefully,
+
+113
+00:10:21.048 --> 00:10:25.658
+they are interpretable as
+a prior guess for sigma squared,
+
+114
+00:10:25.658 --> 00:10:30.470
+as well as a prior effective
+sample size to go with that guess.
+
+115
+00:10:31.902 --> 00:10:34.180
+The prior effective sample size.
+
+116
+00:10:35.686 --> 00:10:43.030
+Which we'll call n_0,
+is two times this nu_0 parameter.
+
+117
+00:10:43.030 --> 00:10:48.050
+So in other words, the nu parameter
+will be the prior sample size
+
+118
+00:10:50.868 --> 00:10:54.340
+Divided by 2.
+
+119
+00:10:54.340 --> 00:10:58.230
+We're also going to create
+an initial guess for sigma squared,
+
+120
+00:10:59.840 --> 00:11:05.730
+let's call it s2_0.
+
+121
+00:11:05.730 --> 00:11:10.440
+The relationship between beta_0 and
+these two numbers is the following.
+
+122
+00:11:12.610 --> 00:11:20.010
+It is the prior sample size
+times the prior guess.
+
+123
+00:11:23.580 --> 00:11:25.834
+Divided by 2.
+
+124
+00:11:29.223 --> 00:11:33.348
+This particular parameterization
+of the inverse gamma
+
+125
+00:11:33.348 --> 00:11:38.522
+distribution is called the scaled
+inverse chi square distribution,
+
+126
+00:11:38.522 --> 00:11:42.133
+where the two parameters are n_0 and s2_0.
+
+127
+00:11:45.337 --> 00:11:49.424
+We are now free to enter our
+prior effective sample size,
+
+128
+00:11:49.424 --> 00:11:51.820
+let's say it's 2 in this case.
+
+129
+00:11:53.030 --> 00:11:55.910
+In other words,
+there are ten data points and
+
+130
+00:11:55.910 --> 00:11:58.620
+there are two effective
+data points in the prior.
+
+131
+00:11:58.620 --> 00:12:03.915
+And we'll say our prior guess for
+sigma squared will be 1.
+
+132
+00:12:06.528 --> 00:12:10.192
+Once we specify these two numbers,
+the parameters for
+
+133
+00:12:10.192 --> 00:12:15.300
+our inverse gamma distribution right
+here are automatically determined.
+
+134
+00:12:17.590 --> 00:12:20.330
+Let's read these lines into our R session.
+
+135
+00:12:23.615 --> 00:12:28.998
+And before we run our Gibbs sampler, let's
+take a look at the histogram of the data
+
+136
+00:12:28.998 --> 00:12:33.850
+with our prior for mu, like we did in
+the earlier example with the t prior.
+
+137
+00:12:35.178 --> 00:12:37.390
+This should look familiar.
+
+138
+00:12:38.530 --> 00:12:44.370
+It's very similar to the t prior we
+had before, but now this prior for
+
+139
+00:12:44.370 --> 00:12:49.880
+mu is a normal distribution centered at 0.
+
+140
+00:12:49.880 --> 00:12:53.340
+If you'll recall,
+the data mean was about 1.
+
+141
+00:12:53.340 --> 00:12:57.222
+So we expect our posterior mean
+to be somewhere between 0 and
+
+142
+00:12:57.222 --> 00:13:03.790
+1 Let's go ahead and
+run this Gibbs sampler.
+
+143
+00:13:03.790 --> 00:13:09.910
+Before we start, we'll always set
+the random number generator seed.
+
+144
+00:13:09.910 --> 00:13:14.900
+We'll use 53, And run that line.
+
+145
+00:13:16.650 --> 00:13:21.040
+And we need to create the variables that
+we're going to pass to our Gibbs function.
+
+146
+00:13:21.040 --> 00:13:23.447
+Those are the init.
+
+147
+00:13:25.499 --> 00:13:29.640
+So we'll create the init as a list.
+
+148
+00:13:29.640 --> 00:13:33.141
+And init$mu, our initial value for mu,
+
+149
+00:13:33.141 --> 00:13:37.350
+let's just start it out at 0,
+and run that line.
+
+150
+00:13:40.040 --> 00:13:43.090
+I think we have all of the arguments
+ready for the Gibbs function now.
+
+151
+00:13:45.050 --> 00:13:48.082
+So we're going to call our Gibbs function.
+
+152
+00:13:48.082 --> 00:13:53.600
+I'm just going to copy and paste it so
+we can remember the arguments.
+
+153
+00:13:53.600 --> 00:14:00.472
+So we'll call Gibbs, and for
+the y, we'll give it the data y.
+
+154
+00:14:00.472 --> 00:14:04.364
+We have to select the number
+of iterations, let's do 1,000,
+
+155
+00:14:04.364 --> 00:14:06.220
+like we've been doing before.
+
+156
+00:14:07.685 --> 00:14:13.220
+We'll give it the initial values
+saved in our list called init.
+
+157
+00:14:13.220 --> 00:14:17.744
+And we'll give it the prior
+hyperparameters saved in
+
+158
+00:14:17.744 --> 00:14:19.760
+our list called prior.
+
+159
+00:14:22.126 --> 00:14:27.416
+Now let's run our Gibbs sampler
+by running the Gibbs function.
+
+160
+00:14:27.416 --> 00:14:28.682
+Press Cmd+Return.
+
+161
+00:14:30.586 --> 00:14:36.970
+That ran the sampler for 1,000 iterations,
+except we forgot to save it in an object.
+
+162
+00:14:36.970 --> 00:14:40.370
+So let's run it again,
+and save it as post.
+
+163
+00:14:43.466 --> 00:14:46.400
+We'll set the seed again, so
+that we get the same answer.
+
+164
+00:14:48.250 --> 00:14:51.130
+And save the object as post, there we go.
+
+165
+00:14:53.161 --> 00:14:58.119
+Let's look at the head of post which will
+show us the first several iterations of
+
+166
+00:14:58.119 --> 00:14:59.458
+this Gibbs sampler.
+
+167
+00:14:59.458 --> 00:15:06.132
+We run that line, we can see the first
+iteration, this was the value of mu and
+
+168
+00:15:06.132 --> 00:15:10.960
+this was the value of sigma squared,
+and so on down.
+
+169
+00:15:10.960 --> 00:15:16.880
+We can also look at the tail of post,
+those were the last few iterations.
+
+170
+00:15:18.690 --> 00:15:22.360
+To analyze this posterior output,
+let's use the coda package.
+
+171
+00:15:24.540 --> 00:15:26.420
+We need to load the coda library.
+
+172
+00:15:29.085 --> 00:15:35.690
+And we can plot the posterior
+distributions as an mcmc object.
+
+173
+00:15:40.153 --> 00:15:41.380
+Let's run that line.
+
+174
+00:15:43.956 --> 00:15:49.712
+We're given a trace plot for mu,
+a density estimate of the posterior
+
+175
+00:15:49.712 --> 00:15:55.072
+distribution that comes from our
+Markov chain, a trace plot for
+
+176
+00:15:55.072 --> 00:16:00.250
+sigma squared and
+a the density estimate for that posterior.
+
+177
+00:16:01.900 --> 00:16:05.855
+Additionally, let's look at a summary,
+
+178
+00:16:05.855 --> 00:16:11.600
+as.mcmc for our post.
+
+179
+00:16:13.300 --> 00:16:17.150
+We run that line, and
+we get the summary for our Markov chain.
+
+180
+00:16:18.747 --> 00:16:24.652
+We can see here we had two parameters
+that we were sampling in the chain mu,
+
+181
+00:16:24.652 --> 00:16:28.177
+which has a posterior mean about 0.90,
+
+182
+00:16:28.177 --> 00:16:33.894
+that's similar to our result from earlier,
+and the posterior mean for
+
+183
+00:16:33.894 --> 00:16:38.723
+sigma squared is about 0.92 or
+0.93 As we had for
+
+184
+00:16:38.723 --> 00:16:44.690
+the Metropolis Hastings example,
+these chains appear to have converged.
+
+185
+00:16:44.690 --> 00:16:47.598
+In the next lesson we'll show you
+how to make that determination.

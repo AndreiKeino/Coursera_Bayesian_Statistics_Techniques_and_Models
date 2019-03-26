@@ -1,0 +1,221 @@
+WEBVTT
+
+1
+00:00:01.000 --> 00:00:05.540
+There are several software packages
+available that will handle the details
+
+2
+00:00:05.540 --> 00:00:07.950
+of MCMC for us.
+
+3
+00:00:07.950 --> 00:00:13.440
+We've provided a supplementary document
+to this lesson which gives an outline,
+
+4
+00:00:13.440 --> 00:00:16.740
+a brief outline of the different
+options available to you.
+
+5
+00:00:17.950 --> 00:00:22.260
+The package we will use
+in this course is JAGS.
+
+6
+00:00:22.260 --> 00:00:27.750
+Which stands for Just Another Gibbs
+Sampler written by Martyn Plummer.
+
+7
+00:00:27.750 --> 00:00:32.390
+The program is free and
+it runs on Mac OS, Windows and Linux.
+
+8
+00:00:33.710 --> 00:00:41.020
+Better yet, the program can be run using
+R from the RJAGS or R2JAGS packages.
+
+9
+00:00:42.060 --> 00:00:45.170
+In JAGS, we can specify models and
+
+10
+00:00:45.170 --> 00:00:49.200
+run MCMC samplers with
+just a few lines of code.
+
+11
+00:00:50.570 --> 00:00:56.540
+JAGS does the rest for us so we can focus
+more on the statistical modeling aspect,
+
+12
+00:00:56.540 --> 00:00:58.280
+and less on the implementation.
+
+13
+00:00:59.810 --> 00:01:03.830
+It makes powerful basin
+machinery available to us.
+
+14
+00:01:03.830 --> 00:01:10.470
+So, we consider] wide variety of
+statistical models relatively easily.
+
+15
+00:01:10.470 --> 00:01:15.988
+The starting place for
+JAGS users is this website,
+
+16
+00:01:15.988 --> 00:01:19.850
+mcmc.jags.sourceforge.net.
+
+17
+00:01:19.850 --> 00:01:25.661
+At this site, you can find news about the
+features of the latest release of JAGS,
+
+18
+00:01:25.661 --> 00:01:31.310
+links to program documentation,
+as well as instructions for installation.
+
+19
+00:01:32.510 --> 00:01:36.400
+The documentation for
+JAGS is particularly important to us.
+
+20
+00:01:37.840 --> 00:01:41.780
+It is available under
+the files page right here.
+
+21
+00:01:41.780 --> 00:01:49.867
+We'll open that up under
+the manuals folder.
+
+22
+00:01:49.867 --> 00:01:53.337
+We're going to use
+the latest version of JAGS,
+
+23
+00:01:53.337 --> 00:01:58.390
+we'll look at four here, and
+we'll download the Jags user manual.
+
+24
+00:01:59.750 --> 00:02:04.204
+We've already downloaded it, so
+let's take a look at the JAGS user manual.
+
+25
+00:02:07.939 --> 00:02:13.262
+The user manual has a lot of useful
+information including how to run models
+
+26
+00:02:16.276 --> 00:02:20.748
+Different modules available,
+the functions available to us in
+
+27
+00:02:20.748 --> 00:02:25.670
+the JAGS language as well as
+probability distributions.
+
+28
+00:02:25.670 --> 00:02:31.230
+Chapters 5 and 6 will be especially
+important to us, as we model.
+
+29
+00:02:31.230 --> 00:02:37.440
+Let's take a look at chapter
+6 in distributions, page 29.
+
+30
+00:02:37.440 --> 00:02:42.220
+This chapter documents
+all of the statistical
+
+31
+00:02:42.220 --> 00:02:45.070
+probability distributions
+that we can use in JAGS.
+
+32
+00:02:47.510 --> 00:02:53.550
+We will refer back to this often, because
+it shows us the functions that correspond
+
+33
+00:02:53.550 --> 00:02:57.290
+with the different distributions and
+how they're parameterized.
+
+34
+00:02:57.290 --> 00:03:00.330
+For example, notice that in jags,
+
+35
+00:03:00.330 --> 00:03:05.900
+the normal distribution is parameterized
+differently than in it is in R.
+
+36
+00:03:05.900 --> 00:03:09.082
+We need to keep that in
+mind while we're modeling.
+
+37
+00:03:11.901 --> 00:03:13.575
+Let's go back to the web page.
+
+38
+00:03:17.733 --> 00:03:19.370
+And start from the beginning again.
+
+39
+00:03:20.860 --> 00:03:23.640
+Under the files page, again down here.
+
+40
+00:03:25.340 --> 00:03:27.810
+We'll find the JAGS folder.
+
+41
+00:03:27.810 --> 00:03:29.660
+This is where we can download and
+
+42
+00:03:29.660 --> 00:03:33.430
+install the latest version of JAGS,
+in this case, four.
+
+43
+00:03:34.720 --> 00:03:38.260
+From here,
+you can select your operating system and
+
+44
+00:03:38.260 --> 00:03:41.650
+follow the directions to download and
+install JAGS.
+
+45
+00:03:43.260 --> 00:03:50.430
+Once JAGS is installed, we can immediately
+run it from R using the R JAGS package.
+
+46
+00:03:50.430 --> 00:03:52.790
+The next segment we'll
+show how this is done

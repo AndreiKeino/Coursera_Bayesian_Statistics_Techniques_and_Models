@@ -1,0 +1,684 @@
+WEBVTT
+
+1
+00:00:01.040 --> 00:00:06.260
+There are four steps to implementing
+a model in JAGS through R.
+
+2
+00:00:06.260 --> 00:00:09.410
+The first step is to specify the model.
+
+3
+00:00:09.410 --> 00:00:13.668
+The next step is to set up the model.
+
+4
+00:00:13.668 --> 00:00:18.337
+The third step is to run
+the MCMC sampler.A nd finally
+
+5
+00:00:18.337 --> 00:00:21.570
+the fourth step is post processing.
+
+6
+00:00:21.570 --> 00:00:24.555
+We'll demonstrate all four of these here.
+
+7
+00:00:24.555 --> 00:00:27.710
+Let's do this using our running example.
+
+8
+00:00:27.710 --> 00:00:32.533
+Where we have data representing
+the percentage change in
+
+9
+00:00:32.533 --> 00:00:37.765
+total personnel from last year
+to this year in ten companies.
+
+10
+00:00:37.765 --> 00:00:42.886
+In this model, we used a normal
+likelihood with a known fixed variance.
+
+11
+00:00:42.886 --> 00:00:47.640
+And a t distribution for
+the prior on the unknown mean.
+
+12
+00:00:47.640 --> 00:00:50.180
+The first step is to specify the model.
+
+13
+00:00:52.040 --> 00:00:56.511
+If we haven't done it already,
+we first need to load the rjags package.
+
+14
+00:01:03.019 --> 00:01:07.102
+This requires that rjags has
+previously been installed,
+
+15
+00:01:07.102 --> 00:01:10.360
+which you can do with this
+line of code up here.
+
+16
+00:01:12.190 --> 00:01:18.739
+Once the library is loaded, we specify
+the hierarchical structure of the model.
+
+17
+00:01:18.739 --> 00:01:23.566
+Let's remind ourselves what
+this model looks like.
+
+18
+00:01:23.566 --> 00:01:27.022
+We have a normal likelihood for the data,
+
+19
+00:01:27.022 --> 00:01:31.580
+which are independent,
+with mean mu and variance 1.
+
+20
+00:01:31.580 --> 00:01:35.850
+Our prior on the mean is a t
+distribution with location 0,
+
+21
+00:01:35.850 --> 00:01:39.574
+scale 1, and degrees of freedom 1.
+
+22
+00:01:40.880 --> 00:01:45.502
+We can write out the hierarchical
+form of the model into jags
+
+23
+00:01:45.502 --> 00:01:50.135
+through a variable that we're
+going to call mod_string.
+
+24
+00:01:53.960 --> 00:02:02.333
+This will be a model where we use curly
+braces to encapsulate the model itself.
+
+25
+00:02:02.333 --> 00:02:08.612
+And for the likelihood portion we're
+going to use a for loop, for in 1:n.
+
+26
+00:02:08.612 --> 00:02:13.999
+Suppose n is the length of our data,
+
+27
+00:02:13.999 --> 00:02:19.573
+inside this loop we'll say y[i].
+
+28
+00:02:19.573 --> 00:02:28.300
+The i observation follows
+a normal distribution.
+
+29
+00:02:29.560 --> 00:02:33.940
+The syntax for that in JAGS is dnorm,
+just like it is in R.
+
+30
+00:02:35.450 --> 00:02:42.720
+With mean mu and
+precision 1 divided by the variance.
+
+31
+00:02:45.020 --> 00:02:51.090
+This is how the normal distribution
+differs between JAGS and R.
+
+32
+00:02:52.980 --> 00:02:58.510
+In JAGS this is the precision which
+is the reciprocal of the variance.
+
+33
+00:03:02.352 --> 00:03:04.290
+That completes the likelihood.
+
+34
+00:03:04.290 --> 00:03:07.000
+So now let's put in the prior for mu.
+
+35
+00:03:08.060 --> 00:03:12.660
+Mu is going to follow a t distribution.
+
+36
+00:03:12.660 --> 00:03:15.050
+The density for that in JAGS is dt.
+
+37
+00:03:17.410 --> 00:03:20.450
+And just to be careful,
+let's check the user manual
+
+38
+00:03:22.290 --> 00:03:26.030
+to see how the T distribution
+is parametrized in JAGS.
+
+39
+00:03:27.530 --> 00:03:32.030
+The first argument it accepts is mu,
+which is the location parameter.
+
+40
+00:03:33.300 --> 00:03:36.056
+The second parameter it accepts is tau.
+
+41
+00:03:38.148 --> 00:03:41.894
+Here, if you were going to look
+at the T distribution in R,
+
+42
+00:03:41.894 --> 00:03:45.820
+you would notice this
+parameter is down here near k.
+
+43
+00:03:45.820 --> 00:03:47.440
+That would be the scale parameter.
+
+44
+00:03:48.460 --> 00:03:53.830
+This is 1 over the scale parameter or
+the inverse scale parameter.
+
+45
+00:03:55.100 --> 00:04:00.590
+Finally, k refers to the degrees
+of freedom in the t distribution.
+
+46
+00:04:00.590 --> 00:04:05.686
+So the three parameters we need
+
+47
+00:04:05.686 --> 00:04:11.762
+are location 0, inverse scale 1,
+
+48
+00:04:11.762 --> 00:04:16.670
+and degrees of freedom, 1.
+
+49
+00:04:16.670 --> 00:04:21.320
+The degrees of freedom is an integer so
+I'll leave it as an integer.
+
+50
+00:04:23.480 --> 00:04:29.055
+Remember that the only parameter we didn't
+know that we're trying to estimate is mu.
+
+51
+00:04:29.055 --> 00:04:32.700
+We are assuming we know sigma squared and
+that it's fixed.
+
+52
+00:04:32.700 --> 00:04:35.350
+So let's tell JAGS
+the value of sigma squared.
+
+53
+00:04:39.550 --> 00:04:43.023
+This completes our
+specification of the model.
+
+54
+00:04:43.023 --> 00:04:48.470
+JAGS requires that we write models
+as strings as we've indicated here.
+
+55
+00:04:48.470 --> 00:04:51.720
+So we need to put this model
+inside the quotation marks.
+
+56
+00:04:56.880 --> 00:04:59.310
+This is what a model looks like in JAGS.
+
+57
+00:05:01.860 --> 00:05:04.350
+The second step is to set up the model.
+
+58
+00:05:06.290 --> 00:05:07.590
+First, we'll enter the data.
+
+59
+00:05:09.840 --> 00:05:13.282
+And we'll save n as the length of y.
+
+60
+00:05:16.930 --> 00:05:19.353
+Before JAGS can run this model,
+
+61
+00:05:19.353 --> 00:05:24.037
+we need to tell it what the data are,
+what the parameters are.
+
+62
+00:05:24.037 --> 00:05:27.349
+And provide initial values for
+those parameters.
+
+63
+00:05:28.620 --> 00:05:34.832
+The data that we'll pass to JAGS,
+we'll call a variable data_jags.
+
+64
+00:05:34.832 --> 00:05:40.339
+It needs to be a list where we
+name the variables the same
+
+65
+00:05:40.339 --> 00:05:45.507
+name that we give them in
+the model specification.
+
+66
+00:05:45.507 --> 00:05:50.020
+So y is our data y.
+
+67
+00:05:51.934 --> 00:05:54.910
+And n is the n we just saved here.
+
+68
+00:05:56.814 --> 00:06:00.288
+We also need to tell JAGS
+what the parameters are.
+
+69
+00:06:00.288 --> 00:06:03.979
+We'll save that in
+a variable called params.
+
+70
+00:06:07.991 --> 00:06:10.990
+Our only parameter in this case is mu.
+
+71
+00:06:10.990 --> 00:06:14.340
+But if we wanted to add other
+parameters like the variance,
+
+72
+00:06:15.450 --> 00:06:18.100
+it could be placed in a vector like this.
+
+73
+00:06:18.100 --> 00:06:19.090
+But we're only using mu.
+
+74
+00:06:20.710 --> 00:06:25.100
+To give JAGS initial values,
+we need to write a function.
+
+75
+00:06:25.100 --> 00:06:26.995
+Let's call that function inits.
+
+76
+00:06:30.675 --> 00:06:33.550
+The function doesn't take any arguments.
+
+77
+00:06:33.550 --> 00:06:38.757
+But it creates a variable called inits and
+
+78
+00:06:38.757 --> 00:06:44.855
+places that into a list
+where we create a value for
+
+79
+00:06:44.855 --> 00:06:48.590
+each parameter in the model.
+
+80
+00:06:48.590 --> 00:06:52.712
+Our only parameter is mu,
+we put it quotation marks and
+
+81
+00:06:52.712 --> 00:06:55.840
+we provide an initial value.
+
+82
+00:06:55.840 --> 00:06:58.380
+Let's just use 0 as we did before.
+
+83
+00:07:00.075 --> 00:07:05.640
+There are actually multiple ways
+to specify initial values in JAGS.
+
+84
+00:07:05.640 --> 00:07:09.250
+They can be explicitly set
+at values you tell it,
+
+85
+00:07:09.250 --> 00:07:12.670
+like we've done here, or
+they could be random.
+
+86
+00:07:12.670 --> 00:07:15.830
+We could replace this number
+here with a function call
+
+87
+00:07:15.830 --> 00:07:18.610
+to generate a random initial value for mu.
+
+88
+00:07:19.680 --> 00:07:22.416
+Finally, we're going to
+compile the model itself.
+
+89
+00:07:25.559 --> 00:07:30.420
+Using the jags.model function
+from the rjags package.
+
+90
+00:07:32.865 --> 00:07:38.350
+The first argument for
+jags.model is that model string.
+
+91
+00:07:39.650 --> 00:07:42.558
+This is usually placed
+in a separate text file.
+
+92
+00:07:42.558 --> 00:07:47.330
+But because we're going to enter
+that directly into the R console.
+
+93
+00:07:47.330 --> 00:07:52.880
+Instead, we're going to
+create a text connection and
+
+94
+00:07:52.880 --> 00:07:55.660
+give it our model string.
+
+95
+00:07:55.660 --> 00:08:03.116
+The second argument is the data
+which we've called data_jags.
+
+96
+00:08:03.116 --> 00:08:05.830
+And next it'll take the initial values.
+
+97
+00:08:09.240 --> 00:08:13.550
+Before we run this let's set
+the random number generator seed
+
+98
+00:08:15.600 --> 00:08:17.550
+so that we can reproduce our results.
+
+99
+00:08:17.550 --> 00:08:19.410
+Let's use 50 there.
+
+100
+00:08:21.730 --> 00:08:25.060
+We haven't entered anything
+into the R console yet.
+
+101
+00:08:25.060 --> 00:08:28.000
+So let's go ahead and do that.
+
+102
+00:08:28.000 --> 00:08:29.890
+First the model string.
+
+103
+00:08:32.163 --> 00:08:37.120
+Then we'll set the seed and
+we'll enter all the model setup pieces.
+
+104
+00:08:39.551 --> 00:08:41.950
+Finally, let's assign the model.
+
+105
+00:08:43.710 --> 00:08:47.670
+Running jags.model will
+initialize the model which can
+
+106
+00:08:47.670 --> 00:08:49.200
+sometimes take a few moments.
+
+107
+00:08:50.840 --> 00:08:55.740
+We're now ready to take our next step
+which is to run the MCMC sampler.
+
+108
+00:08:57.120 --> 00:09:00.450
+There are two very important functions for
+this step.
+
+109
+00:09:00.450 --> 00:09:02.880
+The first function is the update function.
+
+110
+00:09:04.620 --> 00:09:10.320
+Where we give it the model and we tell it
+how many iterations we want it to update.
+
+111
+00:09:10.320 --> 00:09:12.110
+Let's say 500.
+
+112
+00:09:12.110 --> 00:09:17.450
+This function when we run it
+runs the MCMC sampler for
+
+113
+00:09:17.450 --> 00:09:22.610
+500 iterations without
+saving the samples anywhere.
+
+114
+00:09:22.610 --> 00:09:26.895
+This gives the Markov chain some time
+to find the stationary distribution.
+
+115
+00:09:30.695 --> 00:09:35.580
+The next function is
+the coda.samples function.
+
+116
+00:09:35.580 --> 00:09:40.230
+This is where we we'll simulate a Markov
+chain and keep our simulations.
+
+117
+00:09:43.685 --> 00:09:47.695
+Coda.samples function where
+we give it the model,
+
+118
+00:09:47.695 --> 00:09:51.440
+which is the mod that we
+initialized right here.
+
+119
+00:09:54.711 --> 00:10:03.440
+We need to tell it the variable names
+Which in our case we named params.
+
+120
+00:10:03.440 --> 00:10:06.490
+It was this variable up here.
+
+121
+00:10:09.300 --> 00:10:12.600
+We need to tell it how many
+MCMC iterations to run.
+
+122
+00:10:14.450 --> 00:10:17.741
+Let's do 1000.
+We will not provide initial values for
+
+123
+00:10:17.741 --> 00:10:23.660
+this run because this chain has already
+been running for 500 iterations.
+
+124
+00:10:24.960 --> 00:10:30.318
+This will simply continue where
+the chain left off when we last ran it.
+
+125
+00:10:30.318 --> 00:10:33.439
+Let's run this sampler for
+the thousand iterations.
+
+126
+00:10:36.857 --> 00:10:42.040
+The fourth and
+final step is post-processing.
+
+127
+00:10:42.040 --> 00:10:44.150
+We won't get into many details here, but
+
+128
+00:10:44.150 --> 00:10:47.430
+we will do lots of post-processing
+later in the course.
+
+129
+00:10:48.700 --> 00:10:52.940
+This is where we evaluate
+the Markov chains we've simulated
+
+130
+00:10:52.940 --> 00:10:55.680
+to determine if they're suitable for
+inference.
+
+131
+00:10:55.680 --> 00:10:57.500
+And then we can use them for inference.
+
+132
+00:10:58.690 --> 00:11:01.650
+The Coda package will be
+especially useful to us here.
+
+133
+00:11:03.220 --> 00:11:10.590
+Let's load the Coda package, and let's
+first look at a trace plot from our model.
+
+134
+00:11:15.816 --> 00:11:17.300
+Let's run the plot there.
+
+135
+00:11:18.750 --> 00:11:24.100
+And it gives us both a trace plot and
+a density estimate for mew.
+
+136
+00:11:24.100 --> 00:11:27.990
+So this is our posterior distribution for
+mu.
+
+137
+00:11:27.990 --> 00:11:30.690
+Similar to the one we obtained earlier,
+
+138
+00:11:30.690 --> 00:11:35.160
+using our random lock
+Metropolis-Hastings sampler.
+
+139
+00:11:35.160 --> 00:11:40.290
+We can also look at
+a summary from our model.
+
+140
+00:11:44.610 --> 00:11:49.215
+The summary tells us which iterations
+of the chain we're using and
+
+141
+00:11:49.215 --> 00:11:52.707
+gives us some other statistics
+related to our Markov chain.
+
+142
+00:11:53.870 --> 00:11:57.987
+It also gives us some information about
+the parameters we've been estimating,
+
+143
+00:11:57.987 --> 00:12:00.296
+that we've been simulating with the chain.
+
+144
+00:12:00.296 --> 00:12:04.315
+For example our estimated
+posterior mean for
+
+145
+00:12:04.315 --> 00:12:09.190
+mu is 0.91 with a standard
+deviation of 0.31.
+
+146
+00:12:09.190 --> 00:12:13.193
+We will discuss post
+processing further including
+
+147
+00:12:13.193 --> 00:12:16.830
+convergence diagnostics
+in a coming lesson.
