@@ -1,0 +1,265 @@
+WEBVTT
+
+1
+00:00:01.060 --> 00:00:04.239
+We have now proposed
+three different models.
+
+2
+00:00:04.239 --> 00:00:08.730
+How do we compare their
+performance on our data?
+
+3
+00:00:08.730 --> 00:00:13.190
+In the previous course,
+we discussed estimating parameters
+
+4
+00:00:13.190 --> 00:00:17.607
+in models using the maximum
+likelihood method.
+
+5
+00:00:17.607 --> 00:00:22.680
+We can choose between competing
+models using a similar idea.
+
+6
+00:00:23.700 --> 00:00:29.280
+We will use a quantity known as
+the deviance information criterion,
+
+7
+00:00:29.280 --> 00:00:35.940
+often referred to as the dic, which
+essentially calculates the postural mean
+
+8
+00:00:35.940 --> 00:00:41.400
+of the log likelihood and
+adds a penalty for model complexity.
+
+9
+00:00:41.400 --> 00:00:46.340
+Let's calculate the dic for
+our first two linear models.
+
+10
+00:00:46.340 --> 00:00:48.640
+The first one was our
+simple linear regression.
+
+11
+00:00:49.880 --> 00:00:56.801
+To calculate this,
+we'll use the dic.samples function,
+
+12
+00:00:56.801 --> 00:01:01.287
+and we give it our first model, mod1.
+
+13
+00:01:01.287 --> 00:01:04.680
+And these samples from
+a posterior distribution.
+
+14
+00:01:04.680 --> 00:01:09.720
+So we need to give it a specified number
+of iterations, and we can run it.
+
+15
+00:01:11.770 --> 00:01:17.735
+Before we interpret these results,
+let's also run the dic for
+
+16
+00:01:17.735 --> 00:01:24.250
+model 2 where we added oil as
+another explanatory variable.
+
+17
+00:01:24.250 --> 00:01:26.400
+Let's run those samples as well.
+
+18
+00:01:28.060 --> 00:01:33.280
+The first number in the output
+called mean deviance
+
+19
+00:01:33.280 --> 00:01:37.240
+is the Monte Carlo estimated
+posterior mean deviance.
+
+20
+00:01:38.530 --> 00:01:44.300
+Deviance equals negative 2 times
+the log likelihood plus a constant
+
+21
+00:01:44.300 --> 00:01:48.230
+that's irrelevant for comparing models,
+so we're not going to worry about it.
+
+22
+00:01:49.380 --> 00:01:52.190
+Because of that negative 2 factor,
+
+23
+00:01:52.190 --> 00:01:55.250
+a smaller deviance means
+a higher likelihood.
+
+24
+00:01:56.460 --> 00:02:02.790
+Next, we're given a penalty term for
+the complexity of our model.
+
+25
+00:02:02.790 --> 00:02:07.900
+This penalty is necessary, because we
+can always increase the likelihood
+
+26
+00:02:07.900 --> 00:02:13.430
+of the model by making it more
+complex to fit the data exactly.
+
+27
+00:02:13.430 --> 00:02:17.200
+We don't want to do this because
+models that are over fit
+
+28
+00:02:17.200 --> 00:02:19.190
+usually generalize poorly.
+
+29
+00:02:20.600 --> 00:02:25.390
+This penalty is roughly equal to
+the effective number of parameters
+
+30
+00:02:25.390 --> 00:02:26.700
+in your model.
+
+31
+00:02:26.700 --> 00:02:28.400
+You can see this here.
+
+32
+00:02:28.400 --> 00:02:33.840
+In the first model, we had a variance
+parameter and two coefficients for
+
+33
+00:02:33.840 --> 00:02:38.020
+a total of three parameters
+close to the 2.8 we got here.
+
+34
+00:02:39.030 --> 00:02:42.650
+In model 2, we added one more coefficient,
+
+35
+00:02:42.650 --> 00:02:46.540
+one more parameter than the previous
+model which we can see.
+
+36
+00:02:46.540 --> 00:02:50.590
+Reflected which we can see
+reflected in the penalty.
+
+37
+00:02:52.220 --> 00:02:55.980
+We add these two quantities,
+the mean deviance and
+
+38
+00:02:55.980 --> 00:03:01.431
+the penalty term to get the penalized
+deviance, the third term.
+
+39
+00:03:02.620 --> 00:03:06.199
+This is the estimated dic.
+
+40
+00:03:06.199 --> 00:03:09.600
+A better fitting model
+has a lower dic value.
+
+41
+00:03:10.790 --> 00:03:13.890
+In this case, the dic is lower for
+
+42
+00:03:13.890 --> 00:03:17.850
+the second model than it is for
+the first model.
+
+43
+00:03:17.850 --> 00:03:22.420
+So the dic would select
+model 2 over model 1.
+
+44
+00:03:24.580 --> 00:03:30.135
+The gains we receive in
+deviance by adding the is_oil
+
+45
+00:03:30.135 --> 00:03:36.400
+covariant outweigh the penalty for
+adding that extra parameter to our model.
+
+46
+00:03:36.400 --> 00:03:41.927
+The final dic calculation for
+the second model is lower than the first.
+
+47
+00:03:41.927 --> 00:03:46.209
+So we're going to prefer
+this second model.
+
+48
+00:03:46.209 --> 00:03:51.100
+We encourage you to explore
+different model specifications and
+
+49
+00:03:51.100 --> 00:03:54.415
+compare their fate to the data using dic.
+
+50
+00:03:54.415 --> 00:03:58.730
+Wikipedia has a good
+introduction to the to the dic.
+
+51
+00:03:58.730 --> 00:04:03.970
+And you can also find out more
+details about the jags implementation
+
+52
+00:04:03.970 --> 00:04:07.000
+through the r jags package documentation.
+
+53
+00:04:09.210 --> 00:04:16.120
+If we type in ?dic.samples,
+we can get that information.
+
+54
+00:04:18.170 --> 00:04:23.750
+You might want to try fitting
+the model 3 with the t likelihood.
+
+55
+00:04:23.750 --> 00:04:29.308
+Calculate its dic, to see how it
+compares with the other two models.

@@ -1,0 +1,552 @@
+WEBVTT
+
+1
+00:00:01.080 --> 00:00:05.060
+In the previous segment,
+we saw two outliers in the model
+
+2
+00:00:05.060 --> 00:00:08.600
+relating the log of infant
+mortality to the log of income.
+
+3
+00:00:09.990 --> 00:00:14.940
+Here, we're going to discuss the options
+available to you if you decide
+
+4
+00:00:14.940 --> 00:00:19.200
+that these outliers really
+do belong in the dataset.
+
+5
+00:00:19.200 --> 00:00:20.470
+You can't just delete them.
+
+6
+00:00:22.300 --> 00:00:26.380
+The first approach is to look for
+additional covariants or
+
+7
+00:00:26.380 --> 00:00:32.160
+explanatory variables that maybe
+able to explain the outliers.
+
+8
+00:00:32.160 --> 00:00:37.420
+For example, there could be a number of
+variables that provide information about
+
+9
+00:00:37.420 --> 00:00:42.890
+infant mortality above and beyond what
+income provides as an explanation.
+
+10
+00:00:44.630 --> 00:00:48.850
+Looking back at our data, there
+are two variables we haven't used yet.
+
+11
+00:00:48.850 --> 00:00:51.780
+The first one is region and
+the second is oil.
+
+12
+00:00:53.040 --> 00:00:58.830
+The oil variable indicates oil exporting
+countries, both Saudi Arabia and Libya
+
+13
+00:00:58.830 --> 00:01:03.680
+are oil exporting countries, so perhaps
+this might explain part of the anomaly.
+
+14
+00:01:04.820 --> 00:01:07.057
+We've already coded up and
+
+15
+00:01:07.057 --> 00:01:12.610
+run model 1 where log_income was
+the only explanatory variable.
+
+16
+00:01:14.590 --> 00:01:22.080
+Here now is model 2 where we include
+the indicator variable is oil, meaning
+
+17
+00:01:22.080 --> 00:01:28.070
+is this an oil exporting country along
+with a new coefficient for that term.
+
+18
+00:01:29.710 --> 00:01:34.070
+We've added that coefficient,
+as well, to our prior and
+
+19
+00:01:34.070 --> 00:01:38.090
+we've kept the same prior on
+our observation variance.
+
+20
+00:01:40.210 --> 00:01:45.990
+To run model 2, we need to modify
+the data that we send to the model
+
+21
+00:01:45.990 --> 00:01:51.030
+to include the is_oil indicator.
+
+22
+00:01:51.030 --> 00:01:55.910
+To create that indicator,
+we need to transform the original data,
+
+23
+00:01:55.910 --> 00:01:58.510
+which is in terms of yes and no.
+
+24
+00:02:00.340 --> 00:02:05.050
+We want ones to represent yes and
+zeroes to represent no.
+
+25
+00:02:05.050 --> 00:02:11.467
+So this says as.numeric turn the true or
+false statement into a number for
+
+26
+00:02:11.467 --> 00:02:16.190
+whether dat$oil is a yes.
+
+27
+00:02:18.060 --> 00:02:22.392
+If we run that,
+we get a set of 1's and 0's.
+
+28
+00:02:22.392 --> 00:02:26.570
+Here is the batch of oil
+exporting countries right here.
+
+29
+00:02:27.890 --> 00:02:30.870
+Everything else in the model
+setup is the same,
+
+30
+00:02:30.870 --> 00:02:35.870
+except now we're going to draw three
+initial values for our beta vector, and
+
+31
+00:02:35.870 --> 00:02:41.068
+we'll run mod2 with the new data and
+the new initial values.
+
+32
+00:02:41.068 --> 00:02:46.025
+We'll run 1,000 iterations of burn-in,
+
+33
+00:02:47.496 --> 00:02:50.140
+And run our samples to be saved.
+
+34
+00:02:51.490 --> 00:02:53.900
+Let's go ahead and run all of this code.
+
+35
+00:02:55.160 --> 00:03:04.986
+First, we'll run the rjags library,
+And then run model 2.
+
+36
+00:03:07.136 --> 00:03:09.078
+Every time you ran a new model,
+
+37
+00:03:09.078 --> 00:03:14.180
+you should always check the convergence
+diagnostics for the chain you just ran.
+
+38
+00:03:16.150 --> 00:03:20.070
+We're going to skip that in
+the interest of time here but
+
+39
+00:03:20.070 --> 00:03:22.790
+I will report that
+the chains look okay here.
+
+40
+00:03:24.080 --> 00:03:28.200
+Let's take a look at the posterior
+summary from our chains.
+
+41
+00:03:29.860 --> 00:03:33.400
+It looks like not much has
+changed since model 1.
+
+42
+00:03:33.400 --> 00:03:37.970
+The intercept is a similar number,
+the effect related to income
+
+43
+00:03:37.970 --> 00:03:43.230
+has not changed much, and
+we see a positive relationship
+
+44
+00:03:43.230 --> 00:03:46.950
+between oil production and
+the log of infant mortality.
+
+45
+00:03:48.520 --> 00:03:53.060
+Because this data are merely
+observational, we can't say
+
+46
+00:03:53.060 --> 00:03:57.446
+that oil production causes
+an increase in infant mortality,
+
+47
+00:03:57.446 --> 00:04:01.300
+indeed, that most certainly is not true.
+
+48
+00:04:01.300 --> 00:04:04.590
+We can say that they
+are positively correlated.
+
+49
+00:04:06.110 --> 00:04:08.460
+Now let's check the residuals.
+
+50
+00:04:11.636 --> 00:04:17.130
+We'll follow the same steps we did for
+model 1 where we create the design matrix.
+
+51
+00:04:17.130 --> 00:04:22.770
+We'll call it X2 in this case where
+we've now added the is_oil indicator.
+
+52
+00:04:24.340 --> 00:04:31.006
+So we'll run that line and
+take a look at the top of X2.
+
+53
+00:04:31.006 --> 00:04:36.143
+So now we have a third column for
+the oil indicator.
+
+54
+00:04:36.143 --> 00:04:41.376
+We'll collect our posterior means for
+the parameters,
+
+55
+00:04:41.376 --> 00:04:47.272
+as well as the predicted values
+based on those posterior means.
+
+56
+00:04:48.973 --> 00:04:54.476
+And finally, we'll calculate the residuals
+as the difference between the value and
+
+57
+00:04:54.476 --> 00:04:55.632
+the prediction.
+
+58
+00:04:57.602 --> 00:04:59.480
+Now let's look at the residuals.
+
+59
+00:05:01.290 --> 00:05:05.420
+We also want to compare these residuals
+to the residuals from model 1.
+
+60
+00:05:05.420 --> 00:05:11.808
+So let's put both of these plots
+on the same screen with par(mfrow.
+
+61
+00:05:14.267 --> 00:05:17.914
+We want two rows of plots and
+one column of plots.
+
+62
+00:05:20.609 --> 00:05:25.547
+Start an empty plot and we'll fill
+it first with the residuals from
+
+63
+00:05:25.547 --> 00:05:29.699
+the new model and
+then the residuals from the old model.
+
+64
+00:05:31.991 --> 00:05:35.310
+It looks like we do have an improvement.
+
+65
+00:05:35.310 --> 00:05:40.216
+The residuals in the new model
+are closer to the bulk of the data than
+
+66
+00:05:40.216 --> 00:05:45.480
+the residuals were in the old model,
+where they are much further away.
+
+67
+00:05:50.208 --> 00:05:56.432
+The standard deviation of the residuals
+in the second model here is 0.64.
+
+68
+00:05:58.243 --> 00:06:03.868
+The strongest outlier up here is
+more than 2 away from the mean,
+
+69
+00:06:03.868 --> 00:06:08.557
+which means it's more then
+3 standard deviations,
+
+70
+00:06:08.557 --> 00:06:11.990
+3 times 0.64 away from the mean.
+
+71
+00:06:11.990 --> 00:06:17.360
+So three standard deviations is
+still quite an extreme outlier.
+
+72
+00:06:17.360 --> 00:06:22.089
+So although we've seen improvement,
+these outliers are pretty far away still.
+
+73
+00:06:23.716 --> 00:06:28.509
+We might consider adding the other
+covariant region, but instead,
+
+74
+00:06:28.509 --> 00:06:33.397
+let's look at another option when
+we are faced with strong outliers.
+
+75
+00:06:35.074 --> 00:06:39.740
+That option is to change the distribution
+we use for the likelihood.
+
+76
+00:06:41.680 --> 00:06:47.540
+The normal distribution or
+the normal likelihood has thin tails.
+
+77
+00:06:47.540 --> 00:06:52.130
+Almost all of the probability in
+a normal distribution is concentrated
+
+78
+00:06:52.130 --> 00:06:55.050
+within the first few standard
+deviations of the mean.
+
+79
+00:06:56.100 --> 00:06:58.580
+This does not accommodate outliers well.
+
+80
+00:06:59.970 --> 00:07:04.929
+Consequently, models with a normal
+likelihood might be overly influenced
+
+81
+00:07:04.929 --> 00:07:05.861
+by outliers.
+
+82
+00:07:08.277 --> 00:07:12.960
+Remember the t distribution is
+similar to the normal distribution.
+
+83
+00:07:14.100 --> 00:07:18.290
+Here's a plot with the pdf
+of the normal in black and
+
+84
+00:07:18.290 --> 00:07:22.850
+the pdf of a t distribution with
+one degree of freedom in red.
+
+85
+00:07:24.440 --> 00:07:29.220
+The t distribution is similar
+to the normal distribution but
+
+86
+00:07:29.220 --> 00:07:33.370
+it has thicker tails, which
+are better at accommodating outliers.
+
+87
+00:07:35.140 --> 00:07:40.404
+The t model might look
+something like this.
+
+88
+00:07:40.404 --> 00:07:43.610
+We're not going to run this model but
+we're going to step through it and
+
+89
+00:07:43.610 --> 00:07:44.850
+talk about it a little bit.
+
+90
+00:07:46.200 --> 00:07:51.490
+Notice that the t distribution,
+which we're using as our likelihood here,
+
+91
+00:07:51.490 --> 00:07:52.980
+has three parameters.
+
+92
+00:07:52.980 --> 00:07:58.088
+A location, in JAGS,
+tau is an inverse scale parameter and
+
+93
+00:07:58.088 --> 00:08:00.960
+a degrees of freedom parameter.
+
+94
+00:08:02.780 --> 00:08:08.040
+The smaller the degrees of freedom, the
+heavier the tails of the t distribution.
+
+95
+00:08:09.110 --> 00:08:14.209
+We might fix the degrees of freedom to
+some number like we did in this plot or
+
+96
+00:08:14.209 --> 00:08:19.166
+we can assign it a prior distribution,
+that's what we've done here.
+
+97
+00:08:21.149 --> 00:08:23.894
+The degrees of freedom has
+to be a positive number, so
+
+98
+00:08:23.894 --> 00:08:25.853
+we'll give it an exponential prior.
+
+99
+00:08:27.757 --> 00:08:30.676
+The inverse scale, or the tau parameter,
+
+100
+00:08:30.676 --> 00:08:35.870
+behaves similarly to the precision
+parameter in the normal model.
+
+101
+00:08:35.870 --> 00:08:41.080
+It is not exactly the same as
+the precision parameter but it's close,
+
+102
+00:08:41.080 --> 00:08:45.509
+so we'll give it the same dgamma
+prior that we used before.
+
+103
+00:08:49.137 --> 00:08:53.409
+The inverse scale is related
+to the standard deviation of
+
+104
+00:08:53.409 --> 00:08:55.990
+the errors by this equation here.
+
+105
+00:08:57.700 --> 00:09:02.413
+Finally, we're going to relate
+the location parameter with our
+
+106
+00:09:02.413 --> 00:09:04.648
+linear model form right here.
+
+107
+00:09:06.355 --> 00:09:13.061
+As a side note, we should aware that the t
+
+108
+00:09:13.061 --> 00:09:19.178
+distribution does not have a mean and
+
+109
+00:09:19.178 --> 00:09:23.715
+a variance if the degrees of
+
+110
+00:09:23.715 --> 00:09:28.071
+freedom is less than two.
+
+111
+00:09:28.071 --> 00:09:31.480
+That can happen under this model.
+
+112
+00:09:31.480 --> 00:09:37.320
+If we wanted to force the model, the
+likelihood, to have a mean and a variance,
+
+113
+00:09:37.320 --> 00:09:42.970
+we could increase the degrees of freedom
+by two by adding a new variable.
+
+114
+00:09:42.970 --> 00:09:49.970
+Let's call it nu and then the degrees
+of freedom would simply be nu + 2.0.
+
+115
+00:09:49.970 --> 00:09:54.292
+This would guarantee that the degrees
+of freedom is greater than two.
+
+116
+00:09:56.404 --> 00:09:59.730
+Again, we're not going to fit this model,
+we'll leave it up to you.

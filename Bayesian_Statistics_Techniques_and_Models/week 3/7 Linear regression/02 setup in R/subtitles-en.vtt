@@ -1,0 +1,524 @@
+WEBVTT
+
+1
+00:00:01.000 --> 00:00:03.500
+As an example of linear regression,
+
+2
+00:00:03.500 --> 00:00:07.940
+we'll look at the line heart
+data from the car package in R.
+
+3
+00:00:07.940 --> 00:00:13.860
+Let's first load this package,
+library("car").
+
+4
+00:00:13.860 --> 00:00:17.990
+And to access a data set
+that comes with a package,
+
+5
+00:00:17.990 --> 00:00:21.732
+we could use the data function and
+tell it which data set we want.
+
+6
+00:00:23.690 --> 00:00:28.980
+It's the Leinhardt data set and
+before we look at the data,
+
+7
+00:00:28.980 --> 00:00:32.220
+let's learn a little bit about
+it from the documentation.
+
+8
+00:00:33.240 --> 00:00:35.660
+Through question mark Leinhardt,
+
+9
+00:00:37.560 --> 00:00:41.698
+if we run that line of code it brings up
+the documentation page for these data.
+
+10
+00:00:41.698 --> 00:00:48.191
+The leinhardt dataset contains
+data on infant mortality for
+
+11
+00:00:48.191 --> 00:00:54.055
+105 nations of the world
+around the year 1970.
+
+12
+00:00:54.055 --> 00:01:00.570
+It contains four variables per
+capita income in US dollars.
+
+13
+00:01:00.570 --> 00:01:04.600
+Infant mortality rate
+per 1,000 live births.
+
+14
+00:01:04.600 --> 00:01:07.890
+A factor, or categorical variable
+
+15
+00:01:07.890 --> 00:01:12.290
+indicating which region of
+the world this country is located.
+
+16
+00:01:12.290 --> 00:01:16.820
+And finally, whether this country
+exports oil as an indicator variable.
+
+17
+00:01:18.230 --> 00:01:20.901
+If we want to learn more
+about the data set,
+
+18
+00:01:20.901 --> 00:01:24.775
+we can also look to these
+different sources were references.
+
+19
+00:01:27.239 --> 00:01:32.110
+Now that we know a little bit about
+these data set, let's explore it.
+
+20
+00:01:32.110 --> 00:01:35.500
+First, I'm going to look at
+the head of the data set.
+
+21
+00:01:37.300 --> 00:01:43.010
+The first few lines were we see these
+four different variables, income,
+
+22
+00:01:43.010 --> 00:01:48.150
+infant mortality rate, region, and
+whether the country exports oil.
+
+23
+00:01:49.330 --> 00:01:51.830
+For the first several
+countries in this data set.
+
+24
+00:01:53.030 --> 00:01:55.470
+We can also look at
+the structure of the data set,
+
+25
+00:01:55.470 --> 00:01:58.430
+to see what types of
+variables these all are.
+
+26
+00:01:58.430 --> 00:02:04.903
+str(Leinhardt) And
+
+27
+00:02:04.903 --> 00:02:08.830
+here we can see that income
+is an integer variable.
+
+28
+00:02:08.830 --> 00:02:13.100
+Infant is numeric or
+floating-point numeric.
+
+29
+00:02:13.100 --> 00:02:18.150
+Region is a factor or
+a categorical variable with four levels.
+
+30
+00:02:18.150 --> 00:02:22.279
+And oil is a factor variable
+with two levels, no and yes.
+
+31
+00:02:25.230 --> 00:02:30.146
+To investigate the marginal
+relationships between each of these
+
+32
+00:02:30.146 --> 00:02:36.150
+four variables, we can plot each
+of the scatter plots using pairs.
+
+33
+00:02:36.150 --> 00:02:41.370
+So we say pairs(Leinhardt)
+
+34
+00:02:41.370 --> 00:02:45.110
+which creates scatter plots for
+every pair of variables together.
+
+35
+00:02:46.140 --> 00:02:51.680
+For example, this plot is the scatter
+plot between infant mortality rate and
+
+36
+00:02:51.680 --> 00:02:57.850
+income where infant mortality rate is on
+the X axis and income is on the Y axis.
+
+37
+00:02:59.100 --> 00:03:01.500
+The same goes for categorical variables.
+
+38
+00:03:03.140 --> 00:03:06.842
+And you can see that there are two
+versions of the same plot,
+
+39
+00:03:06.842 --> 00:03:09.299
+this one is between infant and income.
+
+40
+00:03:09.299 --> 00:03:13.610
+And this one is also between infant and
+income with the axis reversed.
+
+41
+00:03:15.040 --> 00:03:19.810
+Instead of modeling all these variables
+at once, let's start with a simple linear
+
+42
+00:03:19.810 --> 00:03:26.370
+regression model that relates infant
+mortality to per capita income.
+
+43
+00:03:26.370 --> 00:03:28.000
+So let's do a plot for that one as well.
+
+44
+00:03:29.130 --> 00:03:34.306
+We're going to plot
+infant mortality against
+
+45
+00:03:34.306 --> 00:03:38.825
+income where our data set is Leinhardt.
+
+46
+00:03:47.199 --> 00:03:52.275
+As you look at this scatter plot,
+you might be asking yourself, is a linear
+
+47
+00:03:52.275 --> 00:03:58.600
+model actually appropriate here as a model
+between income and infant mortality?
+
+48
+00:03:58.600 --> 00:04:00.990
+This relationship certainly
+doesn't look linear.
+
+49
+00:04:02.380 --> 00:04:07.640
+In fact, both of these variables
+are extremely right skewed,
+
+50
+00:04:07.640 --> 00:04:11.100
+to see that let's look at a histogram
+of each one individually.
+
+51
+00:04:11.100 --> 00:04:13.534
+We'll do a hist of the infant variable.
+
+52
+00:04:17.651 --> 00:04:20.777
+And immediately you can see
+how right skewed it is.
+
+53
+00:04:23.529 --> 00:04:25.737
+And now let's look at a histogram.
+
+54
+00:04:27.529 --> 00:04:28.862
+For income.
+
+55
+00:04:31.198 --> 00:04:33.193
+Again, that one is very right-skewed.
+
+56
+00:04:33.193 --> 00:04:38.398
+Most values are very small, and
+then they scatter across large values.
+
+57
+00:04:42.313 --> 00:04:44.340
+The short answer is no.
+
+58
+00:04:44.340 --> 00:04:48.140
+A linear regression is not appropriate for
+these variables.
+
+59
+00:04:48.140 --> 00:04:52.990
+However, we did notice that these
+variables are positive valued and
+
+60
+00:04:52.990 --> 00:04:56.040
+very strongly right skewed.
+
+61
+00:04:56.040 --> 00:05:00.610
+That's a hint that we could try
+looking at this on the log scale.
+
+62
+00:05:01.990 --> 00:05:07.660
+So let's recreate these plots now
+with variables that are transformed.
+
+63
+00:05:07.660 --> 00:05:10.380
+So let's look at Leinhardt and
+
+64
+00:05:10.380 --> 00:05:14.230
+we're going to save a new variable,
+let's call it logInfant.
+
+65
+00:05:16.250 --> 00:05:23.840
+It's going to be the log of
+Leinhardt infant mortality rate.
+
+66
+00:05:23.840 --> 00:05:28.829
+We'll run that and let's create another
+variable that's just like it for
+
+67
+00:05:28.829 --> 00:05:30.345
+the income variable.
+
+68
+00:05:35.832 --> 00:05:36.620
+And we'll run that.
+
+69
+00:05:38.280 --> 00:05:43.470
+Now let's look at the relationship
+between logincome and loginfant.
+
+70
+00:05:45.380 --> 00:05:49.826
+We'll plot loginfant against logincome.
+
+71
+00:05:52.898 --> 00:05:55.405
+Where the data are still Leinhardt.
+
+72
+00:06:02.786 --> 00:06:07.202
+I would say that a linear model is
+much more appropriate choice now.
+
+73
+00:06:07.202 --> 00:06:10.274
+You can imagine fitting a line
+through these data points.
+
+74
+00:06:18.029 --> 00:06:20.740
+Let's start a new section and
+call it modelling.
+
+75
+00:06:23.590 --> 00:06:29.120
+Remember that the reference Bayesian
+analysis with the non-informative prior or
+
+76
+00:06:29.120 --> 00:06:33.500
+a flat prior on the coefficient
+in the linear model
+
+77
+00:06:33.500 --> 00:06:36.690
+is available directly in
+R using the LM function.
+
+78
+00:06:38.540 --> 00:06:42.954
+Let's fit one of those and
+call it L-mod for linear model.
+
+79
+00:06:42.954 --> 00:06:47.649
+LM where we used the same
+syntaxes we did to plot these
+
+80
+00:06:47.649 --> 00:06:52.570
+variablesw loginfont will
+be our response variable.
+
+81
+00:06:54.810 --> 00:06:59.240
+Against logincome,
+where the data is Leinhardt.
+
+82
+00:07:01.790 --> 00:07:07.186
+We can run this linear model and
+look at a summary of the results.
+
+83
+00:07:11.954 --> 00:07:15.948
+Under our non-informative flat prior,
+here are the estimates,
+
+84
+00:07:15.948 --> 00:07:19.169
+the posterior mean estimates for
+the coefficients.
+
+85
+00:07:20.560 --> 00:07:25.320
+These estimates are very large
+relative to their standard error, or
+
+86
+00:07:25.320 --> 00:07:29.900
+in this case, standard deviation
+of the posterior distribution.
+
+87
+00:07:31.500 --> 00:07:34.720
+And so they appear to be very
+statistically significant.
+
+88
+00:07:36.620 --> 00:07:41.150
+Residual standard error gives us
+an estimate of the left over variance
+
+89
+00:07:41.150 --> 00:07:42.320
+after fitting the model.
+
+90
+00:07:44.590 --> 00:07:49.440
+The r squared statistics tell
+us how much of the variability
+
+91
+00:07:49.440 --> 00:07:53.290
+is explained by the linear model,
+in this case about half.
+
+92
+00:07:55.020 --> 00:07:58.130
+Also, don't miss this crucial line.
+
+93
+00:07:58.130 --> 00:08:02.450
+It tells us that four of the observations
+in the dataset were deleted.
+
+94
+00:08:02.450 --> 00:08:07.060
+They were not used in the model
+because they contained missing values.
+
+95
+00:08:08.350 --> 00:08:12.170
+There are statistical methods for
+dealing with missing values, but
+
+96
+00:08:12.170 --> 00:08:14.970
+we're not going to discuss
+them in this course.
+
+97
+00:08:14.970 --> 00:08:19.980
+So we're going to follow the example of
+the linear model function and we're going
+
+98
+00:08:19.980 --> 00:08:25.229
+to delete the observations that have
+missing values before we perform analysis.
+
+99
+00:08:26.760 --> 00:08:30.690
+So, what we can do here
+is save a new data set.
+
+100
+00:08:30.690 --> 00:08:33.640
+We'll cal it dav, and
+
+101
+00:08:33.640 --> 00:08:39.940
+it will come from the data set
+Leinhardt where we omit missing values.
+
+102
+00:08:39.940 --> 00:08:45.890
+To do this in R we use na.omit and
+we give it the data set.
+
+103
+00:08:50.550 --> 00:08:53.720
+Let's look at the original
+dataset really fast just so
+
+104
+00:08:53.720 --> 00:08:57.860
+we can see which countries
+it was that we omitted.
+
+105
+00:08:57.860 --> 00:09:01.870
+If we run Leinhardt
+
+106
+00:09:05.550 --> 00:09:08.420
+we see that there are missing values for
+Nepal.
+
+107
+00:09:10.040 --> 00:09:12.235
+There are missing values for Laos.
+
+108
+00:09:14.532 --> 00:09:15.663
+For Haiti.
+
+109
+00:09:19.407 --> 00:09:20.943
+And for Iran.
+
+110
+00:09:20.943 --> 00:09:24.772
+Those four countries will not
+be included in our analysis.

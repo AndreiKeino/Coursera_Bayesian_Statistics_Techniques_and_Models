@@ -1,0 +1,947 @@
+WEBVTT
+
+1
+00:00:00.820 --> 00:00:05.815
+In the last two lessons we've demonstrated
+ways you can simulate a Markov chain
+
+2
+00:00:05.815 --> 00:00:10.770
+whose stationary distribution
+is the target distribution.
+
+3
+00:00:10.770 --> 00:00:14.730
+Usually our target distribution
+is the posterior distribution for
+
+4
+00:00:14.730 --> 00:00:16.990
+the parameters we are trying to estimate.
+
+5
+00:00:18.250 --> 00:00:23.770
+Before using simulated chains
+to obtain Monte Carlo estimates,
+
+6
+00:00:23.770 --> 00:00:26.440
+we should first ask ourselves
+the following question.
+
+7
+00:00:27.520 --> 00:00:32.550
+Has our simulated Markov chain converged
+to its stationary distribution yet?
+
+8
+00:00:34.100 --> 00:00:37.870
+Unfortunately this is
+a difficult question to answer.
+
+9
+00:00:37.870 --> 00:00:40.450
+But we can do several
+things to investigate.
+
+10
+00:00:42.650 --> 00:00:46.990
+Throughout this lesson we're going
+to focus less on the code and
+
+11
+00:00:46.990 --> 00:00:47.870
+more on the plots.
+
+12
+00:00:49.530 --> 00:00:53.580
+Our first visual tool for
+assessing chains and
+
+13
+00:00:53.580 --> 00:00:57.840
+one that you've already seen in
+previous examples is the trace plot.
+
+14
+00:00:58.840 --> 00:01:00.700
+Here's an example of a trace plot.
+
+15
+00:01:02.020 --> 00:01:06.350
+A trace plot shows the history
+of a parameter value across
+
+16
+00:01:06.350 --> 00:01:08.320
+iterations of the chain.
+
+17
+00:01:08.320 --> 00:01:12.020
+Here we have iterations across the x-axis.
+
+18
+00:01:12.020 --> 00:01:15.440
+It shows you precisely where
+the chain has been exploring.
+
+19
+00:01:16.680 --> 00:01:20.400
+First, let's talk about what
+a chain should look like.
+
+20
+00:01:20.400 --> 00:01:24.640
+Here is an example of a chain
+that has most likely converged.
+
+21
+00:01:26.660 --> 00:01:32.460
+If the chain is stationary, it should
+not be showing any long-term trends.
+
+22
+00:01:32.460 --> 00:01:36.840
+The average value for the chain,
+should be roughly flat.
+
+23
+00:01:36.840 --> 00:01:40.400
+And it should not be wondering,
+as we will show in the next example.
+
+24
+00:01:41.590 --> 00:01:46.350
+It appears that this trace plot
+is tracing the same distribution.
+
+25
+00:01:46.350 --> 00:01:50.546
+It looks like it's approximately
+a normal distribution, across iterations
+
+26
+00:01:55.041 --> 00:01:58.245
+Let's look at an example of
+a chain that is wandering.
+
+27
+00:02:03.955 --> 00:02:09.719
+In this example, the step size of
+the random walk sampler is too small,
+
+28
+00:02:09.719 --> 00:02:16.370
+and so it take many iterations for the
+chain to traverse across the distribution.
+
+29
+00:02:17.470 --> 00:02:20.210
+We're seeing long term trends here.
+
+30
+00:02:20.210 --> 00:02:21.420
+For example,
+
+31
+00:02:21.420 --> 00:02:26.890
+if we were going to estimate the mean
+using only the first 200 iterations.
+
+32
+00:02:26.890 --> 00:02:30.606
+We would get a very different
+answer than if we were to estimate
+
+33
+00:02:30.606 --> 00:02:33.687
+the mean using iterations 600 through 800.
+
+34
+00:02:38.076 --> 00:02:41.351
+If this is the case,
+you will need to run the chain for
+
+35
+00:02:41.351 --> 00:02:44.117
+many, many more iterations as we see here.
+
+36
+00:02:48.285 --> 00:02:52.948
+It turns out, this is the exact
+same chain that we were just
+
+37
+00:02:52.948 --> 00:02:57.550
+looking at except it's on
+a much larger time scale.
+
+38
+00:02:57.550 --> 00:03:02.660
+Instead of a few hundred iterations, we
+are looking at about 100,000 iterations.
+
+39
+00:03:05.150 --> 00:03:08.483
+On this larger time scale it
+appears that we have converged.
+
+40
+00:03:13.929 --> 00:03:18.435
+One major difference between
+the two chains we've looked at is
+
+41
+00:03:18.435 --> 00:03:21.250
+the level of autocorrelation in each.
+
+42
+00:03:22.370 --> 00:03:25.730
+Autocorrelation is a number
+between negative 1 and
+
+43
+00:03:25.730 --> 00:03:30.830
+positive 1 which measures
+how linearly dependent
+
+44
+00:03:30.830 --> 00:03:37.050
+the current value of the chain
+is to past values called lags.
+
+45
+00:03:37.050 --> 00:03:42.080
+We will provide more details about auto
+correlation in a supplementary document.
+
+46
+00:03:43.830 --> 00:03:48.738
+We can see and inspect auto correlation
+using the auto correlation plot
+
+47
+00:03:48.738 --> 00:03:52.925
+in the CODA package, so
+let's first load the CODA package.
+
+48
+00:03:59.260 --> 00:04:02.026
+And to look at the auto correlation plot,
+
+49
+00:04:02.026 --> 00:04:05.430
+we're going to use
+the autocorr.plot function.
+
+50
+00:04:08.050 --> 00:04:12.636
+Let's look first at the auto correlation
+in our good example that had converged.
+
+51
+00:04:20.749 --> 00:04:26.790
+This diagnostic calculates the
+autocorrelation against different logs.
+
+52
+00:04:26.790 --> 00:04:29.570
+For example, at the 0th lag,
+
+53
+00:04:29.570 --> 00:04:33.880
+a value in the chain has perfect
+autocorrelation with itself.
+
+54
+00:04:33.880 --> 00:04:35.020
+A correlation of 1.
+
+55
+00:04:36.230 --> 00:04:38.010
+With the first lag,
+
+56
+00:04:38.010 --> 00:04:42.640
+a value of the chain has a correlation
+a little higher than 0.5.
+
+57
+00:04:42.640 --> 00:04:47.390
+And as we go further along the chain,
+the values become less correlated.
+
+58
+00:04:49.300 --> 00:04:56.713
+We can also look at the values of the auto
+correlation themselves with autocorr.diag.
+
+59
+00:05:01.961 --> 00:05:05.160
+We run that and we look at those values.
+
+60
+00:05:05.160 --> 00:05:11.474
+So associated with lag 1 we have
+an autocorrelation of about 0.61.
+
+61
+00:05:13.230 --> 00:05:19.520
+Now let's look at the auto correlation
+in the example where the chain
+
+62
+00:05:19.520 --> 00:05:24.280
+had too small of a step size and run that.
+
+63
+00:05:29.950 --> 00:05:35.560
+Here we can see some pretty extreme auto
+correlation persisting for many lags.
+
+64
+00:05:35.560 --> 00:05:37.870
+Even out past 30 lags,
+
+65
+00:05:37.870 --> 00:05:42.900
+we have auto-correlation which
+appears to be higher than 0.5.
+
+66
+00:05:42.900 --> 00:05:47.940
+That is, a value in the chain has
+a higher than a 0.5 correlation
+
+67
+00:05:47.940 --> 00:05:51.360
+with a value 30 steps behind it.
+
+68
+00:05:53.190 --> 00:05:55.950
+Auto correlation is important
+
+69
+00:05:55.950 --> 00:06:01.560
+because it tells us how much information
+is available in the Markov chain.
+
+70
+00:06:01.560 --> 00:06:07.200
+Sampling 1000 iterations from
+a highly correlated Markov chain
+
+71
+00:06:07.200 --> 00:06:12.490
+yields less information about
+the stationary distribution than we would
+
+72
+00:06:12.490 --> 00:06:18.530
+obtain from 1,000 samples independently
+drawn from the stationary distribution.
+
+73
+00:06:20.310 --> 00:06:22.490
+To illustrate this phenomenon,
+
+74
+00:06:22.490 --> 00:06:27.260
+let's pretend you want to find
+the most popular movie in your town.
+
+75
+00:06:28.720 --> 00:06:36.282
+Would you get more information if you a,
+randomly sampled 20 people from the town,
+
+76
+00:06:36.282 --> 00:06:41.126
+or b, if you conveniently
+asked 20 of your friends.
+
+77
+00:06:41.126 --> 00:06:46.194
+Chances are that your 20 friends'
+movie preferences are correlated,
+
+78
+00:06:46.194 --> 00:06:49.310
+because they might have similar interests.
+
+79
+00:06:50.420 --> 00:06:53.830
+If you conducted such
+a convenient sampling scheme,
+
+80
+00:06:53.830 --> 00:06:57.590
+you would probably have to
+sample many more opinions.
+
+81
+00:06:57.590 --> 00:07:01.080
+To get the same quality
+of information available
+
+82
+00:07:01.080 --> 00:07:04.620
+from a truly random sample
+of 20 people in the town.
+
+83
+00:07:06.700 --> 00:07:11.170
+Auotcorrelation is a major component
+in calculating Monte Carlo
+
+84
+00:07:11.170 --> 00:07:14.640
+effective sample size in your chain.
+
+85
+00:07:14.640 --> 00:07:17.370
+The Monte Carlo effective sample size
+
+86
+00:07:17.370 --> 00:07:22.500
+is how many independent samples from the
+stationary distribution you would have,
+
+87
+00:07:22.500 --> 00:07:27.850
+you would have to draw to have equivalent
+information in your Markov chain.
+
+88
+00:07:27.850 --> 00:07:33.240
+Essentially it is the sample size that
+we chose for our Monte Carlo estimation.
+
+89
+00:07:34.770 --> 00:07:38.720
+Let's look again at this chain that
+has really high autocorrelation.
+
+90
+00:07:39.790 --> 00:07:41.512
+First let's look at
+the structure of the object.
+
+91
+00:07:46.821 --> 00:07:51.765
+We had a very high candidate acceptance
+rate because it took many steps to
+
+92
+00:07:51.765 --> 00:07:53.800
+go across the distribution.
+
+93
+00:07:55.100 --> 00:07:57.440
+And we had 100,000 samples.
+
+94
+00:07:58.880 --> 00:08:03.870
+Now let's calculate the effective
+sample size of this chain.
+
+95
+00:08:03.870 --> 00:08:08.351
+The effective sample size
+function is in the coda package,
+
+96
+00:08:08.351 --> 00:08:11.678
+and the function is called Effective Size.
+
+97
+00:08:14.513 --> 00:08:16.525
+We need to give it a mcmc object.
+
+98
+00:08:22.889 --> 00:08:25.930
+And this is a pretty dramatic difference.
+
+99
+00:08:25.930 --> 00:08:29.929
+Although we simulated a 100,000 samples,
+
+100
+00:08:29.929 --> 00:08:35.702
+the effective sample size of this
+chain Is only 373, approximately.
+
+101
+00:08:35.702 --> 00:08:40.452
+Let's look at a long range
+autocorrelation plot,
+
+102
+00:08:46.312 --> 00:08:52.630
+Of the chain with a 100,000 samples,
+at a really long lag.
+
+103
+00:08:54.950 --> 00:08:56.331
+Let's go out to 500 lags.
+
+104
+00:09:01.940 --> 00:09:07.796
+This plot shows us that you have to go
+all the way out to about 400 lags or
+
+105
+00:09:07.796 --> 00:09:13.318
+even further than 400 lags before
+auto correlation drops to 0.
+
+106
+00:09:13.318 --> 00:09:18.340
+In other words, values in the chain
+have to be about 400 steps
+
+107
+00:09:18.340 --> 00:09:24.777
+apart from each other before there are no
+longer autocorrelated with each other.
+
+108
+00:09:24.777 --> 00:09:29.430
+What would happen then if we kept
+only 1 out of every 400 iterations.
+
+109
+00:09:29.430 --> 00:09:31.589
+Let's do this.
+
+110
+00:09:33.610 --> 00:09:41.100
+We'll create a thin interval of 400, run
+that and we're going to create an index.
+
+111
+00:09:43.760 --> 00:09:49.606
+It'll be a sequence, starting at 400,
+
+112
+00:09:49.606 --> 00:09:53.240
+going to 100,000.
+
+113
+00:09:53.240 --> 00:09:56.870
+And we'll keep every 400th number.
+
+114
+00:09:58.550 --> 00:10:00.861
+Let's take a look at what
+this thin index gave us.
+
+115
+00:10:04.773 --> 00:10:07.903
+This giveS us the address of each
+sample that we're going to keep
+
+116
+00:10:12.021 --> 00:10:16.010
+To remind ourselves let's create
+a traceplot of the original chain.
+
+117
+00:10:22.552 --> 00:10:26.438
+And we're actually going to want to
+do two plots in the same plot here.
+
+118
+00:10:26.438 --> 00:10:32.535
+So we can control the plotting
+parameters in R using par and
+
+119
+00:10:32.535 --> 00:10:37.140
+if we want to have
+multiple plots per frame,
+
+120
+00:10:37.140 --> 00:10:41.618
+we can use the mf row
+command where the first
+
+121
+00:10:41.618 --> 00:10:46.800
+number we give it Is
+the number of rows of plots.
+
+122
+00:10:46.800 --> 00:10:47.818
+We want two rows of plots.
+
+123
+00:10:47.818 --> 00:10:51.786
+And the second number is
+the number of columns of plots.
+
+124
+00:10:51.786 --> 00:10:52.930
+We want one.
+
+125
+00:10:55.180 --> 00:11:01.510
+So, it creates a new window for us where
+we're going to fill in the trace plots.
+
+126
+00:11:01.510 --> 00:11:06.188
+So, the first is the trace
+plot of the original chain,
+
+127
+00:11:06.188 --> 00:11:09.583
+with all 100,000 iterations.
+
+128
+00:11:09.583 --> 00:11:12.880
+Now, I'm going to copy this line,
+paste it, and
+
+129
+00:11:12.880 --> 00:11:18.690
+we're only going to look at the samples
+that we kept after thinning.
+
+130
+00:11:21.280 --> 00:11:25.510
+So we'll index this by the thinning
+index and run that trace plot.
+
+131
+00:11:26.840 --> 00:11:32.088
+Next, we'll calculate the auto
+correlation for this thinned out chain.
+
+132
+00:11:32.088 --> 00:11:41.509
+We want the autocorr.plot.
+
+133
+00:11:41.509 --> 00:11:45.870
+Look at that,
+the auto correlation has essentially
+
+134
+00:11:45.870 --> 00:11:49.660
+disappeared if we've thinned the chain
+out to every 400 iterations.
+
+135
+00:11:51.740 --> 00:11:53.118
+What's the effect of sample size?
+
+136
+00:11:57.782 --> 00:12:02.540
+We'll give it the thinned chain,
+calculate the effective sample size.
+
+137
+00:12:02.540 --> 00:12:03.265
+It's 250.
+
+138
+00:12:03.265 --> 00:12:06.040
+How many actual samples are there?
+
+139
+00:12:10.659 --> 00:12:13.301
+We can look at the length of
+our thinning index sequence.
+
+140
+00:12:13.301 --> 00:12:14.801
+250.
+
+141
+00:12:14.801 --> 00:12:21.953
+So the effective sample size in this chain
+is the same as the actual sample size,
+
+142
+00:12:21.953 --> 00:12:26.890
+because the values
+are approximately uncorrelated.
+
+143
+00:12:28.630 --> 00:12:32.580
+To remind ourselves, let's look at
+the effective sample size of the original
+
+144
+00:12:32.580 --> 00:12:35.810
+chain that had 100,000 iterations.
+
+145
+00:12:35.810 --> 00:12:38.104
+It was about 373.
+
+146
+00:12:39.430 --> 00:12:42.140
+Fairly close to the length
+of our thinned chain.
+
+147
+00:12:43.650 --> 00:12:46.710
+We've now discussed two
+different interpretations
+
+148
+00:12:46.710 --> 00:12:48.870
+of the effective sample size.
+
+149
+00:12:48.870 --> 00:12:53.742
+The effective sample size can be
+thought of as how many independent
+
+150
+00:12:53.742 --> 00:12:58.875
+samples you would need to get the same
+information or you could think of
+
+151
+00:12:58.875 --> 00:13:04.443
+it as the length of chain you would have
+left over if you removed iterations or
+
+152
+00:13:04.443 --> 00:13:08.882
+thinned the chain until you got
+rid of the auto correlation.
+
+153
+00:13:14.020 --> 00:13:19.738
+Now, let's compare the effective sample
+size of this highly auto correlated chain,
+
+154
+00:13:19.738 --> 00:13:25.065
+with 100,000 iterations to the effective
+sample size of our good chain,
+
+155
+00:13:25.065 --> 00:13:29.560
+the one that was mixing well,
+but only had 4,000 iterations.
+
+156
+00:13:33.610 --> 00:13:38.750
+The first chain we looked at which
+had good convergence properties
+
+157
+00:13:38.750 --> 00:13:43.120
+has an effective sample size
+of nearly 1,000 out of 4,000.
+
+158
+00:13:44.390 --> 00:13:48.860
+Whereas the chain with high auto
+correlation had a sample size,
+
+159
+00:13:48.860 --> 00:13:55.910
+an effective sample size of
+373 out of 100,000 samples.
+
+160
+00:13:55.910 --> 00:13:59.260
+Clearly auto correlation
+makes a big difference
+
+161
+00:13:59.260 --> 00:14:02.310
+in how much information you
+get out of your Markov chain.
+
+162
+00:14:04.340 --> 00:14:08.990
+It is usually a good idea to check the
+Monte Carlo effective sample size of your
+
+163
+00:14:08.990 --> 00:14:11.030
+chain when doing mcmc.
+
+164
+00:14:12.040 --> 00:14:16.610
+If all you seek is a posterior
+mean estimate, then
+
+165
+00:14:16.610 --> 00:14:21.320
+an effective sample size of a few hundred
+to a few thousand should be good enough.
+
+166
+00:14:22.350 --> 00:14:28.080
+However, if you want to create something
+like a 95% posterior interval,
+
+167
+00:14:28.080 --> 00:14:30.040
+you're going to need more iterations.
+
+168
+00:14:30.040 --> 00:14:33.520
+You may need many thousands
+of effective samples
+
+169
+00:14:33.520 --> 00:14:38.080
+to produce a reliable estimate of
+those outer edges of the distribution.
+
+170
+00:14:39.160 --> 00:14:45.852
+The number you need can quickly be
+calculated using the Raftery and
+
+171
+00:14:45.852 --> 00:14:50.992
+Lewis diagnostic that is
+also available in the Coda
+
+172
+00:14:50.992 --> 00:14:55.549
+package using the raftery.diag function.
+
+173
+00:14:55.549 --> 00:15:00.515
+Here we are calculating the Raftery and
+Lewis diagnostic for
+
+174
+00:15:00.515 --> 00:15:02.470
+that first good chain.
+
+175
+00:15:03.820 --> 00:15:08.958
+This diagnostic tells us
+that if we want to be 95%
+
+176
+00:15:08.958 --> 00:15:14.573
+confident that we are estimating
+the 0.25 quantile
+
+177
+00:15:14.573 --> 00:15:19.711
+of the distribution to
+an accuracy of 0.005,
+
+178
+00:15:19.711 --> 00:15:25.810
+then we're going to need this
+many iterations in our chain.
+
+179
+00:15:27.520 --> 00:15:32.800
+The number next to it here,
+3,746 is the number
+
+180
+00:15:32.800 --> 00:15:38.510
+of independent samples we would need from
+a chain that had zero autocorrelation.
+
+181
+00:15:38.510 --> 00:15:41.300
+With the autocorrelation in this chain,
+
+182
+00:15:41.300 --> 00:15:46.850
+we would need to generate a little
+more then 12,000 samples to get
+
+183
+00:15:46.850 --> 00:15:51.850
+this degree of accuracy in
+creating probability intervals.
+
+184
+00:15:53.100 --> 00:15:58.160
+The dependence factor increases
+with auto correlation in the chain.
+
+185
+00:15:58.160 --> 00:16:01.940
+It tells us how many more
+iterations we would need
+
+186
+00:16:01.940 --> 00:16:06.870
+with this particular chain
+over an independent sample.
+
+187
+00:16:06.870 --> 00:16:07.760
+In this case,
+
+188
+00:16:07.760 --> 00:16:12.830
+we need about three times as many samples
+to get the same amount of information.
+
+189
+00:16:13.990 --> 00:16:17.330
+To learn more about the Raftery and
+Lewis diagnostic,
+
+190
+00:16:17.330 --> 00:16:21.850
+we can always check the documentation
+in the coder package.
+
+191
+00:16:21.850 --> 00:16:26.120
+To access that, type question mark and
+then the name of the function.
+
+192
+00:16:29.890 --> 00:16:35.000
+This opens the documentation page for
+the diagnostic.
+
+193
+00:16:35.000 --> 00:16:38.310
+We can read a little bit
+about the underlying theory.
+
+194
+00:16:38.310 --> 00:16:42.201
+We can learn more about which arguments
+we can change in the function to get
+
+195
+00:16:42.201 --> 00:16:43.596
+different information.
+
+196
+00:16:47.148 --> 00:16:51.364
+And we also have references to
+the original papers that these diagnostics
+
+197
+00:16:51.364 --> 00:16:52.386
+are based off of.
+
+198
+00:16:54.574 --> 00:16:59.596
+Just to review, the Raftery,
+Lewis diagnostic gives us the number,
+
+199
+00:16:59.596 --> 00:17:02.233
+the sample size that we would need for
+
+200
+00:17:02.233 --> 00:17:07.190
+our Markov chain if we want to
+create reliable posterior intervals.
