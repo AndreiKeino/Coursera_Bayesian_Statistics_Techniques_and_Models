@@ -1,0 +1,864 @@
+WEBVTT
+
+1
+00:00:01.380 --> 00:00:04.080
+In a logistic regression model,
+
+2
+00:00:04.080 --> 00:00:08.290
+how do we turn parameter
+estimates into model predictions?
+
+3
+00:00:09.400 --> 00:00:11.750
+The key is the form of the model.
+
+4
+00:00:11.750 --> 00:00:17.697
+Remember that the likelihood is Bernoulli
+which gives us a one with probability p.
+
+5
+00:00:17.697 --> 00:00:24.717
+We model the logic transformation of p
+as a linear model of the predictors.
+
+6
+00:00:24.717 --> 00:00:29.370
+Which we showed in the first
+segment of this lesson,
+
+7
+00:00:29.370 --> 00:00:35.190
+leads to an exponential form for
+the expected value or p.
+
+8
+00:00:35.190 --> 00:00:37.190
+It's this exponential form, right here.
+
+9
+00:00:38.310 --> 00:00:43.078
+So if we have the coefficients and
+the predictor values.
+
+10
+00:00:43.078 --> 00:00:47.310
+We can plug them into this
+equation to get an estimate of
+
+11
+00:00:47.310 --> 00:00:50.650
+the probability that the response is one.
+
+12
+00:00:50.650 --> 00:00:53.670
+We're going to use the second model.
+
+13
+00:00:55.600 --> 00:00:59.270
+So let's extract the posterior
+means of the coefficients.
+
+14
+00:01:05.751 --> 00:01:12.010
+From the combined simulation,
+And look at the values of those.
+
+15
+00:01:16.029 --> 00:01:21.939
+The posterior mean of the intercept was
+about negative zero point one five.
+
+16
+00:01:23.390 --> 00:01:29.840
+Because we centered and scaled all of
+the covariants, values of zero for
+
+17
+00:01:29.840 --> 00:01:35.420
+each of the predictor variables
+corresponds to their average values.
+
+18
+00:01:35.420 --> 00:01:40.240
+Therefore, if we use this last model,
+then our point estimate for
+
+19
+00:01:40.240 --> 00:01:44.190
+the probability of
+calcium oxalate crystals.
+
+20
+00:01:44.190 --> 00:01:47.440
+When the specific gravity,
+conductivity, and
+
+21
+00:01:47.440 --> 00:01:51.760
+calcium concentration are at
+their average values.
+
+22
+00:01:51.760 --> 00:01:55.100
+That gives us zeros for the x's here.
+
+23
+00:01:58.003 --> 00:02:00.107
+Then our predicted value for
+
+24
+00:02:00.107 --> 00:02:06.560
+the probability of calcium oxalate
+crystals will involve only the intercept.
+
+25
+00:02:06.560 --> 00:02:08.140
+Let's code that up.
+
+26
+00:02:08.140 --> 00:02:12.453
+It'll be one divided by one plus
+
+27
+00:02:12.453 --> 00:02:17.726
+an exponential of negative of negative
+
+28
+00:02:17.726 --> 00:02:22.691
+.15 which is positive 0.15.
+
+29
+00:02:24.865 --> 00:02:29.931
+This means that if we use our
+posterior mean point estimates.
+
+30
+00:02:29.931 --> 00:02:34.807
+We estimate that the probability
+of absorbing crystals at
+
+31
+00:02:34.807 --> 00:02:40.291
+the average values of these
+three predictors is about 0.46.
+
+32
+00:02:41.813 --> 00:02:45.583
+Now let's suppose we want
+to make a prediction for
+
+33
+00:02:45.583 --> 00:02:51.440
+a new specimen whose value as
+specific gravity as at the average.
+
+34
+00:02:51.440 --> 00:02:57.350
+Whose value of conductivity is one
+standard deviation below the mean.
+
+35
+00:02:57.350 --> 00:03:02.460
+And whose value of calcium concentration
+is one standard deviation above the mean.
+
+36
+00:03:03.900 --> 00:03:06.730
+We can just modify this
+calculation right here.
+
+37
+00:03:09.710 --> 00:03:15.870
+The intercept doesn't change
+minus the coefficient for
+
+38
+00:03:15.870 --> 00:03:21.900
+the first data,
+1.42 times the value that we'll use.
+
+39
+00:03:21.900 --> 00:03:26.340
+We were using the average so
+that'll be zero.
+
+40
+00:03:26.340 --> 00:03:32.899
+Conductivity was one standard
+deviation below the mean.
+
+41
+00:03:32.899 --> 00:03:39.329
+Will first add its coefficient
+minus a negative 1.35 or
+
+42
+00:03:39.329 --> 00:03:43.450
+36 is the coefficient for that one.
+
+43
+00:03:43.450 --> 00:03:47.050
+And we're going to be doing one
+standard deviation below the mean.
+
+44
+00:03:47.050 --> 00:03:50.656
+So that will be the value for that x.
+
+45
+00:03:50.656 --> 00:03:55.775
+And finally we want, calcium concentration
+
+46
+00:03:55.775 --> 00:04:00.362
+one standard deviation above the mean.
+
+47
+00:04:00.362 --> 00:04:06.238
+We start with the coefficient 1.88
+times the value of the corresponding
+
+48
+00:04:06.238 --> 00:04:11.671
+x which was one standard deviation
+above the mean and we'll run that.
+
+49
+00:04:11.671 --> 00:04:16.100
+If it gives us a probability
+of almost 0.96 of
+
+50
+00:04:16.100 --> 00:04:19.670
+observing calcium oxalate crystals.
+
+51
+00:04:21.240 --> 00:04:27.560
+Remember the model was fit to standardize
+the values of the predictor variables.
+
+52
+00:04:27.560 --> 00:04:32.180
+And so we need to use the standardized
+values of these predictor variables when
+
+53
+00:04:32.180 --> 00:04:34.350
+making predictions from the model.
+
+54
+00:04:35.540 --> 00:04:38.910
+If we want to make predictions
+in terms of the original
+
+55
+00:04:38.910 --> 00:04:41.870
+x variable values we have two options.
+
+56
+00:04:42.940 --> 00:04:47.740
+The first option is for each x variable,
+we can subtract the mean.
+
+57
+00:04:47.740 --> 00:04:49.710
+And divide by the standard deviation for
+
+58
+00:04:49.710 --> 00:04:53.620
+that variable in the original
+dataset used to fit the model.
+
+59
+00:04:54.790 --> 00:04:59.875
+Or we can refit the model without
+centering and scaling the covariance.
+
+60
+00:05:02.172 --> 00:05:07.432
+So far, we've calculated predicted
+probabilities of observing crystals for
+
+61
+00:05:07.432 --> 00:05:10.030
+hypothetical predictor values only.
+
+62
+00:05:11.730 --> 00:05:15.080
+We can use the same ideas
+to make predictions for
+
+63
+00:05:15.080 --> 00:05:18.800
+each of the original data
+points from the dataset.
+
+64
+00:05:18.800 --> 00:05:22.700
+This is similar to what we
+did to calculate residuals in
+
+65
+00:05:22.700 --> 00:05:24.300
+our earlier linear models.
+
+66
+00:05:25.390 --> 00:05:30.600
+First, will take the X Matrix,
+the design Matrix, and
+
+67
+00:05:30.600 --> 00:05:34.990
+Matrix multiplier with the posterior
+means of the coefficients.
+
+68
+00:05:34.990 --> 00:05:41.040
+Let's create that variable, we'll call it,
+pmxb for posterior mean of x beta.
+
+69
+00:05:42.920 --> 00:05:49.750
+And it will be pm coefficient
+we want the intercept first.
+
+70
+00:05:52.140 --> 00:05:56.838
+Then to the intercept we're going
+to add our design matrix which
+
+71
+00:05:56.838 --> 00:05:59.020
+we've already calculated.
+
+72
+00:05:59.020 --> 00:06:02.504
+And retain only columns one,
+four, and six for
+
+73
+00:06:02.504 --> 00:06:05.740
+those three variables
+we used in the model.
+
+74
+00:06:07.190 --> 00:06:12.768
+And matrix multiply that with pm
+coefficients, one, two, three.
+
+75
+00:06:12.768 --> 00:06:19.250
+Before we run this let's make sure
+we know what each piece is doing.
+
+76
+00:06:19.250 --> 00:06:22.640
+So the first piece here is the intercept.
+
+77
+00:06:24.280 --> 00:06:28.300
+Then we're going to take
+the values of the predictors.
+
+78
+00:06:28.300 --> 00:06:32.381
+The first three are these
+three columns for
+
+79
+00:06:32.381 --> 00:06:38.280
+specific gravity conductivity and
+calcium concentration.
+
+80
+00:06:38.280 --> 00:06:42.321
+And we're going to matrix multiply
+it with the posterior means of
+
+81
+00:06:42.321 --> 00:06:46.140
+the coefficients which
+we calculated up here.
+
+82
+00:06:46.140 --> 00:06:49.100
+The matrix multiplication
+does the following.
+
+83
+00:06:49.100 --> 00:06:51.940
+For observation two right here,
+
+84
+00:06:53.060 --> 00:06:57.170
+we'll multiply the specific gravity
+value with its coefficient.
+
+85
+00:06:58.380 --> 00:07:02.620
+The conductivity value
+with its coefficient and
+
+86
+00:07:02.620 --> 00:07:07.000
+a calcium with its coefficient.
+
+87
+00:07:07.000 --> 00:07:10.515
+And we'll add those three numbers
+together, to get an x beta for
+
+88
+00:07:10.515 --> 00:07:11.567
+observation two.
+
+89
+00:07:11.567 --> 00:07:15.965
+Then the same thing will be repeated for
+observation three,
+
+90
+00:07:15.965 --> 00:07:19.425
+all the way down through
+the end of the dataset.
+
+91
+00:07:20.880 --> 00:07:22.440
+So let's go ahead and run that.
+
+92
+00:07:30.931 --> 00:07:34.640
+And it gives us those values for
+each of the observations.
+
+93
+00:07:35.950 --> 00:07:38.900
+Now we need to turn this
+into a prediction for
+
+94
+00:07:38.900 --> 00:07:42.810
+the probability using this
+inverse transformation.
+
+95
+00:07:43.870 --> 00:07:49.400
+We've already calculated
+the betas times the x variables.
+
+96
+00:07:49.400 --> 00:07:52.625
+So we need to finish calculating
+the rest of this expression
+
+97
+00:07:52.625 --> 00:07:57.472
+p-hat will be our predicted probability.
+
+98
+00:07:57.472 --> 00:08:02.942
+It'll be 1.0 divided by 1.0
+
+99
+00:08:02.942 --> 00:08:07.657
+plus an exponential function
+
+100
+00:08:07.657 --> 00:08:12.560
+of negative one times rpm x data
+
+101
+00:08:12.560 --> 00:08:16.720
+that we just calculated.
+
+102
+00:08:18.500 --> 00:08:23.120
+Please make sure if you have any doubts
+to carefully go through this expression.
+
+103
+00:08:24.240 --> 00:08:29.280
+And verify that it is in fact calculating
+this number where it's extended for
+
+104
+00:08:29.280 --> 00:08:31.710
+three covariance.
+
+105
+00:08:31.710 --> 00:08:36.509
+Let's run that and
+look at the first few values.
+
+106
+00:08:41.137 --> 00:08:46.473
+These are the resulting predicted
+probability of observing crystals for
+
+107
+00:08:46.473 --> 00:08:49.490
+each of the observations in the dataset.
+
+108
+00:08:51.280 --> 00:08:56.019
+We can get a rough idea of how successful
+the model is by plotting these predicted
+
+109
+00:08:56.019 --> 00:08:58.227
+values against the actual outcome.
+
+110
+00:08:58.227 --> 00:09:06.120
+We'll plot y-hat against
+the response variable.
+
+111
+00:09:06.120 --> 00:09:09.780
+We use p-hat not y-hat.
+
+112
+00:09:14.505 --> 00:09:19.826
+Of course, the response variable could
+take on values of only zero and one.
+
+113
+00:09:19.826 --> 00:09:22.221
+And it's kind of hard to
+see what's going on here.
+
+114
+00:09:22.221 --> 00:09:27.864
+So let's rerun this plot by adding
+
+115
+00:09:27.864 --> 00:09:33.520
+some jitter to the ones and zeros.
+
+116
+00:09:33.520 --> 00:09:37.550
+Recall they're still ones and zeros, but
+
+117
+00:09:37.550 --> 00:09:40.970
+now they've been spread out a little
+bit so that we can see them better.
+
+118
+00:09:42.040 --> 00:09:46.650
+Along the y axis,
+we have the actual response, one or zero.
+
+119
+00:09:46.650 --> 00:09:52.620
+And along the x axis, the predicted
+probability that it would be a one.
+
+120
+00:09:52.620 --> 00:09:56.610
+We can see that this model did okay, for
+
+121
+00:09:56.610 --> 00:10:02.290
+observations that have high values of
+predicted probability of observing a one.
+
+122
+00:10:02.290 --> 00:10:04.960
+Many of them really were ones.
+
+123
+00:10:04.960 --> 00:10:10.550
+And down here, observations that have
+low probability were often zeros.
+
+124
+00:10:12.600 --> 00:10:16.270
+Suppose we chose a cut off for
+these predicted probabilities.
+
+125
+00:10:17.470 --> 00:10:20.760
+For example lets select 0.5 as our cutoff.
+
+126
+00:10:22.310 --> 00:10:26.090
+If the model tells us that
+the probability is higher
+
+127
+00:10:26.090 --> 00:10:30.750
+than .5 we're going to classify
+the observation as a one.
+
+128
+00:10:30.750 --> 00:10:37.000
+And if it is less than 0.5 on the left
+here we're going to classify it as a zero.
+
+129
+00:10:37.000 --> 00:10:41.846
+We can tabulate these classifications
+against the truth to see how
+
+130
+00:10:41.846 --> 00:10:44.885
+well the model predicts the original data
+
+131
+00:10:47.915 --> 00:10:52.328
+We'll create a table
+based on a cutoff of 0.5,
+
+132
+00:10:53.350 --> 00:10:57.030
+Using the table function.
+
+133
+00:10:57.030 --> 00:11:00.000
+Where the first argument is whether or
+
+134
+00:11:00.000 --> 00:11:05.700
+not the predicted probability
+is greater than 0.5.
+
+135
+00:11:05.700 --> 00:11:12.880
+And then we want to know whether
+the response was actually zero or one.
+
+136
+00:11:12.880 --> 00:11:14.240
+Let's run that table.
+
+137
+00:11:14.240 --> 00:11:19.550
+Now take a look at the values.
+
+138
+00:11:21.130 --> 00:11:26.525
+So the false values here
+are observations where p-hat
+
+139
+00:11:26.525 --> 00:11:32.420
+was less that 0.5 and
+here they were larger than 0.5.
+
+140
+00:11:32.420 --> 00:11:37.560
+These observations were correctly
+classified because their true value
+
+141
+00:11:37.560 --> 00:11:38.300
+was one.
+
+142
+00:11:38.300 --> 00:11:43.990
+And these observations were correctly
+classified because their value was zero.
+
+143
+00:11:43.990 --> 00:11:50.970
+That is the correct one classifications
+are the points in this region.
+
+144
+00:11:50.970 --> 00:11:58.661
+And the correct zero classifications
+are the points in this region.
+
+145
+00:11:58.661 --> 00:12:02.679
+To calculate our correct
+classification rate,
+
+146
+00:12:02.679 --> 00:12:06.600
+let's take a sum of
+the diagonal of that table.
+
+147
+00:12:10.190 --> 00:12:11.980
+Those are the correct classifications.
+
+148
+00:12:13.660 --> 00:12:16.380
+And we'll divide by the sum
+of the overall table.
+
+149
+00:12:21.591 --> 00:12:29.650
+This gives us a correct classification
+rate of about 0.76 or 0.77.
+
+150
+00:12:29.650 --> 00:12:31.620
+Not too bad, but not great.
+
+151
+00:12:33.450 --> 00:12:37.910
+Now suppose that it is considered really
+bad to predict that there will be no
+
+152
+00:12:37.910 --> 00:12:41.760
+calcium oxalate crystal
+when in fact there is one.
+
+153
+00:12:43.070 --> 00:12:45.780
+We might then choose to
+lower our threshold for
+
+154
+00:12:45.780 --> 00:12:48.680
+classifying the data points as ones.
+
+155
+00:12:48.680 --> 00:12:53.500
+Let's say we move that threshold
+back over this direction to
+
+156
+00:12:53.500 --> 00:12:57.030
+point three and
+we'll call that our cutoff.
+
+157
+00:12:58.970 --> 00:13:03.607
+That is if the model says that the
+probability is greater than point three
+
+158
+00:13:03.607 --> 00:13:07.113
+will classify it as having
+a calcium oxalate crystal.
+
+159
+00:13:07.113 --> 00:13:13.404
+Let's recalculate that tab 0.3.
+
+160
+00:13:17.126 --> 00:13:23.738
+So if it's greater than 0.3 will
+classified it as having a crystal.
+
+161
+00:13:23.738 --> 00:13:30.424
+Let's run those as you can see,
+we have reduced the incidence of false
+
+162
+00:13:30.424 --> 00:13:35.537
+negatives where we said there
+would not be a crystal.
+
+163
+00:13:35.537 --> 00:13:39.960
+But in fact there was one, previously
+there were 12 now there are only seven.
+
+164
+00:13:41.910 --> 00:13:46.950
+Let's check the success rate
+of our classification here for
+
+165
+00:13:46.950 --> 00:13:48.120
+this cut off value.
+
+166
+00:13:52.226 --> 00:13:55.882
+It looks like we gave up
+a little bit of predictive
+
+167
+00:13:55.882 --> 00:14:00.710
+accuracy to increase our chances
+of detecting a true positive.
+
+168
+00:14:00.710 --> 00:14:04.580
+And to reduce our chances
+of a false negative.
+
+169
+00:14:06.210 --> 00:14:11.250
+We could repeat this exercise for
+many thresholds between zero and one.
+
+170
+00:14:12.650 --> 00:14:14.050
+Different cut off points here.
+
+171
+00:14:15.500 --> 00:14:18.820
+And for each one we could
+calculate our error rates.
+
+172
+00:14:20.350 --> 00:14:25.210
+This is equivalent to calculating
+what is called the ROC.
+
+173
+00:14:25.210 --> 00:14:28.490
+Or receiving operating
+characteristics curve.
+
+174
+00:14:29.540 --> 00:14:34.320
+Which are often use to evaluate
+classification techniques
+
+175
+00:14:34.320 --> 00:14:35.770
+like logistics regression.
+
+176
+00:14:37.440 --> 00:14:43.790
+These classification tables which we
+have calculated are on in sample.
+
+177
+00:14:43.790 --> 00:14:48.270
+They were predicting the same data
+that we use to fit the model.
+
+178
+00:14:49.430 --> 00:14:52.700
+We could get a better, less biased, and
+
+179
+00:14:52.700 --> 00:14:57.060
+more accurate assessment of
+how well our models performs.
+
+180
+00:14:57.060 --> 00:15:02.930
+If we calculated these tables for
+data that were not used to fit the model.
+
+181
+00:15:02.930 --> 00:15:07.370
+For example,
+before we fit the model we can withhold
+
+182
+00:15:07.370 --> 00:15:12.310
+a set of randomly selected
+tests data points.
+
+183
+00:15:12.310 --> 00:15:18.102
+And then use the model fit to the rest of
+the training data to make predictions for
+
+184
+00:15:18.102 --> 00:15:19.151
+our test set.

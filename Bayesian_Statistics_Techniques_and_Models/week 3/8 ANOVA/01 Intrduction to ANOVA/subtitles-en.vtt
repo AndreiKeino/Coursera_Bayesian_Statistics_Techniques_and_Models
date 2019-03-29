@@ -1,0 +1,555 @@
+WEBVTT
+
+1
+00:00:00.070 --> 00:00:03.447
+[MUSIC]
+
+2
+00:00:03.447 --> 00:00:08.297
+Anova is used when we have
+categorical explanatory variables so
+
+3
+00:00:08.297 --> 00:00:11.450
+that the observations belong to groups.
+
+4
+00:00:12.565 --> 00:00:17.510
+It's stand for, analysis of variance,
+where we compare the variability of
+
+5
+00:00:17.510 --> 00:00:23.740
+responses within groups to the variability
+of responses between groups.
+
+6
+00:00:23.740 --> 00:00:28.260
+If the variability between groups is
+large, relative to the variability
+
+7
+00:00:28.260 --> 00:00:32.210
+within the groups, we conclude
+that there is a grouping effect.
+
+8
+00:00:33.880 --> 00:00:40.776
+Categorical explanatory variables
+are often referred to as factor variables.
+
+9
+00:00:44.090 --> 00:00:47.880
+Factors can have two categories or levels.
+
+10
+00:00:47.880 --> 00:00:51.970
+For example, low and
+high or true and false.
+
+11
+00:00:51.970 --> 00:00:54.220
+Or they can have many levels.
+
+12
+00:00:54.220 --> 00:00:58.130
+They often result from experiments
+where we carefully assign values of
+
+13
+00:00:58.130 --> 00:01:00.050
+explanatory variables.
+
+14
+00:01:00.050 --> 00:01:03.740
+Two randomly selected subjects, and
+look for a cause and effect relationship.
+
+15
+00:01:05.520 --> 00:01:08.670
+There could be one, or
+many factors in an experiment.
+
+16
+00:01:09.700 --> 00:01:14.790
+For example, if we are going to conduct
+an online marketing experiment,
+
+17
+00:01:14.790 --> 00:01:18.530
+we might experiment with two
+factors of website design.
+
+18
+00:01:19.890 --> 00:01:22.293
+Let's say these factors are sound.
+
+19
+00:01:25.088 --> 00:01:26.092
+And font size.
+
+20
+00:01:33.306 --> 00:01:35.889
+We might use two levels with sound.
+
+21
+00:01:38.210 --> 00:01:42.960
+For example, having music or
+having no music.
+
+22
+00:01:45.855 --> 00:01:50.741
+And for the font size factor, we might do
+
+23
+00:01:50.741 --> 00:01:56.220
+something like small, medium, and large.
+
+24
+00:01:59.946 --> 00:02:05.450
+This two by three design would result in
+a total of six treatment combinations.
+
+25
+00:02:05.450 --> 00:02:10.580
+For example, we could do a website with
+music in small font, or no music in large.
+
+26
+00:02:10.580 --> 00:02:12.210
+There are six possible ways to do that.
+
+27
+00:02:13.640 --> 00:02:19.693
+Let's write down the model with one
+explanatory variable that has g,
+
+28
+00:02:19.693 --> 00:02:21.341
+capital g levels.
+
+29
+00:02:24.717 --> 00:02:29.564
+That would be yi given
+a variable that tells us
+
+30
+00:02:29.564 --> 00:02:33.655
+which group individual I belongs to.
+
+31
+00:02:36.379 --> 00:02:41.966
+All of the means for
+each group and sigma squared would
+
+32
+00:02:41.966 --> 00:02:48.176
+be independently distributed
+normal where the mean is mu,
+
+33
+00:02:48.176 --> 00:02:53.410
+the mu that corresponds to
+the group of subject i.
+
+34
+00:02:54.650 --> 00:02:57.133
+And, of course, variance sigma squared.
+
+35
+00:03:00.789 --> 00:03:05.829
+This g variable right here is just
+a group indicator, so it would be
+
+36
+00:03:05.829 --> 00:03:12.560
+a member of one of this set, one of these
+numbers right here, from 1 up to g.
+
+37
+00:03:12.560 --> 00:03:19.800
+So for individual i of gi is 2,
+that means that yi is a member of group 2.
+
+38
+00:03:19.800 --> 00:03:25.427
+And, of course,
+we have our observations 1 up to n.
+
+39
+00:03:28.152 --> 00:03:34.043
+Alternatively, we can write the mean
+in terms of an intercept representing
+
+40
+00:03:34.043 --> 00:03:39.670
+a baseline group and then affects for
+each of the g minus 1 other groups.
+
+41
+00:03:40.850 --> 00:03:42.649
+So we could write an alternative model,
+
+42
+00:03:46.838 --> 00:03:51.973
+Alternative model formulation
+
+43
+00:03:51.973 --> 00:03:57.676
+would be to set the expected value,
+
+44
+00:03:57.676 --> 00:04:02.429
+right here, (yi) = beta0
+
+45
+00:04:02.429 --> 00:04:07.561
++ beta1 X1i like we had before
+
+46
+00:04:07.561 --> 00:04:12.135
+up to betaG-1*XG-1i.
+
+47
+00:04:14.398 --> 00:04:21.078
+Here the X variables are what
+are called dummy variables.
+
+48
+00:04:21.078 --> 00:04:26.310
+They're indicators that
+
+49
+00:04:26.310 --> 00:04:30.910
+the group of individual I,
+in this case, is 1.
+
+50
+00:04:30.910 --> 00:04:36.100
+This X here would be an indicator
+variable that the group
+
+51
+00:04:36.100 --> 00:04:40.690
+of individual i is G minus 1.
+
+52
+00:04:40.690 --> 00:04:49.320
+That is at most one of the Xs will
+be turned on or have a value of 1.
+
+53
+00:04:49.320 --> 00:04:54.400
+Otherwise, if we're in group capital G,
+the last group, the only
+
+54
+00:04:54.400 --> 00:04:59.790
+parameter active is this one here, so beta
+naught corresponds to the mean of group g.
+
+55
+00:05:01.156 --> 00:05:06.770
+Again, these Xs here are what
+are called dummy variables,
+
+56
+00:05:06.770 --> 00:05:11.310
+they indicate the membership of
+the observation into group k.
+
+57
+00:05:14.140 --> 00:05:19.930
+This formulation right here shows how
+Anova is related to linear regression.
+
+58
+00:05:19.930 --> 00:05:22.780
+This formulation is also the default in r.
+
+59
+00:05:25.390 --> 00:05:30.010
+These two formulations for
+the mean are equivalent and
+
+60
+00:05:30.010 --> 00:05:33.180
+both of them have capital G parameters for
+the mean.
+
+61
+00:05:34.420 --> 00:05:36.969
+If we have more than capital G parameters,
+
+62
+00:05:38.240 --> 00:05:41.760
+the parameters would no
+longer be uniquely identified
+
+63
+00:05:41.760 --> 00:05:46.200
+since infinite combinations of parameter
+values would result in the same mean.
+
+64
+00:05:47.500 --> 00:05:50.100
+We must be careful not
+to overparameterize.
+
+65
+00:05:52.050 --> 00:05:56.110
+Again, the assumption of constant
+variance across all groups might be
+
+66
+00:05:56.110 --> 00:05:58.420
+too restrictive for your data.
+
+67
+00:05:58.420 --> 00:06:02.759
+If that's the case, you might also
+consider having multiple sigma squared
+
+68
+00:06:02.759 --> 00:06:04.804
+parameters for different groups.
+
+69
+00:06:07.469 --> 00:06:11.990
+We're now going to consider
+the model where we have two factors.
+
+70
+00:06:11.990 --> 00:06:14.580
+Let's call the factors A and B.
+
+71
+00:06:14.580 --> 00:06:19.940
+They might correspond to sound being A,
+and font size being B,
+
+72
+00:06:19.940 --> 00:06:23.310
+from our website design experiment
+that we discussed earlier.
+
+73
+00:06:24.950 --> 00:06:31.170
+One option for a model is that now against
+to the first model we used for one factor.
+
+74
+00:06:31.170 --> 00:06:34.470
+Where we have a different mean for
+each stream and combination.
+
+75
+00:06:35.910 --> 00:06:38.860
+This is called the cell means model.
+
+76
+00:06:38.860 --> 00:06:46.265
+So if we have factor A which in this case
+will be sound we have two levels, and
+
+77
+00:06:46.265 --> 00:06:54.070
+for factor B which could be represented
+by font size would have three levels.
+
+78
+00:06:54.070 --> 00:06:58.280
+So this might be representing small,
+medium, and large.
+
+79
+00:07:00.210 --> 00:07:03.570
+In this model formulation,
+we need a different mean for
+
+80
+00:07:03.570 --> 00:07:08.231
+each one of these combinations,
+so Mu 1 sub 1 would
+
+81
+00:07:08.231 --> 00:07:14.420
+represent the mean for
+this group with music and small font size.
+
+82
+00:07:15.690 --> 00:07:17.461
+We can fill in the rest of these.
+
+83
+00:07:27.849 --> 00:07:31.645
+So each of these means
+corresponds to a treatment group.
+
+84
+00:07:33.045 --> 00:07:37.540
+It is written, the model itself
+is written, the same as before,
+
+85
+00:07:37.540 --> 00:07:42.180
+except that Mu now has two indexes,
+one for each factor.
+
+86
+00:07:43.370 --> 00:07:49.860
+With six treatment groups, we can have at
+most six parameters describing the means.
+
+87
+00:07:49.860 --> 00:07:53.570
+However, we might get away
+with fewer parameters.
+
+88
+00:07:53.570 --> 00:07:57.959
+For example,
+we can use the following additive model.
+
+89
+00:08:05.201 --> 00:08:08.995
+This model,
+which has only 4 parameter instead of 6,
+
+90
+00:08:08.995 --> 00:08:14.180
+would be appropriate if we believe
+there are no interactions.
+
+91
+00:08:14.180 --> 00:08:16.000
+Let's write this model out really quick.
+
+92
+00:08:16.000 --> 00:08:23.080
+The expected value for
+yi would be equal to a baseline,
+
+93
+00:08:24.260 --> 00:08:30.080
+mean plus we'll say,
+alpha-2 times the indicator.
+
+94
+00:08:31.760 --> 00:08:34.479
+That the level of factor A,
+
+95
+00:08:34.479 --> 00:08:39.690
+which we'll call little a for
+individual I, is 2.
+
+96
+00:08:39.690 --> 00:08:45.180
+In other words, this is an indicator that
+individual I is in level 2 of factor A.
+
+97
+00:08:47.500 --> 00:08:50.390
+Then we could have a beta
+2 times an indicator.
+
+98
+00:08:51.600 --> 00:08:56.676
+That the level for individual
+
+99
+00:08:56.676 --> 00:09:01.751
+I of factor B is equal to 2 plus
+
+100
+00:09:01.751 --> 00:09:08.665
+beta 3 times an indicator that BI = 3.
+
+101
+00:09:11.239 --> 00:09:15.970
+This Mu here represents the mean for
+this group right here.
+
+102
+00:09:17.170 --> 00:09:23.310
+And then, if they are in different group,
+for example, a factor A, we would
+
+103
+00:09:23.310 --> 00:09:29.019
+add alpha-2 which represents the effect
+of going from this group to this group.
+
+104
+00:09:30.230 --> 00:09:33.010
+Same thing goes for factor B.
+
+105
+00:09:33.010 --> 00:09:37.870
+If we want to move from level
+one of factor B up to level 2,
+
+106
+00:09:37.870 --> 00:09:40.800
+we would add this coefficient here.
+
+107
+00:09:40.800 --> 00:09:43.630
+It's an adjustment to the mean.
+
+108
+00:09:45.590 --> 00:09:49.970
+I mentioned earlier that this additive
+model would be appropriate if we had no
+
+109
+00:09:49.970 --> 00:09:52.760
+interaction between the variables.
+
+110
+00:09:52.760 --> 00:09:59.750
+Or in other words, if we believe that
+going from level 1 to level 2 of factor A,
+
+111
+00:09:59.750 --> 00:10:04.310
+has the same effect on the mean
+regardless of whether we're in level 1,
+
+112
+00:10:04.310 --> 00:10:06.620
+2, or 3 of factor B.
+
+113
+00:10:09.090 --> 00:10:15.920
+If the effect of factor A on the response
+changes between levels of factor B.
+
+114
+00:10:15.920 --> 00:10:20.220
+Then we would need more parameters
+to describe how that mean changes.
+
+115
+00:10:20.220 --> 00:10:22.440
+For example, with this cell means model.
+
+116
+00:10:23.660 --> 00:10:27.890
+This phenomenon is called
+interaction between the factors.
+
+117
+00:10:29.230 --> 00:10:35.147
+In the coming segments we will look at
+an example of a one way Anova model.
+
+118
+00:10:35.147 --> 00:10:38.629
+We'll work with the two-way
+Anova in the honors section.
+
+119
+00:10:38.629 --> 00:10:43.572
+[MUSIC]

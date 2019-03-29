@@ -1,0 +1,341 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:03.772
+[MUSIC]
+
+2
+00:00:03.772 --> 00:00:08.854
+Linear regression is used when we
+have a continuous response variable,
+
+3
+00:00:08.854 --> 00:00:12.890
+and several explanatory variables,
+or co-variance.
+
+4
+00:00:12.890 --> 00:00:16.710
+But what if the response
+variable is binary, zero or one?
+
+5
+00:00:17.740 --> 00:00:21.510
+We could still fit
+a linear regression model.
+
+6
+00:00:21.510 --> 00:00:23.200
+That might look something like this.
+
+7
+00:00:24.280 --> 00:00:28.210
+Here I've written the x axis for
+the explanatory variable.
+
+8
+00:00:28.210 --> 00:00:32.370
+And the response variable is here y,
+on the y axis.
+
+9
+00:00:32.370 --> 00:00:34.680
+It can only take values of 0 and 1.
+
+10
+00:00:36.390 --> 00:00:39.380
+So if we were to draw a linear
+regression through these
+
+11
+00:00:39.380 --> 00:00:41.780
+points it might look something like that.
+
+12
+00:00:43.300 --> 00:00:44.510
+As you can see,
+
+13
+00:00:44.510 --> 00:00:50.390
+only two very specific values of x
+will cause a prediction of 0 or 1.
+
+14
+00:00:50.390 --> 00:00:55.100
+Not to mention, if we were to draw
+a residual plot from this regression
+
+15
+00:00:55.100 --> 00:00:59.839
+right here, it would certainly not
+appear to be very normally distributed.
+
+16
+00:01:01.570 --> 00:01:04.020
+Instead of using a normal likelihood,
+
+17
+00:01:04.020 --> 00:01:08.410
+it is more appropriate to use
+a Bernoulli likelihood here.
+
+18
+00:01:08.410 --> 00:01:13.871
+That is, the response yi, given phi
+
+19
+00:01:13.871 --> 00:01:18.510
+i would be independent from
+a Bernoulli distribution.
+
+20
+00:01:20.830 --> 00:01:27.449
+Phi i, where phi i is the probability
+of success for observation i.
+
+21
+00:01:30.056 --> 00:01:34.560
+In this case,
+phi i is also the expected value of yi.
+
+22
+00:01:36.270 --> 00:01:41.340
+But we still need to relate this phi
+i to our explanatory variable x.
+
+23
+00:01:42.720 --> 00:01:44.510
+Remember, in linear regression,
+
+24
+00:01:50.079 --> 00:01:54.574
+We had the expected value
+of yi was equal to,
+
+25
+00:01:54.574 --> 00:01:58.714
+directly to the linear form in the x's.
+
+26
+00:02:02.087 --> 00:02:04.790
+Like this.
+
+27
+00:02:04.790 --> 00:02:11.400
+One option in this model, would be to
+model phi directly with this linear form.
+
+28
+00:02:12.670 --> 00:02:18.258
+But there's one problem,
+because phi represents a probability,
+
+29
+00:02:18.258 --> 00:02:21.010
+it needs to lie between 0 and 1.
+
+30
+00:02:21.010 --> 00:02:24.271
+To keep this linear form
+right here between 0 and 1,
+
+31
+00:02:24.271 --> 00:02:29.060
+we would need to place some pretty odd
+restrictions on the beta coefficients.
+
+32
+00:02:30.230 --> 00:02:34.410
+Instead, we'll use what
+is called a link function
+
+33
+00:02:34.410 --> 00:02:38.575
+that relates the linear form of
+the restricted parameter, in our case phi.
+
+34
+00:02:39.610 --> 00:02:42.410
+Without any restrictions on the beta's.
+
+35
+00:02:44.250 --> 00:02:50.970
+To do this, we could use the odds which
+is defined as phi over 1 minus phi.
+
+36
+00:02:52.760 --> 00:02:55.312
+Odds can take on any value greater than 0.
+
+37
+00:02:55.312 --> 00:02:58.790
+So, we're less restricted but,
+not totally unrestricted.
+
+38
+00:02:59.870 --> 00:03:01.970
+So now let's take the log of the odds.
+
+39
+00:03:04.721 --> 00:03:11.210
+This quantity is called the logit link,
+or logistic link.
+
+40
+00:03:11.210 --> 00:03:15.630
+It can now take on any real number,
+positive or negative, so
+
+41
+00:03:15.630 --> 00:03:18.668
+it can be related to our linear
+form without any restrictions.
+
+42
+00:03:18.668 --> 00:03:23.310
+That is, the logit of phi i,
+
+43
+00:03:23.310 --> 00:03:29.306
+which is equal to the log of the odds,
+
+44
+00:03:29.306 --> 00:03:35.697
+will be equal to this linear form here.
+
+45
+00:03:39.923 --> 00:03:44.290
+So this is the piece that relates
+the x to the success probability.
+
+46
+00:03:44.290 --> 00:03:48.660
+If we do a little bit of algebra,
+we can recover the expression for
+
+47
+00:03:48.660 --> 00:03:51.710
+the expected value of yi.
+
+48
+00:03:52.730 --> 00:03:59.080
+That is, from this we can get
+the expected value of yi, which is phi.
+
+49
+00:04:00.280 --> 00:04:04.250
+So we just need to solve
+this equation here for phi,
+
+50
+00:04:04.250 --> 00:04:09.550
+which will be the e to
+the beta not plus beta
+
+51
+00:04:09.550 --> 00:04:14.610
+1 x1i, over 1 plus the same thing.
+
+52
+00:04:21.980 --> 00:04:26.498
+If we divide the numerator and
+the denominator by the numerator,
+
+53
+00:04:26.498 --> 00:04:27.740
+we get this form.
+
+54
+00:04:34.965 --> 00:04:39.530
+This form is a little bit more
+computationally convenient.
+
+55
+00:04:41.110 --> 00:04:45.260
+This process right here is called
+inverting the link function
+
+56
+00:04:45.260 --> 00:04:49.000
+to get an expression for
+the expected value of y.
+
+57
+00:04:49.000 --> 00:04:56.080
+Now, if we were to plot expected value
+of y as a function of x, over here.
+
+58
+00:04:58.150 --> 00:04:59.670
+It might look something like this.
+
+59
+00:05:04.480 --> 00:05:08.310
+Where the expected value
+now stays between 0 and 1.
+
+60
+00:05:08.310 --> 00:05:12.740
+This is logistic regression
+using the logistic link.
+
+61
+00:05:13.820 --> 00:05:18.674
+If the beta coefficient for
+x, for the covariant x,
+
+62
+00:05:18.674 --> 00:05:23.746
+is positive, it means that
+an increase in the value of x
+
+63
+00:05:23.746 --> 00:05:29.286
+corresponds to an increase in
+the probability that y is 1.
+
+64
+00:05:29.286 --> 00:05:31.160
+So the curve would look like this.
+
+65
+00:05:32.230 --> 00:05:35.800
+If the coefficient is negative, that is,
+
+66
+00:05:35.800 --> 00:05:40.630
+beta is negative, that means that
+an increase in x would correspond to
+
+67
+00:05:40.630 --> 00:05:44.030
+a decrease in the probability
+that y is equal to 1.
+
+68
+00:05:44.030 --> 00:05:46.940
+So it's just a negative
+version of that dotted curve.
+
+69
+00:05:48.787 --> 00:05:54.439
+There are other possible link functions,
+but we're just going to focus on this one.
+
+70
+00:05:55.490 --> 00:06:01.000
+Of course we can add more x variables
+like we did with multiple regression.
+
+71
+00:06:01.000 --> 00:06:04.429
+And some, or all of those x variables,
+could be categorical,
+
+72
+00:06:04.429 --> 00:06:05.736
+like we had with ANOVA.
+
+73
+00:06:05.736 --> 00:06:12.099
+[MUSIC]

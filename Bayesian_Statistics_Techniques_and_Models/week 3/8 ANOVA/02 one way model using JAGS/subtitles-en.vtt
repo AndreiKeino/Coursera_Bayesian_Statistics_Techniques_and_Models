@@ -1,0 +1,1012 @@
+WEBVTT
+
+1
+00:00:00.760 --> 00:00:07.290
+As an example of a one way ANOVA model,
+we'll look at the plant growth data NR.
+
+2
+00:00:08.480 --> 00:00:14.670
+All we need to do to extract the data is
+use the data function on PlantGrowth.
+
+3
+00:00:19.175 --> 00:00:23.010
+And then we can immediately
+look at the documentation.
+
+4
+00:00:24.872 --> 00:00:26.980
+To learn a little bit about this dataset.
+
+5
+00:00:28.840 --> 00:00:36.300
+The PlantGrowth data contains results
+from an experiment to compare yields.
+
+6
+00:00:36.300 --> 00:00:39.580
+That is measured by plant weight for
+
+7
+00:00:39.580 --> 00:00:44.700
+plants that were grown under a control and
+two different treatment conditions.
+
+8
+00:00:46.370 --> 00:00:51.740
+There are 30 experiments and
+there are two variables.
+
+9
+00:00:51.740 --> 00:00:55.450
+The first variable is
+the weight of the plant, and
+
+10
+00:00:55.450 --> 00:01:00.290
+the second is the group to
+which that plant was assigned.
+
+11
+00:01:00.290 --> 00:01:07.779
+It's either ctrl, trt1 or trt2, you can
+check this source for more information.
+
+12
+00:01:11.856 --> 00:01:14.876
+Let's take a look at the PlantGrowth data.
+
+13
+00:01:19.854 --> 00:01:23.792
+As we said, the first column
+contains the weights of the plants,
+
+14
+00:01:23.792 --> 00:01:27.240
+the second column tells us
+which group that plant was in.
+
+15
+00:01:28.570 --> 00:01:35.880
+Because the explanatory variable group
+is a factor and is not continuous.
+
+16
+00:01:35.880 --> 00:01:40.259
+We're going to choose to visualize
+the data with box plots rather than with
+
+17
+00:01:40.259 --> 00:01:41.241
+scatter plots.
+
+18
+00:01:44.339 --> 00:01:46.983
+So we'll create a box plot of the weight.
+
+19
+00:01:49.705 --> 00:01:57.764
+Against group using the PlantGrowth data.
+
+20
+00:02:00.105 --> 00:02:01.516
+Here are the box plots.
+
+21
+00:02:03.997 --> 00:02:08.697
+The box plots summarize
+the distribution of the data for
+
+22
+00:02:08.697 --> 00:02:13.840
+each of the three groups,
+ctrl, trt1, and trt2.
+
+23
+00:02:13.840 --> 00:02:18.302
+For example,
+this line tells us the median of yield for
+
+24
+00:02:18.302 --> 00:02:21.992
+the ctrl group is a little
+bit higher than 5.
+
+25
+00:02:21.992 --> 00:02:29.440
+And most of the distribution is
+located between 4.5 and 5.5.
+
+26
+00:02:29.440 --> 00:02:34.870
+It appears that trt2 has
+the highest mean yield, but
+
+27
+00:02:34.870 --> 00:02:38.400
+it might be questionable whether
+each group has the same variance.
+
+28
+00:02:39.420 --> 00:02:42.371
+We're going to assume that
+is the case in our modeling.
+
+29
+00:02:46.744 --> 00:02:51.301
+Again, let's begin modelling
+with a reference analysis
+
+30
+00:02:51.301 --> 00:02:56.870
+using the non informative flat prior for
+linear model in R.
+
+31
+00:02:56.870 --> 00:03:01.864
+We'll call it lmod,
+which is a linear model of weight.
+
+32
+00:03:04.745 --> 00:03:07.050
+Versus our factor variable group.
+
+33
+00:03:09.060 --> 00:03:12.342
+And of course the data are PlantGrowth.
+
+34
+00:03:15.183 --> 00:03:17.963
+Run this linear model and
+create a summary for it.
+
+35
+00:03:22.354 --> 00:03:25.794
+And here we get the posterior
+mean estimates for
+
+36
+00:03:25.794 --> 00:03:28.890
+the three parameters governing the mean.
+
+37
+00:03:29.920 --> 00:03:35.200
+The first group the intercept,
+refers to the control group and
+
+38
+00:03:35.200 --> 00:03:39.365
+it is the mean yield for
+the control group, about 5.
+
+39
+00:03:40.720 --> 00:03:45.130
+These next two parameters
+give us the modification
+
+40
+00:03:45.130 --> 00:03:49.920
+to this original mean to obtain
+the mean for treatment group one.
+
+41
+00:03:49.920 --> 00:03:55.173
+So, the mean for
+treatment group one would be about 4.6 and
+
+42
+00:03:55.173 --> 00:04:02.660
+the mean for treatment group two would be
+about 5.5, we're adding to the baseline.
+
+43
+00:04:05.057 --> 00:04:11.354
+With the ANOVA models,
+you can also calculate the ANOVA table.
+
+44
+00:04:11.354 --> 00:04:15.302
+So we'll do ANOVA for
+this linear model, run that,
+
+45
+00:04:15.302 --> 00:04:18.910
+which gives us the analysis
+of variance table.
+
+46
+00:04:20.370 --> 00:04:25.250
+It indicates to us the results
+of a statistical test for
+
+47
+00:04:25.250 --> 00:04:29.760
+each factor variable,
+whether that factor variable
+
+48
+00:04:29.760 --> 00:04:34.600
+significantly contributes to
+the variability in the data.
+
+49
+00:04:34.600 --> 00:04:39.709
+It does this by calculating
+the variability between the factors
+
+50
+00:04:40.890 --> 00:04:44.740
+versus the variability within the factors.
+
+51
+00:04:44.740 --> 00:04:50.390
+If this is a large ratio then we
+would say that the factor variable
+
+52
+00:04:50.390 --> 00:04:55.130
+does significantly contribute
+to the variability in the data.
+
+53
+00:04:56.210 --> 00:05:02.779
+In this case, it gives a p value of
+0.016 which is marginally significant.
+
+54
+00:05:05.786 --> 00:05:09.930
+Let's now fit a Bayesian model in Jags.
+
+55
+00:05:09.930 --> 00:05:16.650
+The model we'll use now is the cell means
+model, where each group gets its own mean.
+
+56
+00:05:18.490 --> 00:05:22.260
+The model string which
+I've already included here
+
+57
+00:05:22.260 --> 00:05:26.770
+starts with the likelihood as
+usual where y[i] comes from
+
+58
+00:05:26.770 --> 00:05:31.730
+a normal distribution where
+mu [i] has another index.
+
+59
+00:05:33.960 --> 00:05:37.632
+First, to know which mu is active for
+
+60
+00:05:37.632 --> 00:05:42.967
+the [i] person,
+we need to extract a group number.
+
+61
+00:05:42.967 --> 00:05:48.157
+grp[i] will evaluate to a number group 1,
+2,
+
+62
+00:05:48.157 --> 00:05:54.846
+0, or 3, which will tell us which
+mu to use for the ith person.
+
+63
+00:05:54.846 --> 00:05:58.730
+We'll use a constant variance or
+in this case precision.
+
+64
+00:06:00.250 --> 00:06:08.450
+And for each of the three cell means we'll
+use a fairly non-informative normal prior.
+
+65
+00:06:08.450 --> 00:06:13.870
+In our prior for the variance,
+we'll use an inverse gamma with
+
+66
+00:06:15.440 --> 00:06:19.850
+five observations as our
+effective prior sample size.
+
+67
+00:06:19.850 --> 00:06:23.530
+And the prior guess on
+the variance of 1.0.
+
+68
+00:06:23.530 --> 00:06:28.910
+That would be an inverse
+gamma prior on the variance
+
+69
+00:06:28.910 --> 00:06:32.550
+which translates to a gamma
+prior on the precision.
+
+70
+00:06:34.590 --> 00:06:37.263
+Instead of monitoring the precision,
+
+71
+00:06:37.263 --> 00:06:43.020
+let's monitor the standard deviation of
+th observations using this calculation.
+
+72
+00:06:45.715 --> 00:06:49.300
+Below we have the standard set up for
+a jags model.
+
+73
+00:06:50.660 --> 00:06:56.250
+First, lets look at the structure of
+the PlantGrowth dataset where the first
+
+74
+00:06:56.250 --> 00:06:56.930
+variable.
+
+75
+00:06:56.930 --> 00:07:01.090
+The weight of the plants
+is in numeric variable and
+
+76
+00:07:01.090 --> 00:07:05.320
+the second the group is
+a factor with three levels.
+
+77
+00:07:06.760 --> 00:07:11.400
+When we put that data into
+jags through data jags,
+
+78
+00:07:11.400 --> 00:07:16.856
+we need to turn that group
+indicator into a numeric variable.
+
+79
+00:07:16.856 --> 00:07:21.586
+So we'll say
+as.numeric(PlantGrowth$group),
+
+80
+00:07:21.586 --> 00:07:24.470
+let's see what that looks like.
+
+81
+00:07:26.230 --> 00:07:31.159
+It translates the three factors,
+control, treatment 1 and
+
+82
+00:07:31.159 --> 00:07:35.710
+treatment 2 into numbers
+where 1 represents control,
+
+83
+00:07:35.710 --> 00:07:41.049
+2 represents treatment 1 and
+group 3 represents treatment 2.
+
+84
+00:07:41.049 --> 00:07:44.950
+This is the group variable that
+will go right here in our model.
+
+85
+00:07:46.690 --> 00:07:49.170
+We're going to monitor mu and sigma.
+
+86
+00:07:50.290 --> 00:07:54.290
+We can give it initial
+values which are optional.
+
+87
+00:07:54.290 --> 00:07:57.716
+We could just omit the initial values and
+
+88
+00:07:57.716 --> 00:08:02.062
+the jags model would create
+initial values for us.
+
+89
+00:08:02.062 --> 00:08:04.770
+We'll run 1,000 iterations of burning.
+
+90
+00:08:06.130 --> 00:08:12.050
+We'll run our three chains for
+5,000 iterations to save those samples and
+
+91
+00:08:12.050 --> 00:08:15.430
+then again,
+we'll combine those samples at the end.
+
+92
+00:08:16.970 --> 00:08:18.100
+Let's run this model.
+
+93
+00:08:19.420 --> 00:08:24.332
+First, we need to load the rjags library.
+
+94
+00:08:30.788 --> 00:08:32.130
+And then we'll run the models.
+
+95
+00:08:34.458 --> 00:08:38.360
+Before we use the model,
+let's check our convergence diagnostics.
+
+96
+00:08:41.180 --> 00:08:48.200
+First, we'll start with,
+With our trace plots.
+
+97
+00:08:50.170 --> 00:08:52.272
+And in this case, they look really good.
+
+98
+00:08:54.727 --> 00:08:59.200
+And we'll check our Gelman and
+Rubin statistics.
+
+99
+00:08:59.200 --> 00:09:02.368
+This potential scale reduction
+factors are all essentially 1.
+
+100
+00:09:05.063 --> 00:09:09.780
+The autocorrelation is definitely
+not a big problem here.
+
+101
+00:09:09.780 --> 00:09:13.600
+So we would imagine that the effect
+of sample size will be large,
+
+102
+00:09:13.600 --> 00:09:17.260
+close to the actual size of the chain,
+which is true.
+
+103
+00:09:18.690 --> 00:09:24.600
+So now that we're confident in our
+Monte Carlo simulation from the posterior,
+
+104
+00:09:24.600 --> 00:09:28.479
+let's calculate the posterior mean for
+the parameters.
+
+105
+00:09:30.560 --> 00:09:35.376
+Do that using the column
+means based on the combined
+
+106
+00:09:35.376 --> 00:09:39.861
+simulations where they're
+all in one matrix.
+
+107
+00:09:39.861 --> 00:09:42.701
+Let's take a look at
+these posterior means.
+
+108
+00:09:45.300 --> 00:09:49.945
+And really quickly, let's compare those
+to the coefficient estimates that we got
+
+109
+00:09:49.945 --> 00:09:52.745
+from the non-informative
+reference analysis.
+
+110
+00:09:58.933 --> 00:10:01.880
+These results look pretty consistent.
+
+111
+00:10:01.880 --> 00:10:07.890
+The mu estimates for the control group
+are similar between the two models.
+
+112
+00:10:09.250 --> 00:10:14.600
+The sal mean for treatment one which
+you obtain by adding these two numbers
+
+113
+00:10:14.600 --> 00:10:19.350
+is very close to the treatment mean for
+group two, estimated in our jags model.
+
+114
+00:10:20.970 --> 00:10:26.100
+And the treatment mean for
+treatment two is also very similar if you
+
+115
+00:10:26.100 --> 00:10:32.320
+add .49 to .50, you get essentially
+this number right here.
+
+116
+00:10:32.320 --> 00:10:34.490
+So, these two models are very consistent.
+
+117
+00:10:36.510 --> 00:10:41.360
+Let's use these posterior means of
+the parameters to compute residuals.
+
+118
+00:10:41.360 --> 00:10:47.320
+The first thing we need are predictions
+for each observation, call that y hat.
+
+119
+00:10:47.320 --> 00:10:50.740
+And it'll be based on
+the posterior means for
+
+120
+00:10:50.740 --> 00:10:55.410
+these parameters for
+the first three means.
+
+121
+00:10:56.820 --> 00:11:00.420
+And we want to index these
+by their group indicator.
+
+122
+00:11:00.420 --> 00:11:07.610
+So that comes from datajags
+the group variable.
+
+123
+00:11:07.610 --> 00:11:10.457
+Let's just remind ourselves
+what's in the group variable.
+
+124
+00:11:13.203 --> 00:11:17.110
+This tells us that
+observation 1 was in group 1.
+
+125
+00:11:17.110 --> 00:11:23.268
+Observation 11 was in group 2, observation
+12 was in group 2, and so forth.
+
+126
+00:11:25.135 --> 00:11:30.297
+So what this line of code will
+do is that the prediction for
+
+127
+00:11:30.297 --> 00:11:38.720
+observation 1 will be the posterior mean
+for the mu of group because of this index.
+
+128
+00:11:38.720 --> 00:11:42.510
+The prediction for
+observation 10 will be mu1,
+
+129
+00:11:43.930 --> 00:11:49.130
+the prediction for
+observation 11 will be mu2 and so forth.
+
+130
+00:11:49.130 --> 00:11:50.430
+Let see if that's true.
+
+131
+00:11:50.430 --> 00:11:55.350
+We'll run that and
+take a look at y hat and
+
+132
+00:11:55.350 --> 00:11:59.920
+we can see the first ten
+observations are predicted to have
+
+133
+00:11:59.920 --> 00:12:03.180
+mean mu equal to the first group's mean.
+
+134
+00:12:04.460 --> 00:12:07.630
+This is true also for
+groups two and three.
+
+135
+00:12:09.530 --> 00:12:13.640
+Once we have the predicted values,
+
+136
+00:12:13.640 --> 00:12:19.942
+we can calculate the residuals
+[SOUND] as the difference
+
+137
+00:12:19.942 --> 00:12:25.014
+between the data and the predicted values.
+
+138
+00:12:25.014 --> 00:12:32.142
+Let's plot those residuals against
+their index or observation number and
+
+139
+00:12:32.142 --> 00:12:38.570
+I don't see any patterns here,
+this looks pretty good.
+
+140
+00:12:38.570 --> 00:12:45.779
+Next, we'll create a residual plot, where
+the x-axis contains the predicted values.
+
+141
+00:12:48.702 --> 00:12:49.849
+Not surprisingly,
+
+142
+00:12:49.849 --> 00:12:54.980
+there are only three sets of predictions
+because there are three groups.
+
+143
+00:12:54.980 --> 00:12:59.980
+But one thing that really stands out
+is that the variance for this group,
+
+144
+00:12:59.980 --> 00:13:04.520
+the residual variance, is much higher than
+the residual variance for this group.
+
+145
+00:13:05.920 --> 00:13:10.610
+As we mentioned earlier, it might be
+appropriate to have a separate variance
+
+146
+00:13:10.610 --> 00:13:16.590
+parameter for each group, just like we had
+a separate mu parameter for each group.
+
+147
+00:13:16.590 --> 00:13:18.427
+We'll let you do that as an exercise.
+
+148
+00:13:21.270 --> 00:13:25.430
+Let's now look at a summary of
+our posterior distributions.
+
+149
+00:13:26.505 --> 00:13:34.540
+Summary(mod_sim) which gives us
+the posterior means for the parameters,
+
+150
+00:13:34.540 --> 00:13:38.510
+which we've already seen, as well as
+the posterior standard deviations.
+
+151
+00:13:41.020 --> 00:13:45.120
+Also, we have quantiles from
+the posterior distributions.
+
+152
+00:13:45.120 --> 00:13:48.270
+For example, if we wanted to create.
+
+153
+00:13:48.270 --> 00:13:55.010
+A 95% posterior probability interval for
+mu[1] associated with the control group.
+
+154
+00:13:56.910 --> 00:14:00.160
+It could be between this number and
+this number.
+
+155
+00:14:02.370 --> 00:14:06.080
+If we wanted to create the highest
+posterior density interval,
+
+156
+00:14:06.080 --> 00:14:11.610
+an HPDInterval,
+which we discussed in the previous course.
+
+157
+00:14:11.610 --> 00:14:14.440
+It really is just what the name implies,
+
+158
+00:14:14.440 --> 00:14:19.450
+it's the interval associated with
+the highest values of postural density.
+
+159
+00:14:20.830 --> 00:14:26.950
+We can use the HPDInterval function
+from the code of package and it our mod
+
+160
+00:14:26.950 --> 00:14:32.190
+csim for out combined simulations,
+which were all in one matrix.
+
+161
+00:14:35.500 --> 00:14:40.210
+Let's run that, and get a 95%
+HPDinterval for each of the parameters.
+
+162
+00:14:40.210 --> 00:14:45.650
+Usually the HPDinterval is
+slightly smaller than the interval
+
+163
+00:14:45.650 --> 00:14:46.720
+using equal tails.
+
+164
+00:14:49.650 --> 00:14:53.380
+We can also give it another argument.
+
+165
+00:14:53.380 --> 00:14:57.450
+If we want to change the posterior
+probability associated with the interval,
+
+166
+00:14:57.450 --> 00:15:00.583
+we can change it to, for example, .9, and
+
+167
+00:15:00.583 --> 00:15:05.050
+we would get 90% posterior
+probability intervals.
+
+168
+00:15:07.190 --> 00:15:12.230
+Now, suppose that in this experiment
+we are interested should know
+
+169
+00:15:12.230 --> 00:15:16.870
+if one of the treatments increases
+the mean yield from the plants.
+
+170
+00:15:18.600 --> 00:15:22.885
+It is clear from our posterior
+summaries that treatment
+
+171
+00:15:22.885 --> 00:15:28.500
+1 does not increase,
+plant yield over the control group.
+
+172
+00:15:28.500 --> 00:15:31.037
+But treatment 2 might increase it.
+
+173
+00:15:34.291 --> 00:15:38.488
+One major advantage of having
+a Bayesian model with Monte Carlo
+
+174
+00:15:38.488 --> 00:15:41.418
+samples from the posterior
+is that it is easy
+
+175
+00:15:41.418 --> 00:15:45.790
+to calculate posterior probabilities
+of hypothesis like this.
+
+176
+00:15:46.890 --> 00:15:51.840
+So if we want to find out whether
+treatment two produces a larger yield than
+
+177
+00:15:51.840 --> 00:15:55.930
+the control group,
+let's create an indicator variable.
+
+178
+00:15:55.930 --> 00:16:04.120
+From our combined stimulations
+Column 3 refers to mu 3.
+
+179
+00:16:04.120 --> 00:16:08.160
+We want to see if mu 3 is greater than
+
+180
+00:16:09.270 --> 00:16:12.860
+csim mu 1.
+
+181
+00:16:12.860 --> 00:16:18.450
+This will give us for
+each sample in our Monte Carlo stimulation
+
+182
+00:16:18.450 --> 00:16:23.943
+whether the draw from mu 3 was
+larger than the draw from mu 1.
+
+183
+00:16:23.943 --> 00:16:29.850
+We take the average of that,
+that gives us the posterior probability.
+
+184
+00:16:31.060 --> 00:16:35.900
+Really fast,
+let's just double check mod_csim.
+
+185
+00:16:35.900 --> 00:16:40.686
+Look at the head of this posterior
+simulation to make sure we have the right
+
+186
+00:16:40.686 --> 00:16:41.398
+columns.
+
+187
+00:16:41.398 --> 00:16:46.632
+Column 1 is mu(1), Column 3 is mu(3).
+
+188
+00:16:46.632 --> 00:16:52.281
+So let's calculate this posterior
+probability, it's about .94.
+
+189
+00:16:52.281 --> 00:16:57.010
+A very high posterior probability
+that the main yield is greater for
+
+190
+00:16:57.010 --> 00:16:59.330
+treatment in group two
+than the control group.
+
+191
+00:17:01.060 --> 00:17:05.010
+Now suppose that treatment
+two would be costly
+
+192
+00:17:05.010 --> 00:17:09.590
+to put into production and
+in order to be worthwhile.
+
+193
+00:17:09.590 --> 00:17:14.460
+This treatment must increase
+the mean yield by at least 10%.
+
+194
+00:17:14.460 --> 00:17:19.720
+What is the posterior probability
+that the increase is at least that?
+
+195
+00:17:20.990 --> 00:17:26.507
+Well we can easily do this with
+posterior samples again and
+
+196
+00:17:26.507 --> 00:17:31.960
+we need mu three to be at
+least 10% larger than mu one.
+
+197
+00:17:31.960 --> 00:17:36.847
+So it needs to be at least
+as big as 1.1 times mu 1.
+
+198
+00:17:39.863 --> 00:17:45.730
+The posterior probability for
+this hypothesis is about 0.48.
+
+199
+00:17:45.730 --> 00:17:51.155
+In other words, we have about
+50-50 odds that adopting treatment
+
+200
+00:17:51.155 --> 00:17:56.659
+2 will increase the mean yield
+of the plants by at least 10%.
+
+201
+00:17:58.380 --> 00:18:02.040
+It might be tempting to look
+at a lot of comparisons or
+
+202
+00:18:02.040 --> 00:18:04.440
+test many hypotheses like these.
+
+203
+00:18:05.660 --> 00:18:12.110
+But we must warn you that this could yield
+unreliable or non reproducible results.
+
+204
+00:18:13.570 --> 00:18:17.490
+Back when we discussed
+the statistical modeling cycle.
+
+205
+00:18:17.490 --> 00:18:22.490
+We said that it is best not to search
+your results for interesting hypotheses.
+
+206
+00:18:22.490 --> 00:18:27.590
+Because if there are many hypotheses,
+some will appear to show effects or
+
+207
+00:18:27.590 --> 00:18:30.110
+associations simply due to chance.
+
+208
+00:18:31.280 --> 00:18:36.250
+Results are most reliable when
+we determine a relatively
+
+209
+00:18:36.250 --> 00:18:41.550
+small number of hypotheses that
+we're interested in beforehand.
+
+210
+00:18:41.550 --> 00:18:43.430
+Then we collect the data, and
+
+211
+00:18:43.430 --> 00:18:46.190
+then statistically evaluate
+the evidence for them.
