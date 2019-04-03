@@ -1,0 +1,1007 @@
+WEBVTT
+
+1
+00:00:00.810 --> 00:00:03.870
+For an example of Poisson regression,
+
+2
+00:00:03.870 --> 00:00:08.390
+we'll use the bad health dataset
+from the count package in R.
+
+3
+00:00:09.440 --> 00:00:11.190
+Let's load the library here.
+
+4
+00:00:13.278 --> 00:00:17.740
+Load the data and
+check the documentation for the dataset.
+
+5
+00:00:20.140 --> 00:00:26.783
+The badhealth dataset is from a German
+health survey in the year 1998.
+
+6
+00:00:26.783 --> 00:00:34.960
+It records the number of visits to doctors
+during the year 1998 for 1,127 patients.
+
+7
+00:00:37.710 --> 00:00:44.050
+Our two covariants which we'll use
+as explanatory variables are badh,
+
+8
+00:00:44.050 --> 00:00:46.220
+which gives us an indicator variable for
+
+9
+00:00:46.220 --> 00:00:50.440
+whether the patient claims
+to be in bad health or not.
+
+10
+00:00:50.440 --> 00:00:52.040
+As well as the patient's age.
+
+11
+00:00:53.700 --> 00:00:56.990
+Again, we can check these sources and
+references for
+
+12
+00:00:56.990 --> 00:00:59.050
+more information about the data.
+
+13
+00:01:01.303 --> 00:01:05.830
+Let's print out the first
+few values of the dataset.
+
+14
+00:01:05.830 --> 00:01:09.510
+The first column we have
+the number of visits to a doctor,
+
+15
+00:01:09.510 --> 00:01:14.160
+an indicator of whether that patient
+considers themselves to have bad health,
+
+16
+00:01:14.160 --> 00:01:16.100
+and the age of the patient.
+
+17
+00:01:16.100 --> 00:01:18.500
+It's also a good idea to check.
+
+18
+00:01:18.500 --> 00:01:21.870
+To make sure we don't
+have any missing values.
+
+19
+00:01:23.580 --> 00:01:29.130
+So, we're going to check using s.na,
+
+20
+00:01:29.130 --> 00:01:33.390
+which will flag missing values, and
+we want to see if there are any of those.
+
+21
+00:01:34.990 --> 00:01:36.440
+No, there are no missing values.
+
+22
+00:01:37.540 --> 00:01:40.740
+As usual, let's visualize
+this data with the histogram
+
+23
+00:01:42.239 --> 00:01:45.490
+We'll do bad health number of visits.
+
+24
+00:01:49.313 --> 00:01:52.130
+And we'll try to do 20 categories here.
+
+25
+00:01:55.785 --> 00:02:00.532
+As we can see,
+number of visits is a positively valued or
+
+26
+00:02:00.532 --> 00:02:06.320
+at least non-negative valued,
+right skewed quantity.
+
+27
+00:02:06.320 --> 00:02:09.210
+If there are no 0 values for
+number visits,
+
+28
+00:02:17.550 --> 00:02:20.492
+Turns out there are.
+
+29
+00:02:20.492 --> 00:02:27.483
+Let's count how many of those occur.
+
+30
+00:02:27.483 --> 00:02:30.761
+We want to see how many of these are 0?
+
+31
+00:02:30.761 --> 00:02:36.218
+360 out about 1100 have
+0 visits to the doctor,
+
+32
+00:02:36.218 --> 00:02:39.816
+because we can't take the log of 0,
+
+33
+00:02:39.816 --> 00:02:44.710
+we'll have to omit these
+when we create the plot.
+
+34
+00:02:46.410 --> 00:02:48.990
+We want to plot the jitter so
+
+35
+00:02:48.990 --> 00:02:53.630
+that they move around off of
+the exact number of counts.
+
+36
+00:02:53.630 --> 00:02:58.490
+The jitter of the log of numvisit against,
+
+37
+00:03:00.645 --> 00:03:03.240
+A jitter of the age variable.
+
+38
+00:03:05.187 --> 00:03:08.290
+Where the data will be badhealth,
+
+39
+00:03:10.587 --> 00:03:15.777
+We're going to subset the data,
+for those that have bad health.
+
+40
+00:03:17.710 --> 00:03:25.314
+Equal to 0, in other words people
+that are in good health and
+
+41
+00:03:25.314 --> 00:03:29.500
+people with numvisit > than 0.
+
+42
+00:03:29.500 --> 00:03:33.525
+So, this is going to be a plot for
+people in good health,
+
+43
+00:03:33.525 --> 00:03:36.794
+who visited the doctor
+more than zero times.
+
+44
+00:03:39.750 --> 00:03:46.690
+Our x-axis will be age, and our y-axis
+will be the logged number of visits.
+
+45
+00:03:58.996 --> 00:04:02.200
+Here, you can see maybe
+a slight general trend,
+
+46
+00:04:02.200 --> 00:04:06.917
+that as age increases the number
+of doctor visits increases.
+
+47
+00:04:06.917 --> 00:04:14.535
+And now, lets repeat this plot for
+people that have badhealth.
+
+48
+00:04:15.890 --> 00:04:18.780
+And let's make the color of
+the plot red to distinguish.
+
+49
+00:04:20.860 --> 00:04:24.670
+And we need to say point instead of plot.
+
+50
+00:04:24.670 --> 00:04:27.010
+So, that it'll add to an existing plot.
+
+51
+00:04:30.220 --> 00:04:32.910
+There are not many red points down here.
+
+52
+00:04:32.910 --> 00:04:37.250
+A lot of them are up here, so
+it looks like being in bad health,
+
+53
+00:04:37.250 --> 00:04:40.760
+not surprisingly, is associated
+with more visits to the doctor.
+
+54
+00:04:46.927 --> 00:04:51.602
+Because both variables are related
+to the number of doctor visits,
+
+55
+00:04:51.602 --> 00:04:56.619
+any model that we fit should probably
+include terms for both variables.
+
+56
+00:04:58.160 --> 00:05:00.056
+If we believe that the age and
+
+57
+00:05:00.056 --> 00:05:05.518
+visits relationship is different between
+healthy and non healthy populations.
+
+58
+00:05:05.518 --> 00:05:09.440
+We should also include
+an interaction term in the model.
+
+59
+00:05:09.440 --> 00:05:11.020
+We're going to do that.
+
+60
+00:05:11.020 --> 00:05:14.010
+We're going to fit the full model here.
+
+61
+00:05:14.010 --> 00:05:16.720
+And then, we're going to leave
+it to you to compare it.
+
+62
+00:05:16.720 --> 00:05:18.560
+To the simpler additive model.
+
+63
+00:05:20.330 --> 00:05:25.243
+One modelling option would be
+to fit a normal linear model to
+
+64
+00:05:25.243 --> 00:05:29.180
+the log of the number of
+visits as our response.
+
+65
+00:05:30.430 --> 00:05:34.880
+Or we could transform the number
+of visits by some power.
+
+66
+00:05:34.880 --> 00:05:38.300
+So, that the responds variable
+looks more normally distributed.
+
+67
+00:05:39.710 --> 00:05:44.670
+We already saw one drawback of taking
+the log of the number of visits as our
+
+68
+00:05:44.670 --> 00:05:46.630
+response variable.
+
+69
+00:05:46.630 --> 00:05:48.540
+You can't take the log of 0.
+
+70
+00:05:48.540 --> 00:05:51.194
+So, in order to be able to model it,
+
+71
+00:05:51.194 --> 00:05:56.068
+while keeping all the individuals
+who never visited the doctor.
+
+72
+00:05:56.068 --> 00:06:00.912
+We would have to add a number
+maybe a small number like 0.1 to
+
+73
+00:06:00.912 --> 00:06:03.810
+the response before taking the log.
+
+74
+00:06:05.040 --> 00:06:08.140
+This is kind of an awkward transformation
+
+75
+00:06:08.140 --> 00:06:13.020
+because our choice of number to add to
+the number of visits is pretty arbitrary.
+
+76
+00:06:14.280 --> 00:06:18.570
+Instead of using logged number of
+visits as our response variable,
+
+77
+00:06:18.570 --> 00:06:21.440
+let's instead choose
+the Poisson linear model.
+
+78
+00:06:23.110 --> 00:06:26.150
+One major advantage of
+the Poisson linear model
+
+79
+00:06:26.150 --> 00:06:30.870
+is that the log transformation
+appears in the link function.
+
+80
+00:06:30.870 --> 00:06:35.740
+We are taking the log of the mean
+rather than the response itself.
+
+81
+00:06:38.130 --> 00:06:41.110
+You'll be familiar with
+the code that follows.
+
+82
+00:06:41.110 --> 00:06:44.610
+We start our model string
+with the likelihood.
+
+83
+00:06:44.610 --> 00:06:49.300
+Where we iterate i from 1 to
+the length of number of visits.
+
+84
+00:06:49.300 --> 00:06:52.360
+Or you could assign n to be that number.
+
+85
+00:06:52.360 --> 00:06:55.488
+And for each number of visits for
+the ith person,
+
+86
+00:06:55.488 --> 00:06:59.620
+this will follow a Poisson
+distribution with mean lambda sub i.
+
+87
+00:07:00.740 --> 00:07:07.170
+Lambda sub i is controlled by this link
+function and the linear form of the model.
+
+88
+00:07:07.170 --> 00:07:10.399
+Where we have an intercept,
+a coefficient for
+
+89
+00:07:10.399 --> 00:07:15.920
+badhealth, the value of the badhealth
+variable, a coefficient for age,
+
+90
+00:07:15.920 --> 00:07:21.560
+the value of the ith age and
+an interaction coefficient.
+
+91
+00:07:21.560 --> 00:07:25.280
+To go along with the age
+times the bad health.
+
+92
+00:07:25.280 --> 00:07:29.330
+For a person in good health
+this variable will be zero,
+
+93
+00:07:30.380 --> 00:07:32.780
+which cancels out this entire term.
+
+94
+00:07:32.780 --> 00:07:37.710
+But, if the person is in bad health this
+is a one which makes this interaction
+
+95
+00:07:37.710 --> 00:07:41.950
+term modify the coefficient for age.
+
+96
+00:07:43.070 --> 00:07:45.980
+In other words,
+the effective age will be different for
+
+97
+00:07:45.980 --> 00:07:47.970
+people with badhealth
+than with good health,
+
+98
+00:07:47.970 --> 00:07:53.830
+of course we now add prior distributions
+to each of this four coefficients.
+
+99
+00:07:55.310 --> 00:07:56.990
+Let's go ahead and fit this model.
+
+100
+00:07:58.530 --> 00:08:04.110
+We'll first load the library
+as well as the model string.
+
+101
+00:08:04.110 --> 00:08:08.570
+Then we'll set seed and
+create our data for jags.
+
+102
+00:08:08.570 --> 00:08:11.240
+Let's take a look at the structure
+of that really fast.
+
+103
+00:08:13.150 --> 00:08:16.960
+We did this as a list of
+the original badhealth.
+
+104
+00:08:16.960 --> 00:08:21.170
+DataFrame it creates the list we want
+
+105
+00:08:21.170 --> 00:08:25.810
+because we use the same names for
+the different variables in our model.
+
+106
+00:08:27.340 --> 00:08:31.410
+The parameters are intercept and
+the three coefficients.
+
+107
+00:08:32.890 --> 00:08:35.830
+Now, let's initialize the model and
+run the burning period.
+
+108
+00:08:38.310 --> 00:08:39.950
+And as you can see, because there's so
+
+109
+00:08:39.950 --> 00:08:43.260
+many data points,
+it takes a few moments to run this.
+
+110
+00:08:47.007 --> 00:08:51.418
+Then, we can run the simulations for
+the samples that we'll keep.
+
+111
+00:08:51.418 --> 00:08:54.590
+And this runs even slower.
+
+112
+00:09:00.010 --> 00:09:01.390
+We've skipped ahead to the end.
+
+113
+00:09:03.070 --> 00:09:07.280
+Also we'll leave it up to you to
+run these convergence diagnostics
+
+114
+00:09:07.280 --> 00:09:10.820
+to make sure that we can trust
+these posterior samples.
+
+115
+00:09:10.820 --> 00:09:13.650
+We should also collect the DIC for
+this model.
+
+116
+00:09:18.570 --> 00:09:22.662
+To get a general idea of
+this model's performance,
+
+117
+00:09:22.662 --> 00:09:26.947
+we can look at predicted
+values in residuals as usual.
+
+118
+00:09:26.947 --> 00:09:30.890
+We'll call this section residuals.
+
+119
+00:09:31.970 --> 00:09:35.480
+And we'll start with the design matri X.
+
+120
+00:09:36.860 --> 00:09:42.230
+We'll transform it to be
+a matrix from the original data,
+
+121
+00:09:42.230 --> 00:09:46.670
+badhealth, and
+we'll remove the response variable.
+
+122
+00:09:46.670 --> 00:09:48.750
+We only want the code variance here.
+
+123
+00:09:50.060 --> 00:09:51.470
+Make sure this is what we want.
+
+124
+00:09:53.060 --> 00:09:56.210
+Not quite,
+we also want the interreaction term, so
+
+125
+00:09:56.210 --> 00:09:58.400
+let's add that as a third column to X.
+
+126
+00:09:59.630 --> 00:10:02.700
+We will cbind it to the original X.
+
+127
+00:10:02.700 --> 00:10:05.520
+So, the original X will
+be a cbind with itself.
+
+128
+00:10:05.520 --> 00:10:11.253
+And with the badhealth data set,
+
+129
+00:10:11.253 --> 00:10:17.620
+we want to calculate badh times age.
+
+130
+00:10:17.620 --> 00:10:19.090
+Now, let's see if that's what we want.
+
+131
+00:10:20.540 --> 00:10:25.290
+The third column is bodhealth times
+h which is true in all these cases.
+
+132
+00:10:25.290 --> 00:10:26.240
+Let's look at the tail.
+
+133
+00:10:28.700 --> 00:10:32.160
+And again, it's the product of these
+two numbers, so this looks good.
+
+134
+00:10:34.040 --> 00:10:38.430
+We need point estimates of our
+coefficients and in this case,
+
+135
+00:10:38.430 --> 00:10:42.480
+let's try the posterior median
+instead of the posterior means.
+
+136
+00:10:45.594 --> 00:10:48.840
+We'll take these from
+the combined simulation.
+
+137
+00:10:51.909 --> 00:10:57.509
+So, this apply function says apply
+to the columns of model csim and
+
+138
+00:10:57.509 --> 00:11:01.930
+calculate the medians for those columns.
+
+139
+00:11:01.930 --> 00:11:07.060
+We want to use median here because we're
+going to be taking the inverse log or
+
+140
+00:11:07.060 --> 00:11:10.010
+the exponential function
+of these point estimates.
+
+141
+00:11:11.600 --> 00:11:13.470
+Really this is just another option.
+
+142
+00:11:13.470 --> 00:11:15.190
+You could have used the mean here.
+
+143
+00:11:16.550 --> 00:11:19.440
+We'll run those coefficients,
+take a look at them.
+
+144
+00:11:21.503 --> 00:11:26.920
+And of course we'll matrix multiply
+these to get our predictions.
+
+145
+00:11:26.920 --> 00:11:35.310
+First we'll extract the log of lambda
+hat which will be our intercept first.
+
+146
+00:11:37.880 --> 00:11:42.900
+So, let's extract
+the intercept plus the design
+
+147
+00:11:42.900 --> 00:11:47.680
+matrix Matrix multiplied
+with the coefficients.
+
+148
+00:11:50.185 --> 00:11:54.995
+We want the b_badh,
+
+149
+00:11:54.995 --> 00:12:01.950
+the b_age and the b_interx.
+
+150
+00:12:03.367 --> 00:12:05.120
+Let's run that.
+
+151
+00:12:06.990 --> 00:12:10.730
+This evaluated the linear part of
+the model for the observations.
+
+152
+00:12:11.790 --> 00:12:16.930
+But to get back the original lambdas, or
+the means of that Poisson distribution,
+
+153
+00:12:16.930 --> 00:12:19.270
+we have to take the inverse
+of the link function.
+
+154
+00:12:20.320 --> 00:12:27.620
+So, lam_hat will be nn exponentiated
+version of log lam_hat.
+
+155
+00:12:30.160 --> 00:12:33.300
+Finally, we can calculate
+the residuals from the predictions.
+
+156
+00:12:34.400 --> 00:12:39.420
+Resids will come from badhealth$numvisit.
+
+157
+00:12:39.420 --> 00:12:44.925
+And we'll subtract off the predictions
+
+158
+00:12:48.872 --> 00:12:50.240
+Let's look at these residuals.
+
+159
+00:12:56.106 --> 00:13:00.750
+Ordinarily we would be
+alarmed by this plot.
+
+160
+00:13:00.750 --> 00:13:04.210
+The index of the data seems
+to have something to do,
+
+161
+00:13:04.210 --> 00:13:08.830
+with the value of the residual which would
+suggest that the data are not independent.
+
+162
+00:13:09.940 --> 00:13:13.920
+It turns out in this case
+that the data were presorted.
+
+163
+00:13:13.920 --> 00:13:18.170
+They were ordered by
+the number of doctor visits.
+
+164
+00:13:18.170 --> 00:13:19.940
+And so, we won't worry about this plot.
+
+165
+00:13:23.233 --> 00:13:29.300
+Next, let's plot the predicted
+values against the residuals.
+
+166
+00:13:37.425 --> 00:13:41.880
+Where we want to standardize the x-axis.
+
+167
+00:13:41.880 --> 00:13:45.430
+And let's look at each
+group one at a time.
+
+168
+00:13:45.430 --> 00:13:50.560
+First, we want to look at
+the ones that have bad health.
+
+169
+00:13:50.560 --> 00:13:57.775
+So, we'll take only
+the predictions where badhealth,
+
+170
+00:13:57.775 --> 00:14:04.370
+badh==0 and
+we also want only those residuals as well.
+
+171
+00:14:06.490 --> 00:14:11.280
+The predictions for which badhealth is 0,
+and the residuals for
+
+172
+00:14:11.280 --> 00:14:15.480
+which bad health in
+the original data set is 0.
+
+173
+00:14:15.480 --> 00:14:18.740
+Next, on top of that plot,
+
+174
+00:14:18.740 --> 00:14:24.223
+we will add points, Where badhealth is 1.
+
+175
+00:14:27.592 --> 00:14:32.498
+So, the lambda hats for
+which the badhealth indicator is 1.
+
+176
+00:14:32.498 --> 00:14:36.340
+And the residuals for
+which the badhealth indicator is 1.
+
+177
+00:14:36.340 --> 00:14:39.550
+And let's change the color
+of these points.
+
+178
+00:14:43.970 --> 00:14:49.470
+Okay, and
+we also need to add a y limit for
+
+179
+00:14:49.470 --> 00:14:53.560
+these because the two groups
+have different range.
+
+180
+00:14:53.560 --> 00:14:58.552
+So let's set the entire
+range of the residuals for
+
+181
+00:14:58.552 --> 00:15:02.610
+our y-axis, now let's run this plot.
+
+182
+00:15:07.789 --> 00:15:12.734
+On the x-axis we have lambda hat,
+the predicted mean of the Poisson.
+
+183
+00:15:12.734 --> 00:15:16.320
+And on the y-axis we
+have the residual value.
+
+184
+00:15:17.540 --> 00:15:22.144
+Interestingly, the model separated
+the predicted number of visits
+
+185
+00:15:22.144 --> 00:15:25.830
+according to whether or
+not the person had bad health.
+
+186
+00:15:25.830 --> 00:15:29.930
+If the person had bad health, the model
+predicts they'll have about six visits.
+
+187
+00:15:29.930 --> 00:15:32.990
+And if they don't have bad health
+the model predicts about two visits.
+
+188
+00:15:35.220 --> 00:15:38.800
+It looks like this model
+isn't performing great.
+
+189
+00:15:38.800 --> 00:15:43.850
+We have a lot of values here
+with really large residuals.
+
+190
+00:15:43.850 --> 00:15:48.420
+In other words, the number of visits was
+much higher than the model predicted for
+
+191
+00:15:48.420 --> 00:15:49.310
+a lot of these people.
+
+192
+00:15:50.760 --> 00:15:55.050
+It's not surprising to see that
+the variability increases.
+
+193
+00:15:55.050 --> 00:15:57.500
+As lam_hat increases.
+
+194
+00:15:57.500 --> 00:16:00.040
+We're using a Poisson likelihood.
+
+195
+00:16:00.040 --> 00:16:03.420
+And remember that in the Poisson
+distribution, the mean and
+
+196
+00:16:03.420 --> 00:16:05.270
+the variance are the same number.
+
+197
+00:16:06.720 --> 00:16:09.816
+However, if the Poisson model is correct,
+
+198
+00:16:09.816 --> 00:16:13.761
+this group of residuals
+should have variance about 2.
+
+199
+00:16:13.761 --> 00:16:17.290
+And this group of residuals
+should have variance about six.
+
+200
+00:16:18.970 --> 00:16:20.750
+Let's test that out.
+
+201
+00:16:20.750 --> 00:16:26.130
+First, let's take the residuals for
+which badhealth is 0.
+
+202
+00:16:26.130 --> 00:16:29.590
+And we'll calculate the variance
+of these residuals.
+
+203
+00:16:30.980 --> 00:16:32.360
+We expect it to be about two.
+
+204
+00:16:33.420 --> 00:16:35.640
+Turns out it's about seven.
+
+205
+00:16:35.640 --> 00:16:40.310
+Now, let's do the same thing for
+patients were badhealth equals 1.
+
+206
+00:16:40.310 --> 00:16:45.104
+We would expect the variance
+here to be about six.
+
+207
+00:16:45.104 --> 00:16:48.836
+It turns out the variance is about 41.
+
+208
+00:16:48.836 --> 00:16:53.471
+The fact that we observed so
+much more variability than we
+
+209
+00:16:53.471 --> 00:16:58.640
+expected indicates that
+either the model fits poorly.
+
+210
+00:16:58.640 --> 00:17:03.270
+Meaning that the covariance don't explain
+enough of the variability in the data.
+
+211
+00:17:04.430 --> 00:17:09.780
+Or the data are over dispersed for
+this plus on likely that we've chosen.
+
+212
+00:17:11.070 --> 00:17:13.700
+This is a common issue with count data.
+
+213
+00:17:13.700 --> 00:17:18.930
+If the data are more variable then
+the plus on likelihood suggest,
+
+214
+00:17:18.930 --> 00:17:22.920
+we can look to alternative models for
+over dispersed data.
+
+215
+00:17:23.940 --> 00:17:28.330
+One common alternative is to use
+the negative binomial distribution,
+
+216
+00:17:29.380 --> 00:17:32.260
+which we won't cover here,
+but it's good to know about.

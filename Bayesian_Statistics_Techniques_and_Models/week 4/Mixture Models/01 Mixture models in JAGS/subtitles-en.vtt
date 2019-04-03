@@ -1,0 +1,754 @@
+WEBVTT
+
+1
+00:00:00.790 --> 00:00:07.470
+For an example of a mixture model, we're
+going to use the data in mixture.csv.
+
+2
+00:00:07.470 --> 00:00:11.492
+Let's go ahead and
+read that in using read.csv,
+
+3
+00:00:11.492 --> 00:00:15.240
+with header=FALSE, and
+take a look at that.
+
+4
+00:00:16.268 --> 00:00:20.390
+The header=FALSE was because there
+was no name for the variable, so
+
+5
+00:00:20.390 --> 00:00:23.025
+this is a default name
+given to variable 1.
+
+6
+00:00:25.050 --> 00:00:27.900
+Let's check the number of rows in dat.
+
+7
+00:00:27.900 --> 00:00:31.964
+We have 200 observations of this variable.
+
+8
+00:00:31.964 --> 00:00:35.421
+Let's take a look at it, see what we have.
+
+9
+00:00:35.421 --> 00:00:39.509
+First, we will create a variable,
+
+10
+00:00:39.509 --> 00:00:43.880
+name it y, and that will be dat$V1.
+
+11
+00:00:46.421 --> 00:00:48.906
+And let's do a histogram of y.
+
+12
+00:00:51.798 --> 00:00:57.520
+So the values of y range from about -5,
+maybe, up to 4.
+
+13
+00:00:57.520 --> 00:01:01.680
+And we see we have
+possibly two populations.
+
+14
+00:01:03.710 --> 00:01:07.960
+We can also view this with
+a density estimate, so
+
+15
+00:01:07.960 --> 00:01:12.400
+we can plot density(y).
+
+16
+00:01:12.400 --> 00:01:17.710
+And again, we can see this might
+represent two different populations,
+
+17
+00:01:17.710 --> 00:01:22.370
+but we only have one variable here,
+the response variable.
+
+18
+00:01:22.370 --> 00:01:27.540
+We have no covariance that might perhaps
+explain why there's a group here,
+
+19
+00:01:27.540 --> 00:01:29.060
+around -2.
+
+20
+00:01:29.060 --> 00:01:32.910
+And there's another group up here,
+close to +2.
+
+21
+00:01:32.910 --> 00:01:37.550
+Perhaps, in the context of our
+example with company growth,
+
+22
+00:01:37.550 --> 00:01:40.790
+this might represent
+companies that are growing.
+
+23
+00:01:40.790 --> 00:01:44.850
+This population over here might be
+companies that are not growing.
+
+24
+00:01:44.850 --> 00:01:48.531
+But we don’t know which companies
+fall in which categories,
+
+25
+00:01:48.531 --> 00:01:51.661
+we'll have to try and
+infer it with a mixture model.
+
+26
+00:01:54.692 --> 00:01:57.072
+First, we'll load the JAGS library,
+
+27
+00:02:00.218 --> 00:02:04.537
+Which is actually the rjags library,
+there we go.
+
+28
+00:02:04.537 --> 00:02:06.505
+And we'll create the model string.
+
+29
+00:02:13.051 --> 00:02:18.300
+Let's do a mixture of normal distributions
+with two mixture components.
+
+30
+00:02:19.610 --> 00:02:21.993
+We'll start with the likelihood
+portion as usual.
+
+31
+00:02:21.993 --> 00:02:25.350
+for i in 1:length of the data,
+
+32
+00:02:28.647 --> 00:02:33.360
+y[i] will come from a normal distribution,
+
+33
+00:02:36.425 --> 00:02:41.410
+Where we're going to index mu
+by which category it belongs to.
+
+34
+00:02:41.410 --> 00:02:45.180
+And then we're going to assume that
+they all have the same precision.
+
+35
+00:02:47.040 --> 00:02:53.580
+So which normal distribution y[i] comes
+from will depend on our variable z[i].
+
+36
+00:02:53.580 --> 00:02:56.770
+This is our auxiliary,
+or latent, variable.
+
+37
+00:02:58.760 --> 00:03:04.510
+Because the auxiliary variable z
+is not observed in the dataset,
+
+38
+00:03:04.510 --> 00:03:08.740
+like we had with anova,
+we're going to have to learn z.
+
+39
+00:03:08.740 --> 00:03:11.450
+So we have to give it
+a prior distribution.
+
+40
+00:03:11.450 --> 00:03:17.030
+So z[i] will come from
+a categorical distribution.
+
+41
+00:03:17.030 --> 00:03:20.660
+A categorical distribution
+is like a Bernoulli,
+
+42
+00:03:20.660 --> 00:03:24.590
+except with possibly many categories.
+
+43
+00:03:24.590 --> 00:03:28.129
+Here there are only two categories,
+category one or category two.
+
+44
+00:03:31.218 --> 00:03:34.914
+The probabilities of being
+in those categories will
+
+45
+00:03:34.914 --> 00:03:37.520
+be saved in a variable called omega.
+
+46
+00:03:39.420 --> 00:03:42.585
+And now we need to come up with priors for
+the two different mus.
+
+47
+00:03:42.585 --> 00:03:47.330
+mu[1], we'll say comes from
+a normal distribution,
+
+48
+00:03:49.620 --> 00:03:53.370
+and we'll help this model
+identify the two populations.
+
+49
+00:03:53.370 --> 00:03:57.930
+Remember, we had one that was negative and
+one that was positive.
+
+50
+00:03:57.930 --> 00:04:01.400
+So we'll say mu[1] should
+be the smaller of the two.
+
+51
+00:04:01.400 --> 00:04:07.368
+And we'll give it a prior mean of -1,
+but with a fairly large variance.
+
+52
+00:04:10.607 --> 00:04:17.060
+Now, given mu[1], mu[2] is going
+to follow a normal distribution.
+
+53
+00:04:17.060 --> 00:04:22.109
+With a positive mean,
+the same variance, but
+
+54
+00:04:22.109 --> 00:04:29.244
+it'll be constrained, or
+forced, to be larger than mu[1].
+
+55
+00:04:32.299 --> 00:04:36.700
+This is going to guarantee that
+mu[2] is larger than mu[1],
+
+56
+00:04:36.700 --> 00:04:39.470
+which helps our mixture model.
+
+57
+00:04:39.470 --> 00:04:42.230
+Sometimes mixture models are susceptible
+
+58
+00:04:42.230 --> 00:04:45.750
+to what is called
+an identifiability problem.
+
+59
+00:04:45.750 --> 00:04:48.710
+We can't identify which group is which,
+
+60
+00:04:48.710 --> 00:04:52.970
+the labels might switch between
+groups one and groups two.
+
+61
+00:04:52.970 --> 00:04:59.180
+If we force the mus to be ordered and
+give them a prior which helps them
+
+62
+00:04:59.180 --> 00:05:04.400
+identify themselves, then we can
+avoid the identifiability issue.
+
+63
+00:05:06.300 --> 00:05:09.444
+As usual,
+we'll put a prior on that precision.
+
+64
+00:05:14.007 --> 00:05:19.874
+We'll give it a prior sample size of 1,
+a prior guess of 1.
+
+65
+00:05:21.780 --> 00:05:26.535
+And instead of monitoring the precision,
+we'll monitor the standard deviation.
+
+66
+00:05:33.477 --> 00:05:38.650
+Our latent variables z[i]
+can be either a 1 or a 2.
+
+67
+00:05:40.000 --> 00:05:42.730
+Depending on the probability of being 1 or
+2,
+
+68
+00:05:42.730 --> 00:05:45.190
+which is in our probability vector omega.
+
+69
+00:05:46.830 --> 00:05:51.267
+One prior distribution for probability
+vectors is the Dirichlet distribution,
+
+70
+00:05:51.267 --> 00:05:54.492
+we're going to give the Dirichlet
+distribution to omega.
+
+71
+00:05:58.134 --> 00:06:02.310
+The Dirichlet distribution has
+a vector of shape parameters.
+
+72
+00:06:02.310 --> 00:06:06.500
+They're very similar to
+the beta shape parameters,
+
+73
+00:06:06.500 --> 00:06:10.430
+where you add the number
+of counts to these alphas.
+
+74
+00:06:10.430 --> 00:06:14.506
+To update a Dirichlet distribution just
+like you update a beta distribution in
+
+75
+00:06:14.506 --> 00:06:15.380
+the posterior.
+
+76
+00:06:17.680 --> 00:06:24.623
+We'll use a uniform symmetric Dirichlet
+prior with shape parameter 1 and 1.
+
+77
+00:06:27.166 --> 00:06:33.256
+As usual,
+we have to put this into a string, And
+
+78
+00:06:33.256 --> 00:06:36.335
+save that model string.
+
+79
+00:06:36.335 --> 00:06:37.764
+We'll set the seed.
+
+80
+00:06:41.989 --> 00:06:46.727
+And now we need to create the data for
+jags, it is just a list of y.
+
+81
+00:06:52.213 --> 00:06:55.680
+Let's save the parameters
+we want to look at.
+
+82
+00:06:56.860 --> 00:07:01.490
+We want to save mu, both mus, sigma,
+
+83
+00:07:01.490 --> 00:07:04.510
+the standard deviation in
+our normal likelihood.
+
+84
+00:07:05.860 --> 00:07:11.690
+We want to save omega, the probabilities
+of being in either of the two categories.
+
+85
+00:07:13.100 --> 00:07:17.060
+And we could monitor z, but as you know,
+
+86
+00:07:17.060 --> 00:07:20.850
+there are just as many
+zs are there are ys.
+
+87
+00:07:20.850 --> 00:07:25.730
+That would be monitoring 200 parameters,
+we don't want to do that.
+
+88
+00:07:25.730 --> 00:07:28.075
+Let's look at only a few of these zs.
+
+89
+00:07:29.310 --> 00:07:31.890
+Let's pick out a few observations for
+
+90
+00:07:31.890 --> 00:07:36.160
+which the posterior distribution
+of z might be interesting.
+
+91
+00:07:36.160 --> 00:07:38.490
+Let's look at the first 50 values of y.
+
+92
+00:07:40.630 --> 00:07:43.292
+And for reference,
+let's look at the density estimate again.
+
+93
+00:07:48.868 --> 00:07:53.321
+It looks like the first observation
+is pretty clearly in this
+
+94
+00:07:53.321 --> 00:07:57.660
+population here on the left,
+in population one.
+
+95
+00:07:57.660 --> 00:08:02.650
+So we would expect the posterior
+probability that z[1]
+
+96
+00:08:02.650 --> 00:08:06.190
+is equal to the group 1
+should be pretty high.
+
+97
+00:08:07.350 --> 00:08:09.961
+So to verify that, let's monitor z[1].
+
+98
+00:08:13.397 --> 00:08:18.262
+If you look a little further down,
+at observation 31, that's -0.37,
+
+99
+00:08:18.262 --> 00:08:20.160
+so that's right around here.
+
+100
+00:08:21.650 --> 00:08:26.270
+If this is a mixture of
+two normal distributions,
+
+101
+00:08:26.270 --> 00:08:34.411
+it's fairly ambiguous which population
+an observation of -0.37 will belong to.
+
+102
+00:08:34.411 --> 00:08:40.255
+So let's monitor z[31],
+that one should be interesting.
+
+103
+00:08:43.642 --> 00:08:47.720
+Next, let's look at observation 49.
+
+104
+00:08:47.720 --> 00:08:53.970
+This one is 0.03, or close to 0.04,
+
+105
+00:08:53.970 --> 00:08:57.600
+that's right over here.
+
+106
+00:08:57.600 --> 00:09:02.821
+It's fairly ambiguous, but it looks
+like it probably belongs to group two.
+
+107
+00:09:05.517 --> 00:09:07.840
+Let's monitor z[49].
+
+108
+00:09:11.021 --> 00:09:18.220
+Finally, if we look at observation 6,
+the value is 3.75, it's way over here.
+
+109
+00:09:18.220 --> 00:09:22.010
+Pretty clearly,
+it's a member of population two.
+
+110
+00:09:22.010 --> 00:09:27.582
+So we can verify that by looking at
+the posterior distribution for z[6].
+
+111
+00:09:33.781 --> 00:09:38.167
+Okay, it now remains to initialize and
+run this model.
+
+112
+00:09:38.167 --> 00:09:44.383
+I've also changed the data_jags list
+right here, so that the name of y is y.
+
+113
+00:09:44.383 --> 00:09:48.060
+So that it knows the name
+of this variable here.
+
+114
+00:09:48.060 --> 00:09:53.082
+Let's run the initialization and
+burning period.
+
+115
+00:09:53.082 --> 00:09:56.230
+And then we'll run the actual simulations.
+
+116
+00:10:00.603 --> 00:10:04.160
+Again, we won't go deep into
+the convergence diagnostics, but
+
+117
+00:10:04.160 --> 00:10:06.366
+let's at least look at the trace plots.
+
+118
+00:10:17.291 --> 00:10:19.193
+These appear to be mixing quite well.
+
+119
+00:10:22.980 --> 00:10:28.140
+Let me get the plot again,
+yeah, pretty good mixing.
+
+120
+00:10:28.140 --> 00:10:32.147
+Notice that these zs,
+they are discrete variables, so
+
+121
+00:10:32.147 --> 00:10:35.740
+this is bouncing back and
+forth between 1 and 2.
+
+122
+00:10:35.740 --> 00:10:36.970
+That's just fine.
+
+123
+00:10:42.451 --> 00:10:43.228
+Okay.
+
+124
+00:10:45.948 --> 00:10:49.277
+Next, let's look at a posterior
+summary from these chains.
+
+125
+00:10:54.392 --> 00:10:59.460
+And again, for reference, let's compare
+this to the density estimate for y.
+
+126
+00:11:05.567 --> 00:11:10.408
+Mu[1] has a posterior mean of -2,
+which looks about right for
+
+127
+00:11:10.408 --> 00:11:12.493
+this normal distribution.
+
+128
+00:11:12.493 --> 00:11:19.870
+And mu[2] has a posterior mean about 1.5,
+that seems reasonable.
+
+129
+00:11:19.870 --> 00:11:23.340
+So it looks like we have
+identified two populations.
+
+130
+00:11:24.390 --> 00:11:28.200
+It also looks like the two
+normal distributions have
+
+131
+00:11:28.200 --> 00:11:30.800
+a standard deviation of about 1.
+
+132
+00:11:30.800 --> 00:11:33.210
+That looks probably like it's true.
+
+133
+00:11:34.970 --> 00:11:40.439
+And it suggests that the probability
+of being in group 1 is about 39%,
+
+134
+00:11:40.439 --> 00:11:44.689
+and the probability of being
+in group 2 is about 61%.
+
+135
+00:11:44.689 --> 00:11:51.204
+So about a 39% chance of being down here
+and about a 61% chance of being up here.
+
+136
+00:11:51.204 --> 00:11:52.870
+That looks about right as well.
+
+137
+00:11:55.888 --> 00:12:00.221
+Rather than looking at the posterior
+means of these z variables,
+
+138
+00:12:00.221 --> 00:12:03.840
+let's look at them graphically instead.
+
+139
+00:12:03.840 --> 00:12:09.220
+I've created here a plot from
+the coda package densplot for
+
+140
+00:12:09.220 --> 00:12:11.596
+these four different zs.
+
+141
+00:12:11.596 --> 00:12:14.174
+So we can look at them all at once.
+
+142
+00:12:17.334 --> 00:12:22.162
+Remember, the first observation
+associated with z[1] was very
+
+143
+00:12:22.162 --> 00:12:26.420
+clearly in group 1,
+it was far over to the left.
+
+144
+00:12:26.420 --> 00:12:30.200
+And you can see here,
+almost all of the posterior probability
+
+145
+00:12:30.200 --> 00:12:33.730
+is that it is within group 1.
+
+146
+00:12:33.730 --> 00:12:37.520
+Observation 31 was more ambiguous,
+
+147
+00:12:37.520 --> 00:12:40.337
+we weren't sure which
+population it belonged to.
+
+148
+00:12:40.337 --> 00:12:45.020
+The posterior distribution of z
+suggests that there's a little
+
+149
+00:12:45.020 --> 00:12:49.330
+more posterior probability that it
+was in group two than in group one.
+
+150
+00:12:51.960 --> 00:12:56.497
+Observation 49 was positive,
+it was about 0.03.
+
+151
+00:12:56.497 --> 00:13:02.254
+And it belonged fairly clearly
+to population 2's territory.
+
+152
+00:13:02.254 --> 00:13:06.222
+And as we can see,
+the posterior probability that
+
+153
+00:13:06.222 --> 00:13:10.009
+observation 49 is in
+group 2 is pretty high.
+
+154
+00:13:12.273 --> 00:13:16.984
+The 6th observation was above 3,
+it was very positive, and
+
+155
+00:13:16.984 --> 00:13:20.280
+it was very clearly part of population 2.
+
+156
+00:13:20.280 --> 00:13:25.241
+And the posterior for
+z[6] suggests that this
+
+157
+00:13:25.241 --> 00:13:29.844
+observation is clearly
+a member of group 2.
+
+158
+00:13:29.844 --> 00:13:35.490
+The hierarchical structure of this
+mixture model was very useful to
+
+159
+00:13:35.490 --> 00:13:41.940
+us In identifying groupings of variables
+that were not explicit in the data.
+
+160
+00:13:41.940 --> 00:13:44.736
+We were able to infer them
+using this mixture model.

@@ -1,0 +1,668 @@
+WEBVTT
+
+1
+00:00:01.200 --> 00:00:06.130
+As we just saw, the Poisson
+model is lacking for these data.
+
+2
+00:00:07.280 --> 00:00:13.280
+However, assuming the model fit is
+adequate, we could interpret the results.
+
+3
+00:00:13.280 --> 00:00:16.167
+Let's look at a summary from
+these model simulations.
+
+4
+00:00:19.791 --> 00:00:24.695
+In this model, the intercept is
+not necessarily interpretable
+
+5
+00:00:24.695 --> 00:00:28.430
+because it corresponds
+to a healthy 0 year old.
+
+6
+00:00:29.550 --> 00:00:34.197
+Whereas in this dataset the youngest
+person is 20 years old.
+
+7
+00:00:34.197 --> 00:00:37.610
+It is still an important parameter
+we just won't interpret it.
+
+8
+00:00:39.070 --> 00:00:43.000
+For healthy individuals
+it appears that age
+
+9
+00:00:43.000 --> 00:00:47.070
+has a positive association with
+the number of doctor visits.
+
+10
+00:00:48.500 --> 00:00:54.879
+Clearly bad health is associated with
+an increase in expected number of visits.
+
+11
+00:00:56.110 --> 00:01:01.030
+The interaction term is
+interpreted as an adjustment
+
+12
+00:01:01.030 --> 00:01:03.910
+to the age coefficient for
+people in bad health.
+
+13
+00:01:05.150 --> 00:01:07.910
+So in this case it looks like, for
+
+14
+00:01:07.910 --> 00:01:12.510
+a person with bad health,
+the age coefficient would switch
+
+15
+00:01:12.510 --> 00:01:16.370
+from being positive to being negative
+because we would subtract this off.
+
+16
+00:01:18.120 --> 00:01:23.090
+Remember, here the interpretation
+is if a coefficient is positive,
+
+17
+00:01:23.090 --> 00:01:27.430
+then there is a positive association
+between that variable and
+
+18
+00:01:27.430 --> 00:01:30.200
+the expected number of doctor visits.
+
+19
+00:01:30.200 --> 00:01:34.780
+If the coefficient is negative, then
+it's a negative association between that
+
+20
+00:01:34.780 --> 00:01:37.216
+variable and the number of doctor visits.
+
+21
+00:01:42.404 --> 00:01:47.037
+Everything we've done so far,
+could have easily been computed
+
+22
+00:01:47.037 --> 00:01:52.410
+using the Default Reference Analysis
+from the functions in R.
+
+23
+00:01:52.410 --> 00:01:56.010
+So now, let's do something
+where it really pays off
+
+24
+00:01:56.010 --> 00:01:59.729
+to have an Bayesian Analysis
+with posterior samples.
+
+25
+00:02:01.000 --> 00:02:05.485
+Let's say, we have two people age 35.
+
+26
+00:02:05.485 --> 00:02:09.580
+One person is in good health and
+the other person is in poor health.
+
+27
+00:02:10.720 --> 00:02:13.600
+What is the posterior probability
+
+28
+00:02:13.600 --> 00:02:17.610
+that the individual with poor health
+will have more doctor visits?
+
+29
+00:02:19.410 --> 00:02:23.750
+This goes beyond the posterior
+probabilities we've calculated
+
+30
+00:02:23.750 --> 00:02:27.810
+comparing expected responses
+in the previous lessons.
+
+31
+00:02:27.810 --> 00:02:31.540
+Here, we need to create
+Monte Carlo samples for
+
+32
+00:02:31.540 --> 00:02:33.770
+the actual responses themselves.
+
+33
+00:02:35.280 --> 00:02:40.480
+This is done by taking the Monte Carlo
+samples of the model parameters and
+
+34
+00:02:40.480 --> 00:02:44.500
+for each of those drawing
+a sample from the likelihood.
+
+35
+00:02:44.500 --> 00:02:45.660
+Let's walk through this.
+
+36
+00:02:46.950 --> 00:02:49.060
+First, we need the x values.
+
+37
+00:02:49.060 --> 00:02:53.090
+The predictor variable values for
+each individual.
+
+38
+00:02:53.090 --> 00:02:58.690
+We'll say that the healthy
+person is person 1,
+
+39
+00:02:58.690 --> 00:03:04.930
+for person 1, their bad health indicator
+will be 0 because they are in good health.
+
+40
+00:03:04.930 --> 00:03:06.626
+Their age is 35, and
+
+41
+00:03:06.626 --> 00:03:11.820
+the interaction term which is
+the product of the first two is also 0.
+
+42
+00:03:13.740 --> 00:03:20.360
+For the second person who is in poor
+health, we have 1 to indicate bad health.
+
+43
+00:03:20.360 --> 00:03:24.892
+They are also age 35 and
+the product of those two for
+
+44
+00:03:24.892 --> 00:03:28.403
+the interaction term of course is 35.
+
+45
+00:03:28.403 --> 00:03:33.380
+Let's run these two, okay.
+
+46
+00:03:33.380 --> 00:03:37.167
+Remember that all
+the posterior samples for
+
+47
+00:03:37.167 --> 00:03:41.268
+the model parameters
+are stored In mod_csim.
+
+48
+00:03:41.268 --> 00:03:46.208
+So let's look at the head of that,
+mod_csim.
+
+49
+00:03:48.935 --> 00:03:55.000
+For these two individuals, we need to
+compute the linear part of the predictor.
+
+50
+00:03:55.000 --> 00:03:59.160
+So let's do the log of lambda for
+person 1.
+
+51
+00:03:59.160 --> 00:04:01.570
+Which will be mod_csim.
+
+52
+00:04:01.570 --> 00:04:08.960
+And we want to grab first the intercept
+term for all of the rows.
+
+53
+00:04:08.960 --> 00:04:11.430
+And we want the intercept
+column of that matrix.
+
+54
+00:04:13.220 --> 00:04:16.860
+Then to that we'll add mod_csim.
+
+55
+00:04:16.860 --> 00:04:19.250
+We want all rows again.
+
+56
+00:04:19.250 --> 00:04:21.770
+And now we want columns 2, 1, and
+
+57
+00:04:21.770 --> 00:04:26.260
+3 in that order because remember,
+we fit the model.
+
+58
+00:04:26.260 --> 00:04:31.490
+Because we fit the model first with
+the bad health indicator, followed by age,
+
+59
+00:04:31.490 --> 00:04:33.340
+followed by the interaction.
+
+60
+00:04:33.340 --> 00:04:37.150
+So column 2 is the bad health indicator.
+
+61
+00:04:37.150 --> 00:04:39.970
+Then we need the age,
+which is column 1 and
+
+62
+00:04:39.970 --> 00:04:42.530
+then we need the interaction
+term which is column three.
+
+63
+00:04:43.590 --> 00:04:49.970
+We will matrix multiply this with the
+values of the predictors for person one.
+
+64
+00:04:51.670 --> 00:04:55.043
+We also need to do this for person two.
+
+65
+00:04:55.043 --> 00:05:00.547
+And the only thing we need to change is
+that we're using the predictor values for
+
+66
+00:05:00.547 --> 00:05:02.700
+x for person two.
+
+67
+00:05:02.700 --> 00:05:06.219
+We'll call that logLan2.
+
+68
+00:05:06.219 --> 00:05:09.810
+We run both of these and
+
+69
+00:05:09.810 --> 00:05:15.102
+this gives us a Monte Carlo sample
+
+70
+00:05:15.102 --> 00:05:20.830
+of the linear part of the model.
+
+71
+00:05:20.830 --> 00:05:23.952
+So we have one for
+each sample from the posterior.
+
+72
+00:05:27.732 --> 00:05:32.575
+Now that we have samples from
+the posterior distribution of the log of
+
+73
+00:05:32.575 --> 00:05:38.605
+lambda for these individuals, we need to
+get the posterior distribution of lambda.
+
+74
+00:05:38.605 --> 00:05:43.674
+So we'll say lam1 will be
+an exponentiated version of log lambda 1.
+
+75
+00:05:46.484 --> 00:05:49.340
+And we'll do the same for person two.
+
+76
+00:05:52.611 --> 00:05:58.390
+We now have Monte Carlo samples for the
+Poisson mean for these two individuals.
+
+77
+00:05:58.390 --> 00:06:04.060
+Let's take a look at the posterior
+distribution for Lambda 1 for person 1.
+
+78
+00:06:04.060 --> 00:06:07.237
+Let's plot a density estimate of lam1.
+
+79
+00:06:11.673 --> 00:06:15.598
+For person 1,
+we would expect on average for
+
+80
+00:06:15.598 --> 00:06:19.948
+them to have between 1.8 and
+2 doctor visits.
+
+81
+00:06:22.892 --> 00:06:27.836
+Remember, our question was what
+is the posterior probability that
+
+82
+00:06:27.836 --> 00:06:31.750
+person two will have more doctor visits?
+
+83
+00:06:31.750 --> 00:06:36.044
+That's different than the number
+of doctor visits on average,
+
+84
+00:06:36.044 --> 00:06:38.117
+we want actual doctor visits.
+
+85
+00:06:38.117 --> 00:06:42.628
+So now, with the posterior distribution
+for Lambda, we now need to
+
+86
+00:06:42.628 --> 00:06:48.530
+simulate a Monte Carlo sample of actual
+number of visits for each of them.
+
+87
+00:06:48.530 --> 00:06:52.654
+First we need to know how many
+simulations we're calculating.
+
+88
+00:06:52.654 --> 00:06:55.902
+This would be the length of lambda 1.
+
+89
+00:06:55.902 --> 00:07:00.099
+Which is also the length of lambda 2.
+
+90
+00:07:02.010 --> 00:07:06.140
+Its 15,000 because we ran three
+chains each with 5,000 iterations.
+
+91
+00:07:08.160 --> 00:07:11.740
+Simulating from the likelihood
+is very straightforward here.
+
+92
+00:07:11.740 --> 00:07:18.740
+For person1 we'll draw from
+a Poisson distribution, rpois.
+
+93
+00:07:18.740 --> 00:07:21.523
+And we're going to create n_sim,
+
+94
+00:07:21.523 --> 00:07:27.481
+simulations from that Poisson
+distribution, where the mean is lambda 1.
+
+95
+00:07:27.481 --> 00:07:32.353
+So for each draw of the Poisson
+we're going to use a different value
+
+96
+00:07:32.353 --> 00:07:35.399
+from our Monte Carlo sample of lambda 1.
+
+97
+00:07:36.660 --> 00:07:38.235
+The same goes for person 2.
+
+98
+00:07:39.340 --> 00:07:42.590
+Their doctor visits that
+we're going to simulate
+
+99
+00:07:42.590 --> 00:07:45.160
+will come from a Poisson distribution.
+
+100
+00:07:45.160 --> 00:07:50.200
+Where the means will come from our
+Monte Carlo sample for the lambda twos.
+
+101
+00:07:51.950 --> 00:07:54.780
+We'll run that.
+
+102
+00:07:54.780 --> 00:07:58.996
+And let's plot the posterior distribution
+for these number of visits for
+
+103
+00:07:58.996 --> 00:07:59.950
+the two people.
+
+104
+00:08:01.100 --> 00:08:05.340
+First we want to plot for
+person 1, we want to plot a table
+
+105
+00:08:06.520 --> 00:08:09.740
+of y1 as a factor variable.
+
+106
+00:08:09.740 --> 00:08:13.742
+So we need to say factor(y1) and
+
+107
+00:08:13.742 --> 00:08:18.297
+let's plot this for up to 18 visits.
+
+108
+00:08:20.913 --> 00:08:25.081
+We want this table to output
+probabilities instead of counts, so
+
+109
+00:08:25.081 --> 00:08:27.975
+let's divide by the number of simulations.
+
+110
+00:08:30.487 --> 00:08:32.109
+Let's run this plot.
+
+111
+00:08:34.999 --> 00:08:39.370
+So along the x axis we have
+the number of doctor visits and
+
+112
+00:08:39.370 --> 00:08:44.884
+along the y axis the probability
+of those number of doctor visits.
+
+113
+00:08:44.884 --> 00:08:48.760
+There is also a possibility that
+they have 0 doctor visits so
+
+114
+00:08:48.760 --> 00:08:50.660
+let's include 0 as a level.
+
+115
+00:08:54.239 --> 00:09:00.130
+Right there's a 15% probability that
+this person has zero doctor visits.
+
+116
+00:09:00.130 --> 00:09:03.920
+Now let's add the posterior
+distribution for person two.
+
+117
+00:09:06.260 --> 00:09:12.660
+I'm going to shift them just slightly here
+so that we can see both sets of points.
+
+118
+00:09:15.330 --> 00:09:16.827
+We'll make this one colored red.
+
+119
+00:09:19.430 --> 00:09:22.125
+And we need to change this
+from plots to points.
+
+120
+00:09:24.376 --> 00:09:28.303
+We can also get rid of the factor,
+variable here.
+
+121
+00:09:31.843 --> 00:09:33.268
+And now let's run it.
+
+122
+00:09:35.228 --> 00:09:39.105
+We now have the posterior distribution
+of the number of visits for
+
+123
+00:09:39.105 --> 00:09:42.700
+the person in poor health and
+the posterior distribution for
+
+124
+00:09:42.700 --> 00:09:45.680
+the number of visits of
+the person in good health.
+
+125
+00:09:46.970 --> 00:09:50.360
+Finally, we can answer
+our original question.
+
+126
+00:09:50.360 --> 00:09:54.330
+What is the probability that
+the person with poor health
+
+127
+00:09:54.330 --> 00:09:58.320
+will have more doctor visits than
+the person with good health?
+
+128
+00:09:58.320 --> 00:10:03.160
+We can take take the Monte Carlo
+mean of that indicator variable,
+
+129
+00:10:03.160 --> 00:10:05.010
+y2 is greater than y1.
+
+130
+00:10:05.010 --> 00:10:06.776
+For each Monte Carlo sample,
+
+131
+00:10:06.776 --> 00:10:11.095
+it evaluates whether person two had
+more doctor visits than person one.
+
+132
+00:10:12.815 --> 00:10:16.115
+And the average of that is
+the posterior probability.
+
+133
+00:10:16.115 --> 00:10:17.685
+Let's run that.
+
+134
+00:10:17.685 --> 00:10:19.903
+We get about 92%.
+
+135
+00:10:19.903 --> 00:10:24.820
+That is,
+the posterior probability that person2
+
+136
+00:10:24.820 --> 00:10:30.093
+will have more doctor
+visits than person1 is 92%.
+
+137
+00:10:30.093 --> 00:10:36.199
+Because we used our posterior samples for
+the model parameters in our simulation.
+
+138
+00:10:36.199 --> 00:10:41.846
+This posterior predictive distribution on
+the number of visits for these two new
+
+139
+00:10:41.846 --> 00:10:47.920
+individuals naturally takes into account
+our uncertainty in these model estimates.
+
+140
+00:10:48.920 --> 00:10:51.690
+That creates for us a more honest or
+
+141
+00:10:51.690 --> 00:10:56.460
+realistic distribution than we would
+get if we had just fixed the model
+
+142
+00:10:56.460 --> 00:11:01.160
+parameters at their maximum likelihood
+estimates or some other point estimate.
+
+143
+00:11:02.360 --> 00:11:06.416
+It's a nice example of the advantages
+that a Bayesian model can give us here.

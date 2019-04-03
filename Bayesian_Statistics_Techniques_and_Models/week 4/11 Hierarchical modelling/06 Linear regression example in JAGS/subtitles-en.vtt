@@ -1,0 +1,621 @@
+WEBVTT
+
+1
+00:00:00.980 --> 00:00:06.150
+Let's see if we can improve on our
+analysis of the Leinhardt data
+
+2
+00:00:06.150 --> 00:00:08.780
+by extending our linear model
+
+3
+00:00:08.780 --> 00:00:12.690
+on infant mortality to
+incorporate the region variable.
+
+4
+00:00:14.000 --> 00:00:20.220
+We will do this with a hierarchical model
+where each region has its own intercept.
+
+5
+00:00:22.050 --> 00:00:27.380
+First we need to read in the car
+library and the Leinhardt dataset.
+
+6
+00:00:27.380 --> 00:00:30.160
+Let's reacquaint ourselves
+with the dataset really fast.
+
+7
+00:00:31.270 --> 00:00:36.670
+We have a number of countries,
+we have per capita income for
+
+8
+00:00:36.670 --> 00:00:39.350
+each country standardized.
+
+9
+00:00:39.350 --> 00:00:44.040
+Infant mortality in that country,
+region, and
+
+10
+00:00:44.040 --> 00:00:47.910
+then indicator of whether
+that country exports oil.
+
+11
+00:00:50.510 --> 00:00:54.770
+The log of infant mortality
+is our response variable.
+
+12
+00:00:54.770 --> 00:00:57.240
+And previously, the log of income and
+
+13
+00:00:57.240 --> 00:01:00.990
+the oil indicator were used as
+covariants in the linear model.
+
+14
+00:01:02.670 --> 00:01:08.130
+Remember also that we had missing values
+in the data set which we will remove and
+
+15
+00:01:08.130 --> 00:01:12.710
+we also need to calculate the log
+transformations for income and
+
+16
+00:01:12.710 --> 00:01:13.740
+infant mortality.
+
+17
+00:01:16.050 --> 00:01:19.720
+And just to verify, let's look
+at the structure of the dataset.
+
+18
+00:01:19.720 --> 00:01:23.300
+We still have income infant mortality,
+region,
+
+19
+00:01:23.300 --> 00:01:27.890
+oil, and now, the log of income and
+the log of infant mortality.
+
+20
+00:01:28.900 --> 00:01:31.570
+We've dropped down to 101 observations.
+
+21
+00:01:34.350 --> 00:01:37.920
+Now let's talk about the model string for
+this hierarchical model.
+
+22
+00:01:40.675 --> 00:01:43.437
+In the likelihood portion, of course,
+
+23
+00:01:43.437 --> 00:01:47.020
+we have the loop looping
+over all of the data points.
+
+24
+00:01:49.020 --> 00:01:54.230
+The ith response which is log of
+infant mortality comes from a normal
+
+25
+00:01:54.230 --> 00:01:59.020
+distribution with mu sub i and we have
+
+26
+00:01:59.020 --> 00:02:04.010
+the linear portion of the model connected
+to the mean of that normal likelihood.
+
+27
+00:02:05.720 --> 00:02:10.800
+Previously, we had an intercept
+here as well as these two terms.
+
+28
+00:02:12.110 --> 00:02:16.700
+The modification we're making for
+this hierarchical model is similar to what
+
+29
+00:02:16.700 --> 00:02:20.990
+we did with the lambdas in the chocolate
+chip cookie hierarchical model.
+
+30
+00:02:22.020 --> 00:02:25.650
+Each region now gets its own intercept.
+
+31
+00:02:25.650 --> 00:02:31.710
+So for example if the 50th
+country is from region 3,
+
+32
+00:02:31.710 --> 00:02:37.110
+the model will fit mu 3 using intercept 3.
+
+33
+00:02:37.110 --> 00:02:39.750
+This is a nested index.
+
+34
+00:02:41.730 --> 00:02:47.560
+Each of these intercepts will come
+from the same normal distribution.
+
+35
+00:02:47.560 --> 00:02:52.490
+So we will loop over j from 1 to
+the maximum number of regions,
+
+36
+00:02:53.690 --> 00:03:00.018
+and each of these intercepts comes from
+a normal distribution with mean a0 and
+
+37
+00:03:00.018 --> 00:03:04.060
+precision prec_a.
+
+38
+00:03:04.060 --> 00:03:08.940
+Of course, for the next level in the
+hierarchy we need to produce priors for
+
+39
+00:03:08.940 --> 00:03:11.480
+a0 and prec_a.
+
+40
+00:03:11.480 --> 00:03:17.610
+The mean of this distribution
+represents the mean of all intersects.
+
+41
+00:03:17.610 --> 00:03:22.519
+And the precision is related to
+the variance of these intersects.
+
+42
+00:03:24.110 --> 00:03:26.800
+We'll use fairly standard priors here.
+
+43
+00:03:26.800 --> 00:03:31.400
+We'll use a normal distribution
+centered on 0 for a0.
+
+44
+00:03:33.290 --> 00:03:39.200
+And we'll use an inverse gamma prior on
+the variance of that normal distribution,
+
+45
+00:03:39.200 --> 00:03:42.720
+which implies a gamma
+prior on the precision.
+
+46
+00:03:43.830 --> 00:03:48.360
+Rather than monitor the precision,
+we're going to monitor tou,
+
+47
+00:03:48.360 --> 00:03:52.570
+which will be the standard deviation
+of this normal distribution.
+
+48
+00:03:54.640 --> 00:03:58.810
+The remaining lines are the same as
+they were for the linear model before.
+
+49
+00:03:58.810 --> 00:04:00.610
+We need to provide priors for
+
+50
+00:04:00.610 --> 00:04:05.680
+each of the coefficients in
+the linear part of the model and
+
+51
+00:04:05.680 --> 00:04:10.140
+of course we need to produce a prior for
+the precision in the likelihood.
+
+52
+00:04:11.520 --> 00:04:17.150
+Let's go ahead and
+load in all of these pieces here and
+
+53
+00:04:17.150 --> 00:04:20.360
+set the seed and run the data.
+
+54
+00:04:22.120 --> 00:04:26.540
+This should look just like we had
+before except we're now adding
+
+55
+00:04:28.160 --> 00:04:31.188
+a numeric variable which
+indicates the region.
+
+56
+00:04:31.188 --> 00:04:35.470
+Previously that $region
+was a factor variable.
+
+57
+00:04:35.470 --> 00:04:38.040
+We're turning into a numeric variable.
+
+58
+00:04:38.040 --> 00:04:42.750
+If I run just this piece you can
+see that there are four regions.
+
+59
+00:04:42.750 --> 00:04:46.369
+As we move through the data set
+the index of the region changes.
+
+60
+00:04:48.350 --> 00:04:52.250
+Don't forget also that the is_oil
+was changed to be 0s and
+
+61
+00:04:52.250 --> 00:04:55.350
+1s, indicating whether
+the country exports oil.
+
+62
+00:04:57.180 --> 00:05:01.270
+One other important thing to
+check is whether all of the oil
+
+63
+00:05:01.270 --> 00:05:04.890
+exporting countries
+are within a single region.
+
+64
+00:05:06.350 --> 00:05:10.705
+If that were the case,
+our model could potentially suffer from
+
+65
+00:05:10.705 --> 00:05:15.580
+confounding because we wouldn't know
+whether it's the oil variable or
+
+66
+00:05:15.580 --> 00:05:20.580
+the region variable that's affecting,
+that is potentially explaining some of
+
+67
+00:05:20.580 --> 00:05:24.280
+the variability in infant mortality.
+
+68
+00:05:24.280 --> 00:05:25.840
+It looks like this is not the case.
+
+69
+00:05:26.940 --> 00:05:30.060
+This row represents the oil
+exporting countries.
+
+70
+00:05:30.060 --> 00:05:32.760
+The only region not
+represented is region 4.
+
+71
+00:05:32.760 --> 00:05:37.730
+We're going to monitor
+all of these parameters,
+
+72
+00:05:37.730 --> 00:05:41.980
+including the hierarchical parameters for
+the intercepts a_zero, and tou.
+
+73
+00:05:44.110 --> 00:05:49.670
+Let's go ahead and
+initialize the model, update the model,
+
+74
+00:05:49.670 --> 00:05:55.020
+run a burn-in period, and
+we'll collect our posterior samples.
+
+75
+00:05:56.560 --> 00:05:59.400
+We won't go through all of the steps here,
+but
+
+76
+00:05:59.400 --> 00:06:02.910
+it's always important to check
+your convergence diagnostics.
+
+77
+00:06:02.910 --> 00:06:05.979
+Let's take a look at
+the trace plots really fast.
+
+78
+00:06:05.979 --> 00:06:08.439
+We need to add ask=TRUE to this line.
+
+79
+00:06:11.494 --> 00:06:17.810
+These trace plots don't look green.
+
+80
+00:06:17.810 --> 00:06:21.010
+They appear to be highly auto correlated.
+
+81
+00:06:21.010 --> 00:06:25.840
+And so if you wanted to create posterior
+probability intervals as part of
+
+82
+00:06:25.840 --> 00:06:30.620
+your inferences from this model, it would
+be a good idea to run these chains for
+
+83
+00:06:30.620 --> 00:06:32.750
+many more iterations.
+
+84
+00:06:32.750 --> 00:06:33.930
+Let's look at the next set.
+
+85
+00:06:35.780 --> 00:06:41.190
+We have some pretty high auto correlation
+within these different chains for
+
+86
+00:06:41.190 --> 00:06:42.620
+the first beta coefficient.
+
+87
+00:06:43.730 --> 00:06:48.670
+The other beta coefficient looks
+just fine as well as the trace for
+
+88
+00:06:48.670 --> 00:06:50.660
+the standard deviation of the likelihood.
+
+89
+00:06:55.705 --> 00:07:01.718
+This trace plot also looks pretty good.
+
+90
+00:07:01.718 --> 00:07:07.743
+Next, let's compare this model with the
+old linear model from before using DIC,
+
+91
+00:07:07.743 --> 00:07:10.200
+we'll run the DIC samples here.
+
+92
+00:07:12.160 --> 00:07:14.260
+We get about 221.
+
+93
+00:07:14.260 --> 00:07:18.462
+Remember, the previous
+linear model that we fit,
+
+94
+00:07:18.462 --> 00:07:24.770
+including the is_oil covariate,
+had a DIC value of about 229.
+
+95
+00:07:24.770 --> 00:07:28.660
+So it appears that this
+model is an improvement
+
+96
+00:07:28.660 --> 00:07:31.280
+over the non hierarchical one fit earlier.
+
+97
+00:07:32.550 --> 00:07:38.350
+Notice also that the penalty term
+which is interpreted as the effective
+
+98
+00:07:38.350 --> 00:07:43.860
+number of parameters is less than the
+actual number of parameters in this model.
+
+99
+00:07:43.860 --> 00:07:45.310
+We have nine parameters.
+
+100
+00:07:46.480 --> 00:07:52.370
+We have fewer effective parameters in this
+model because they are sharing information
+
+101
+00:07:52.370 --> 00:07:56.580
+or borrowing strength from each
+other in a hierarchical structure.
+
+102
+00:07:57.800 --> 00:08:01.700
+If we had skipped the hierarchy and
+fit only one intercept,
+
+103
+00:08:01.700 --> 00:08:04.750
+there would have been four
+parameters in this model.
+
+104
+00:08:04.750 --> 00:08:08.030
+If we had fit separate
+independent intercepts for
+
+105
+00:08:08.030 --> 00:08:11.610
+each region,
+there would have been seven parameters.
+
+106
+00:08:11.610 --> 00:08:14.450
+This is actually pretty close
+to what we ended up with.
+
+107
+00:08:15.610 --> 00:08:20.180
+Finally, let's look at our posterior
+summary of our inferences from this model.
+
+108
+00:08:22.510 --> 00:08:29.740
+Here are our posterior means for the four
+linear intercepts one for each region.
+
+109
+00:08:29.740 --> 00:08:36.250
+The overall mean for those intercepts,
+the standard deviation of the intercepts,
+
+110
+00:08:36.250 --> 00:08:40.576
+that is how the intercepts from each
+region differ from one another,
+
+111
+00:08:40.576 --> 00:08:45.730
+are coefficient for income and
+
+112
+00:08:45.730 --> 00:08:49.500
+our coefficient for
+oil exporting countries.
+
+113
+00:08:51.050 --> 00:08:54.170
+Each of these coefficients
+is smaller in magnitude
+
+114
+00:08:54.170 --> 00:08:56.610
+than it was in the previous model,
+
+115
+00:08:56.610 --> 00:09:01.760
+possibly because the region variable is
+now explaining some of the variability.
+
+116
+00:09:01.760 --> 00:09:06.400
+However, the signs of these coefficients
+remain the same as they were before.
+
+117
+00:09:08.340 --> 00:09:14.030
+In this particular model, the intercepts
+do not have a real interpretation
+
+118
+00:09:14.030 --> 00:09:18.640
+because they correspond to the mean
+response for a country that does not
+
+119
+00:09:18.640 --> 00:09:24.290
+produce oil and
+has $0 of log income per capita.
+
+120
+00:09:24.290 --> 00:09:28.950
+In other words that would be $1 of income
+per capita, which is not the case for
+
+121
+00:09:28.950 --> 00:09:29.710
+these countries.
+
+122
+00:09:31.060 --> 00:09:35.800
+In this example we have not
+investigated adding interaction terms,
+
+123
+00:09:35.800 --> 00:09:37.670
+which might be appropriate.
+
+124
+00:09:37.670 --> 00:09:41.930
+We only considered adding
+hierarchy on the intercepts.
+
+125
+00:09:41.930 --> 00:09:45.790
+But in reality nothing prevents
+us from doing the same for
+
+126
+00:09:45.790 --> 00:09:51.440
+other terms in the model, such as
+the coefficients for income and oil.
+
+127
+00:09:51.440 --> 00:09:55.660
+We could try any or
+all of these alternatives and
+
+128
+00:09:55.660 --> 00:09:58.489
+see how the DIC changes for these models.
+
+129
+00:09:59.710 --> 00:10:02.380
+This, together with other
+model checking techniques,
+
+130
+00:10:02.380 --> 00:10:06.940
+including residual checks that
+we've discussed, could be used to
+
+131
+00:10:06.940 --> 00:10:11.990
+identify our best model that you could
+use to make inferences and predictions.

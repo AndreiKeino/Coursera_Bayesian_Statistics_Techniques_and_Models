@@ -1,0 +1,599 @@
+WEBVTT
+
+1
+00:00:01.340 --> 00:00:05.800
+Which will be the alpha draws
+divided by the beta draws.
+
+2
+00:00:05.800 --> 00:00:10.450
+The data can be found in
+the file cookies.dat.
+
+3
+00:00:10.450 --> 00:00:14.390
+We need to read it into R using
+this read.table function,
+
+4
+00:00:15.850 --> 00:00:20.640
+where we give it the name of the file and
+we tell it header=true.
+
+5
+00:00:20.640 --> 00:00:24.860
+Which means that the first
+line of the file itself
+
+6
+00:00:24.860 --> 00:00:29.640
+tells us the variable names and
+doesn't contain data values.
+
+7
+00:00:29.640 --> 00:00:34.640
+In order for this function to work we
+either need to supply the complete
+
+8
+00:00:34.640 --> 00:00:39.020
+address of this file or
+change the working directory of R.
+
+9
+00:00:40.050 --> 00:00:47.910
+Right now on this computer,
+the working directory is /Users/labuser.
+
+10
+00:00:47.910 --> 00:00:52.630
+The cookies.dot dataset
+is located on my desktop.
+
+11
+00:00:52.630 --> 00:00:56.868
+I'm going to change the current
+working directory using setwd.
+
+12
+00:01:02.114 --> 00:01:06.930
+Now let's getwd again and double check.
+
+13
+00:01:06.930 --> 00:01:08.726
+Okay so hopefully this will run now.
+
+14
+00:01:10.694 --> 00:01:13.096
+Let's take a look at
+the head of this dataset.
+
+15
+00:01:17.008 --> 00:01:21.970
+We have that cookie one contains
+12 chips and is from location one.
+
+16
+00:01:21.970 --> 00:01:27.670
+Cookie three has six chips and
+it's from location one and so forth.
+
+17
+00:01:27.670 --> 00:01:31.296
+Let's look at a table of how many
+cookies there are from each location.
+
+18
+00:01:31.296 --> 00:01:37.065
+table(dot$location), there
+
+19
+00:01:37.065 --> 00:01:41.090
+are five locations,
+each with 30 chocolate chip cookies.
+
+20
+00:01:42.600 --> 00:01:47.028
+Next, let's look at a box plot
+of the chips versus location,
+
+21
+00:01:47.028 --> 00:01:54.220
+boxplot(chips), against location.
+
+22
+00:01:54.220 --> 00:01:58.532
+And our data will be dat.
+
+23
+00:01:58.532 --> 00:02:04.881
+This shows us the distribution of the
+number of chips by different locations.
+
+24
+00:02:04.881 --> 00:02:08.599
+It looks like maybe location five
+tends to be more generous on average
+
+25
+00:02:08.599 --> 00:02:09.571
+than the others.
+
+26
+00:02:13.313 --> 00:02:18.397
+Let's remind ourselves what
+this model looks like.
+
+27
+00:02:18.397 --> 00:02:23.078
+We have the ith cookie
+from the jth location and
+
+28
+00:02:23.078 --> 00:02:29.329
+yij represents the number of
+chocolate chips in that cookie.
+
+29
+00:02:29.329 --> 00:02:32.416
+Where lambda j is the average or
+
+30
+00:02:32.416 --> 00:02:37.180
+mean number of chips per cookie for
+location j.
+
+31
+00:02:38.950 --> 00:02:43.300
+The different location means come
+from this gamma distribution with
+
+32
+00:02:43.300 --> 00:02:45.860
+these hyper parameters.
+
+33
+00:02:45.860 --> 00:02:48.430
+Before implementing the model,
+
+34
+00:02:48.430 --> 00:02:54.570
+we need to select prior distributions for
+both alpha and beta.
+
+35
+00:02:54.570 --> 00:02:57.530
+First, think about what
+the lambdas represent.
+
+36
+00:02:58.770 --> 00:03:04.320
+In location j lambda j is the expected
+number of chocolate chips per cookie.
+
+37
+00:03:05.320 --> 00:03:10.569
+Alpha and beta control the distribution
+for these means between locations.
+
+38
+00:03:11.730 --> 00:03:16.370
+The mean of this gamma distribution
+will represent the overall
+
+39
+00:03:16.370 --> 00:03:20.770
+mean of number of chips for all cookies.
+
+40
+00:03:20.770 --> 00:03:25.530
+The variance of this gamma
+distribution controls the variability
+
+41
+00:03:25.530 --> 00:03:29.730
+between locations in
+the mean number of chips.
+
+42
+00:03:29.730 --> 00:03:31.660
+If this variance is high,
+
+43
+00:03:31.660 --> 00:03:36.380
+the mean number of chips will vary
+widely from location to location.
+
+44
+00:03:36.380 --> 00:03:37.750
+If it is small,
+
+45
+00:03:37.750 --> 00:03:42.610
+the mean number of chips will be nearly
+the same from location to location.
+
+46
+00:03:43.920 --> 00:03:46.940
+To see the effects of different priors for
+
+47
+00:03:46.940 --> 00:03:53.400
+the distributions of lambda we
+can simulate Monte Carlo samples.
+
+48
+00:03:53.400 --> 00:03:59.821
+Suppose we try independent exponential
+priors for alpha and beta.
+
+49
+00:03:59.821 --> 00:04:05.449
+Let's simulate from that prior,
+
+50
+00:04:05.449 --> 00:04:09.919
+first we'll set the seed.
+
+51
+00:04:09.919 --> 00:04:13.655
+And, let's choose our number
+of Monte Carlo samples.
+
+52
+00:04:13.655 --> 00:04:17.100
+Suppose we want to do 500.
+
+53
+00:04:17.100 --> 00:04:23.052
+Now, let's draw from the prior for alpha.
+
+54
+00:04:23.052 --> 00:04:30.944
+This will be draws from
+an exponential distribution,
+
+55
+00:04:30.944 --> 00:04:35.748
+where we draw n_sim simulations
+
+56
+00:04:35.748 --> 00:04:39.875
+at rate= 1.0/2.0.
+
+57
+00:04:39.875 --> 00:04:41.623
+Create those simulations.
+
+58
+00:04:41.623 --> 00:04:48.080
+And now let's do the beta_pri simulations.
+
+59
+00:04:48.080 --> 00:04:53.260
+We'll also do an exponential distribution,
+simulate n_sim of them.
+
+60
+00:04:53.260 --> 00:04:57.432
+And let's try a rate of 5.0 for
+
+61
+00:04:57.432 --> 00:05:01.307
+this prior for illustration.
+
+62
+00:05:01.307 --> 00:05:06.539
+Remember that the mean of a gamma
+distribution is alpha divided by beta.
+
+63
+00:05:06.539 --> 00:05:11.921
+So from these Monte Carlo simulations,
+let's also draw simulations.
+
+64
+00:05:11.921 --> 00:05:15.811
+Or let's create based on alpha and
+
+65
+00:05:15.811 --> 00:05:20.511
+beta simulations for the mean of lambda.
+
+66
+00:05:20.511 --> 00:05:26.380
+Which will be the alpha draws
+divided by the beta draws.
+
+67
+00:05:29.090 --> 00:05:33.520
+And then we'll have
+the standard deviation.
+
+68
+00:05:33.520 --> 00:05:38.543
+And the standard deviation of the gamma
+distribution is the square root of
+
+69
+00:05:38.543 --> 00:05:45.717
+the alpha, Divided by the beta squared.
+
+70
+00:05:49.242 --> 00:05:50.886
+We'll run these two lines.
+
+71
+00:05:53.312 --> 00:06:00.697
+And let's look at a summary based
+on our prior for alpha and beta.
+
+72
+00:06:02.515 --> 00:06:06.969
+This is the summary of our prior for
+the mean of this gamma distribution.
+
+73
+00:06:09.543 --> 00:06:15.852
+We get a Median number of expected
+number of chips per cookie, about ten.
+
+74
+00:06:15.852 --> 00:06:18.746
+But a very large Mean and
+a very large Max and
+
+75
+00:06:18.746 --> 00:06:21.892
+that's probably not
+a very realistic value.
+
+76
+00:06:21.892 --> 00:06:28.201
+Let's also look at the summary(sig_prior).
+
+77
+00:06:30.809 --> 00:06:35.563
+Not surprisingly we get some
+pretty large values up here but
+
+78
+00:06:35.563 --> 00:06:38.830
+a median standard deviation of 8.5.
+
+79
+00:06:38.830 --> 00:06:42.775
+After simulating from the priors for
+alpha and
+
+80
+00:06:42.775 --> 00:06:48.754
+beta we can use those samples to
+simulate further down the hierarchy.
+
+81
+00:06:48.754 --> 00:06:52.466
+So for example we can now draw lambdas.
+
+82
+00:06:52.466 --> 00:06:57.232
+So lambda pri, meaning lambda
+prior will come from the gamma
+
+83
+00:06:57.232 --> 00:07:01.850
+distribution that we've
+been talking about here.
+
+84
+00:07:01.850 --> 00:07:07.310
+So we'll simulate from this distribution
+given our draws for alpha and beta.
+
+85
+00:07:07.310 --> 00:07:14.530
+Rgamma we want to draw n_sim of those
+samples where the shape parameter for
+
+86
+00:07:14.530 --> 00:07:19.340
+the gamma is alpha_pri.
+
+87
+00:07:19.340 --> 00:07:26.200
+And the rate in this gamma
+distribution is beta_pri.
+
+88
+00:07:26.200 --> 00:07:30.190
+This gives us a prior predictive
+distribution for lambda.
+
+89
+00:07:30.190 --> 00:07:31.511
+Let's look at a summary of that.
+
+90
+00:07:35.413 --> 00:07:39.070
+Again the median gives us
+a pretty reasonable value.
+
+91
+00:07:39.070 --> 00:07:47.241
+But this distribution is extremely right
+skewed because the mean is really large.
+
+92
+00:07:47.241 --> 00:07:53.222
+If we want to tighten up these values we
+might modify these priors on alpha and
+
+93
+00:07:53.222 --> 00:07:53.790
+beta.
+
+94
+00:07:55.290 --> 00:07:59.830
+Perhaps we would make them gamma
+distributions with smaller variances.
+
+95
+00:08:01.490 --> 00:08:06.460
+If we want to see what kind of responses
+this prior model would produce,
+
+96
+00:08:06.460 --> 00:08:09.320
+we can simulate even
+further down the chain.
+
+97
+00:08:09.320 --> 00:08:14.109
+We now have Monte Carlo samples for
+alpha and beta and lambda.
+
+98
+00:08:14.109 --> 00:08:20.808
+So we could also generate samples from
+the observed number of chocolate chips.
+
+99
+00:08:20.808 --> 00:08:24.850
+We'll call that y_prior.
+
+100
+00:08:24.850 --> 00:08:27.260
+This will come from the likelihood rpois.
+
+101
+00:08:29.310 --> 00:08:32.069
+And we could generate (n_nsim) of these,
+
+102
+00:08:32.069 --> 00:08:35.924
+where the means of these
+distributions are the lamba_prior.
+
+103
+00:08:38.495 --> 00:08:41.520
+We need to keep the name consistent there.
+
+104
+00:08:43.820 --> 00:08:47.680
+Of course,
+we could look at a summary of y prior.
+
+105
+00:08:50.990 --> 00:08:55.480
+So we get a median value of
+7.0 chips per cookie but,
+
+106
+00:08:55.480 --> 00:08:58.617
+again, this is very right-skewed.
+
+107
+00:08:58.617 --> 00:09:03.429
+If we wanted to create a prior
+predictive reconstruction of our
+
+108
+00:09:03.429 --> 00:09:06.895
+original data set, say for five locations.
+
+109
+00:09:06.895 --> 00:09:10.950
+We would keep only five
+of these lambda draws.
+
+110
+00:09:10.950 --> 00:09:17.600
+We'll reassign lambda prior to the lambda
+prior for the first five values.
+
+111
+00:09:19.300 --> 00:09:25.175
+Then to reconstruct the data set,
+we'll draw the y prior values for
+
+112
+00:09:25.175 --> 00:09:28.690
+those five locations only, rpoisson.
+
+113
+00:09:29.800 --> 00:09:35.790
+And we're going to draw 150
+samples where our lambdas,
+
+114
+00:09:37.150 --> 00:09:42.370
+the mean of the Poisson
+will be these five lambdas.
+
+115
+00:09:42.370 --> 00:09:47.604
+30 for each location, so
+we need to repeat lambda
+
+116
+00:09:47.604 --> 00:09:52.620
+prior And
+each of those will happen 30 times.
+
+117
+00:09:53.990 --> 00:09:54.770
+We can run that.
+
+118
+00:09:55.990 --> 00:09:58.590
+Let's take a look at our
+reconstructed data set.
+
+119
+00:10:00.988 --> 00:10:05.720
+This represents what our data
+set might have looked like under
+
+120
+00:10:05.720 --> 00:10:08.430
+our prior distributions.
+
+121
+00:10:08.430 --> 00:10:13.600
+Because these priors have high variance
+and they're somewhat non-informative,
+
+122
+00:10:13.600 --> 00:10:17.560
+they produce unrealistic
+predictive distributions.
+
+123
+00:10:17.560 --> 00:10:22.010
+Still, given enough data,
+we hope that the data would
+
+124
+00:10:22.010 --> 00:10:27.240
+overwhelm the prior resulting in
+useful posterior distributions.
+
+125
+00:10:27.240 --> 00:10:32.830
+Alternatively we could tweak and
+simulate this prior distributions for
+
+126
+00:10:32.830 --> 00:10:38.220
+alpha and beta, until they adequately
+represent our prior beliefs.
+
+127
+00:10:39.330 --> 00:10:43.970
+Yet another approach would be to
+reparameterize the gamma prior.
+
+128
+00:10:43.970 --> 00:10:46.720
+Which we're going to demonstrate
+when we fit this model.

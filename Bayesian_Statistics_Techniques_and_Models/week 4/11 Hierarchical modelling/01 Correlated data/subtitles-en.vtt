@@ -1,0 +1,479 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:03.051
+[MUSIC]
+
+2
+00:00:03.051 --> 00:00:06.514
+In all of our modelling
+throughout the last few lessons,
+
+3
+00:00:06.514 --> 00:00:10.280
+we have assumed that all
+the observations were independent.
+
+4
+00:00:11.420 --> 00:00:14.360
+Sometimes, that's obviously
+not true about our data.
+
+5
+00:00:15.430 --> 00:00:20.370
+There is often a natural grouping to our
+data points which leads us to believe that
+
+6
+00:00:20.370 --> 00:00:26.090
+some observation pairs should be more
+similar to each other than to others.
+
+7
+00:00:26.090 --> 00:00:27.310
+Let's look at an example.
+
+8
+00:00:28.470 --> 00:00:32.670
+In the previous course,
+we talked about using a Poisson model for
+
+9
+00:00:32.670 --> 00:00:34.880
+counting chocolate chips in cookies.
+
+10
+00:00:36.260 --> 00:00:40.730
+Let's suppose that you own a company
+that produces chocolate chip cookies.
+
+11
+00:00:40.730 --> 00:00:47.903
+In an experiment,
+you're going to produce 150 test cookies.
+
+12
+00:00:50.825 --> 00:00:54.236
+Let's say you'll do 30
+from your location and
+
+13
+00:00:54.236 --> 00:00:58.180
+then 30 from four other factory locations.
+
+14
+00:00:58.180 --> 00:01:06.111
+So let's write this as 30
+from each of 5 locations.
+
+15
+00:01:12.162 --> 00:01:16.273
+We're going to assume that all the
+locations use the same recipe when they
+
+16
+00:01:16.273 --> 00:01:18.340
+make their chocolate chip cookies.
+
+17
+00:01:19.510 --> 00:01:23.410
+So now, would you expect
+a cookie from your location,
+
+18
+00:01:23.410 --> 00:01:28.940
+location one, to be more similar
+to another cookie from your batch
+
+19
+00:01:28.940 --> 00:01:34.420
+than to a cookie from another
+locations' batch, I'd say probably.
+
+20
+00:01:34.420 --> 00:01:37.240
+There's a natural grouping to the cookies.
+
+21
+00:01:37.240 --> 00:01:42.050
+We can account for the likely differences
+between cookies in your Poisson model
+
+22
+00:01:42.050 --> 00:01:43.940
+by making it a hierarchical model.
+
+23
+00:01:45.790 --> 00:01:49.515
+The original fully independent mode for
+model for
+
+24
+00:01:49.515 --> 00:01:54.180
+Poisson, the number of chips in
+the cookies would have looked like this.
+
+25
+00:01:54.180 --> 00:01:58.323
+Let's call this the fully
+independent model.
+
+26
+00:02:02.665 --> 00:02:08.159
+For cookie i the number of chips,
+given lambda,
+
+27
+00:02:08.159 --> 00:02:15.799
+the mean would be iid from a Poisson
+distribution with mean lambda.
+
+28
+00:02:15.799 --> 00:02:21.534
+For i = 1 up to n which
+in our case is a 150.
+
+29
+00:02:24.550 --> 00:02:29.326
+One way we can acknowledge the grouping
+in the counts is to assign
+
+30
+00:02:29.326 --> 00:02:33.980
+a different lambda parameter for
+each location.
+
+31
+00:02:33.980 --> 00:02:36.098
+So, we're going to do
+a location dependent model.
+
+32
+00:02:45.150 --> 00:02:50.607
+We'll say that the ith cookie which
+happens to be in the lth location
+
+33
+00:02:50.607 --> 00:02:56.870
+follows a Poisson with a mean lambda that
+depends on the location of cookie i.
+
+34
+00:02:56.870 --> 00:03:03.950
+So that is, yi given the location
+of where cookie i was made.
+
+35
+00:03:06.530 --> 00:03:12.333
+And lambda li will come independently
+
+36
+00:03:12.333 --> 00:03:16.321
+from a Poisson lambda li,
+
+37
+00:03:16.321 --> 00:03:22.485
+where li can take on values between 1 and
+
+38
+00:03:22.485 --> 00:03:27.562
+5 because there are five locations,
+
+39
+00:03:27.562 --> 00:03:31.210
+and i = 1 up to 150.
+
+40
+00:03:31.210 --> 00:03:36.035
+That is,
+if cookie i comes from location two,
+
+41
+00:03:36.035 --> 00:03:39.265
+for example then li will be 2.
+
+42
+00:03:39.265 --> 00:03:43.998
+And so the expected number of chips
+in cookie i will be lambda 2.
+
+43
+00:03:43.998 --> 00:03:49.510
+So far,
+this looks like a one way ANOVA model.
+
+44
+00:03:49.510 --> 00:03:52.210
+What make this a hierarchical model
+
+45
+00:03:52.210 --> 00:03:55.410
+is that instead of placing
+an independent prior for
+
+46
+00:03:55.410 --> 00:04:00.310
+each of the lambda parameters, we're going
+to assume that they come from a common
+
+47
+00:04:00.310 --> 00:04:05.510
+distribution with hyper parameters
+that we're going to estimate as well.
+
+48
+00:04:05.510 --> 00:04:11.820
+That is, we're going to say that lambda l,
+given our hyper parameters,
+
+49
+00:04:11.820 --> 00:04:16.580
+alpha and beta, will be iid from a gamma
+
+50
+00:04:16.580 --> 00:04:21.640
+distribution with shape alpha and
+rate beta.
+
+51
+00:04:21.640 --> 00:04:26.265
+This is for location 1 up to location 5.
+
+52
+00:04:28.220 --> 00:04:31.699
+We'll complete this model with priors for
+alpha and beta.
+
+53
+00:04:31.699 --> 00:04:35.907
+So we'll say,
+alpha comes from the prior for alpha.
+
+54
+00:04:35.907 --> 00:04:41.255
+Beta comes from the prior distribution for
+beta.
+
+55
+00:04:43.360 --> 00:04:47.800
+It's also useful to see the graphical
+representation of this model.
+
+56
+00:04:49.420 --> 00:04:52.314
+We're going to start at the top of
+the hierarchy with the parameters
+
+57
+00:04:52.314 --> 00:04:53.950
+that are independent.
+
+58
+00:04:53.950 --> 00:04:57.395
+So we have a note for
+alpha and a note for beta.
+
+59
+00:04:59.020 --> 00:05:03.610
+And depended on these two parameters,
+we have all of the lambdas.
+
+60
+00:05:03.610 --> 00:05:09.079
+So, lambda 1, lambda 2, up to lambda 5.
+
+61
+00:05:09.079 --> 00:05:13.371
+And of course the distribution for
+
+62
+00:05:13.371 --> 00:05:20.031
+each of these lambdas depends
+on both alpha and beta.
+
+63
+00:05:22.331 --> 00:05:25.002
+In the next level down,
+
+64
+00:05:25.002 --> 00:05:30.887
+we have all of the cookies
+that are from location 1.
+
+65
+00:05:30.887 --> 00:05:34.881
+So I'm going to say, yi for
+
+66
+00:05:34.881 --> 00:05:40.630
+i such that location of i is equal to 1.
+
+67
+00:05:40.630 --> 00:05:43.672
+So these are all the cookies
+from location 1.
+
+68
+00:05:43.672 --> 00:05:50.233
+We can do the same thing for
+all of the other batches,
+
+69
+00:05:50.233 --> 00:05:56.050
+i such that the location
+that i is equal to 2 and
+
+70
+00:05:56.050 --> 00:06:00.247
+a plate for this group over here,
+
+71
+00:06:04.031 --> 00:06:08.647
+Such that location i = 5.
+
+72
+00:06:11.769 --> 00:06:16.800
+The lowest level here represents
+each individual cookie.
+
+73
+00:06:16.800 --> 00:06:23.040
+And cookies are grouped by location, which
+is represented here at the second level.
+
+74
+00:06:23.040 --> 00:06:28.460
+For each location, we have a parameter for
+the mean number of chocolate chips.
+
+75
+00:06:28.460 --> 00:06:33.400
+These five means come from a common
+distribution, who's parameters we can
+
+76
+00:06:33.400 --> 00:06:38.670
+also estimate, because the five lambdas
+can be thought of as data at this level.
+
+77
+00:06:40.110 --> 00:06:46.290
+If we hadn't used the hierarchical model
+for the cookie example here, two obvious
+
+78
+00:06:46.290 --> 00:06:52.190
+modeling choices would have been to first,
+fit a single model to all of the data,
+
+79
+00:06:52.190 --> 00:06:57.420
+treating all 150 cookies as though they're
+independent like we did here in number 1.
+
+80
+00:06:57.420 --> 00:07:02.805
+Or second, fit five separate Poisson
+models, one for each location.
+
+81
+00:07:02.805 --> 00:07:06.974
+The book Bayesian Data Analysis
+by Galman and co-authors,
+
+82
+00:07:06.974 --> 00:07:11.305
+which is listed as one of your
+references for further reading,
+
+83
+00:07:11.305 --> 00:07:15.718
+describes the trade offs,
+between these types of options, and
+
+84
+00:07:15.718 --> 00:07:19.420
+how hierarchical models
+provide a good compromise.
+
+85
+00:07:20.640 --> 00:07:26.940
+For example, if we had fit the original
+model with 150 independent cookies,
+
+86
+00:07:26.940 --> 00:07:31.870
+we would be ignoring potential differences
+between locations and the fact
+
+87
+00:07:31.870 --> 00:07:36.540
+that cookies from the same location are
+likely to be more similar to each other.
+
+88
+00:07:37.670 --> 00:07:42.050
+On the other hand, if we had fit five
+separate Poisson models, one for
+
+89
+00:07:42.050 --> 00:07:46.430
+each batch of cookies, we would
+potentially be ignoring information that
+
+90
+00:07:46.430 --> 00:07:51.050
+could help us estimate the lambda
+parameter for your location.
+
+91
+00:07:51.050 --> 00:07:54.330
+Because separate models would
+ignore data from other locations.
+
+92
+00:07:55.740 --> 00:07:58.900
+Since all locations use the same recipe,
+
+93
+00:07:58.900 --> 00:08:03.500
+it seems reasonable that information
+about another location's cookies
+
+94
+00:08:03.500 --> 00:08:07.660
+might provide information about
+your cookies, at least indirectly.
+
+95
+00:08:08.810 --> 00:08:13.050
+In this sense,
+hierarchical models share information,
+
+96
+00:08:13.050 --> 00:08:15.350
+or borrow strength, from all the data.
+
+97
+00:08:16.662 --> 00:08:22.480
+That is, your lambda is not only estimated
+directly from your 30 cookies, but
+
+98
+00:08:22.480 --> 00:08:28.397
+also indirectly from the other 120 cookies
+leveraging this hierarchical structure.
+
+99
+00:08:30.440 --> 00:08:35.391
+Being able to account for relationships
+in the data while estimating everything
+
+100
+00:08:35.391 --> 00:08:40.063
+with the single model is a primary
+advantage of using hierarchical models.
+
+101
+00:08:40.063 --> 00:08:46.879
+[MUSIC]
