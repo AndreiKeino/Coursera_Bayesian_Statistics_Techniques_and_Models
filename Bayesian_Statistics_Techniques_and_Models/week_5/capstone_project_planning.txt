@@ -1,0 +1,29 @@
+Можно взять данные из датасета R - EuStockMarkets - посмотреть как там обстоит дело с линейной зависимостью между маркетами 
+и попытаться найти наилучшую пару- cointegrated pair или сочетание для торговли для при применении "Pairs trading algorithm" отсюда - 
+https://www.quantopian.com/lectures 
+
+!!!!!     https://www.quantopian.com/lectures/introduction-to-pairs-trading
+
+
+Еще можно сравнить отрезки трендового движение пары и стохастического с применением MCMC как критерия успешности торговли по паре и можно 
+применить еще вот это:
+
+
+Augmented-Dickey Fuller test
+Hurst exponent
+Half-life of mean reversion inferred from an Ornstein–Uhlenbeck process
+Kalman filters
+
+как написано здесь: https://www.quantopian.com/lectures/introduction-to-pairs-trading
+
+MCMC можно также применить так как здесь: "Advanced algorithmic trading"
+
+Можно попробовать сравнить изменение значений коэффициентов линейной регрессии по данным взятым за год последовательно с месячным лагом 
+для всегь временного интервала с прибыльностью торговой стратегии.
+
+https://www.quantstart.com/articles/hidden-markov-models-for-regime-detection-using-r
+
+!!!!!     Hidden Markov Models for Regime Detection using R
+
+https://www.google.com/search?newwindow=1&ei=NyyvXPGZM4rSmwX5xYPIBQ&q=jags+hidden+markov+model+regime+detection&oq=jags+hidden+markov+model+regime+detection&gs_l=psy-ab.3...2391.2391..2871...0.0..0.119.119.0j1......0....1..gws-wiz.oVfxvLxT4Xc
+

@@ -1,0 +1,97 @@
+---
+title: 'Capstone project of the Coursera course - Bayesian statistics: techniques and models'
+author: "Andrei Keino"
+date: "April 12, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+#knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
+```
+This is the capstone project of the Coursera course - Bayesian statistics: techniques and models <https://www.coursera.org/learn/mcmc-bayesian-statistics/>.
+The aim of the project is: select a research problem and accompanying data set that interest you. In selecting a data set, use publicly available data or data that you own (a few websites providing publicly available data are listed below). If you do not personally own the data, be sure to respect copyright laws and do not distribute the data without permission of the owner. If the data are owned by your employer or are otherwise sensitive (e.g., contain protected information), be sure that none of your analyses violate non-disclosure agreements or otherwise compromise anonymity. Responsible, ethical data handling is critical in science, public service, and business.
+
+## Description of the data to be analyzed.
+
+The analyzed data are contained in publicly available data set **EuStockMarkets**. This data set contains the daily closing prices of major European stock indices: Germany DAX (Ibis), Switzerland SMI, France CAC, and UK FTSE, for 1991-1998. The data are sampled in business time, i.e., weekends and holidays are omitted. 
+
+## The aim of the analysis is to check some trading possibilities for these market data with the help of Markov Chain Monte Carlo analysis (MCMC).
+
+####There is the trading algorithm known as **pairs trading algorithm**. 
+
+This is a form of mean reversion algorithm that has a distinct advantage of always being hedged against market movements. Pairs trading is a classic example of a strategy based on mathematical analysis. The principle is as follows. Let's say you have a pair of securities X and Y that have some underlying economic link. An example might be two companies that manufacture the same product, or two companies in one supply chain. If we can model this economic link with a mathematical model, we can make trades on it. More on this can be found here: <https://www.quantopian.com/lectures/introduction-to-pairs-trading>
+
+####Also, the various market regimes can be spotted. There are two very important market regimes - **trend** and **flat**.
+
+A market **trend** is a perceived tendency of financial markets to move in a particular direction over time.[1] These trends are classified as secular for long time frames, primary for medium time frames, and secondary for short time frames.Traders attempt to identify market trends using technical analysis, a framework which characterizes market trends as predictable price tendencies within the market when price reaches support and resistance levels, varying over time.
+
+If the market have no dominant **trend** for some moment, it considered to be in the **flat** regime.
+
+A trend can only be determined in hindsight, since at any time prices in the future are not known.
+
+More on this can be found here: <https://en.wikipedia.org/wiki/Market_trend>
+
+#### So, the aims of the analysis are: 
+
+#### 1. Try to asses the cointegrated pairs with the help of the MCMC.
+#### 2. Check the market regimes for the stock indices data: either the trend regime of the flat regime with the help of the MCMC.
+
+## The summary of data:
+
+```{r load_data}
+data("EuStockMarkets")
+df <- as.data.frame(na.omit(EuStockMarkets))
+#df$DayNum <- 1:nrow(df)
+summary(df)
+```
+
+## The plot of data:
+```{r plot_data}
+# https://stackoverflow.com/questions/4877357/how-to-plot-all-the-columns-of-a-data-frame-in-r
+plot.ts(df, main = "Daily Closing Prices of Major European Stock Indices, 1991-1998", xlab = "Day number")
+pairs(df, main="Pairs plot")
+```
+
+As it can be seen from the pairs plot, the best cointegrated pairs are DAX:SMI and FTSE:SMI or maybe the reversed ones: SMI:DAX and SMI:FTSE.
+
+## Cointegration tests.
+
+```{r cointegration_test}
+# https://www.quantstart.com/articles/Cointegrated-Augmented-Dickey-Fuller-Test-for-Pairs-Trading-Evaluation-in-R
+# https://www.quantstart.com/articles/Cointegrated-Augmented-Dickey-Fuller-Test-for-Pairs-Trading-Evaluation-in-R
+library("tseries")
+set.seed(5)
+
+print("*****     ADF test for DAX:SMI")
+comb <- lm(DAX~SMI, data = df)
+summary(comb)
+adf.test(comb$residuals, k=1)
+
+print("*****     ADF test for SMI:DAX")
+comb <- lm(DAX~SMI, data = df)
+summary(comb)
+adf.test(comb$residuals, k=1)
+
+
+print("*****     ADF test for FTSE:SMI")
+comb <- lm(FTSE~SMI, data = df)
+summary(comb)
+adf.test(comb$residuals, k=1)
+
+print("*****     ADF test for SMI:FTSE")
+comb <- lm(SMI~FTSE, data = df)
+summary(comb)
+adf.test(comb$residuals, k=1)
+
+# The ADF test statistic for EWC as the independent variable is smaller (more negative) than that for EWA as the independent 
+# variable and hence we will choose this as our linear combination for any future trading implementations.
+```
+
+#####As it can be seen from the results of Augmented Dickey-Fuller Test, the **best** cointegrated pair is the **DAX ~ SMI**, because of smaller p - value and smaller ADF test statistics. The **worst** cointegrated pair is the **SMI ~ FTSE** because of the largest p - value. Nevertheless, the p - value even for the DAX ~ SMI pair is not very good, because it si more than 5% (ordinary level of the stationary hypothesis rejection).
+
+
+
+
+
+
