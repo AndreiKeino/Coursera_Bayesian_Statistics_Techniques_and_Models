@@ -57,7 +57,7 @@ As it can be seen from the pairs plot, the best cointegrated pairs are DAX:SMI a
 
 ## Cointegration tests.
 
-If we fit the linear regression to our potentially cointegrated pairs, we will will get the resuduals and we'll be able to run the cointegration tests, for example the Augmented Dickey-Fuller Test.
+If we fit the linear regression to our potentially cointegrated pairs, we will will get the residuals and we'll be able to run the cointegration Augmented Dickey-Fuller Test.
 
 ```{r cointegration_test}
 # https://www.quantstart.com/articles/Cointegrated-Augmented-Dickey-Fuller-Test-for-Pairs-Trading-Evaluation-in-R
@@ -99,12 +99,14 @@ adf.test(comb4$residuals, k=1)
 
 ```{r residuals_plot}
 breaks <- 100
-hist(comb1$residuals, breaks=breaks, main = "DAX ~ SMI residuals")
-hist(comb4$residuals, breaks=breaks, main = "SMI ~ FTSE residuals")
+hist(comb1$residuals, breaks=breaks, main = "Histogram of DAX ~ SMI residuals")
+hist(comb4$residuals, breaks=breaks, main = "Histogram of SMI ~ FTSE residuals")
+
+plot(density(comb1$residuals), main = "Density of DAX ~ SMI residuals")
+plot(density(comb4$residuals), main = "Density of SMI ~ FTSE residuals")
+
 ``` 
 
-
-
-
+##The residuals for linear regression of DAX ~ SMI seems to have a complex stucture, so they can be modeled as a muxture  of three distributions.
 
 
