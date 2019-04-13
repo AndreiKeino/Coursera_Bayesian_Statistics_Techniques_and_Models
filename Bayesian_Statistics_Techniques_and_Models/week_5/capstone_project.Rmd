@@ -57,6 +57,8 @@ As it can be seen from the pairs plot, the best cointegrated pairs are DAX:SMI a
 
 ## Cointegration tests.
 
+If we fit the linear regression to our potentially cointegrated pairs, we will will get the resuduals and we'll be able to run the cointegration tests, for example the Augmented Dickey-Fuller Test.
+
 ```{r cointegration_test}
 # https://www.quantstart.com/articles/Cointegrated-Augmented-Dickey-Fuller-Test-for-Pairs-Trading-Evaluation-in-R
 # https://www.quantstart.com/articles/Cointegrated-Augmented-Dickey-Fuller-Test-for-Pairs-Trading-Evaluation-in-R
@@ -64,31 +66,42 @@ library("tseries")
 set.seed(5)
 
 print("*****     ADF test for DAX:SMI")
-comb <- lm(DAX~SMI, data = df)
-summary(comb)
-adf.test(comb$residuals, k=1)
+comb1 <- lm(DAX~SMI, data = df)
+summary(comb1)
+adf.test(comb1$residuals, k=1)
 
 print("*****     ADF test for SMI:DAX")
-comb <- lm(DAX~SMI, data = df)
-summary(comb)
-adf.test(comb$residuals, k=1)
+comb2 <- lm(DAX~SMI, data = df)
+summary(comb2)
+adf.test(comb2$residuals, k=1)
 
 
 print("*****     ADF test for FTSE:SMI")
-comb <- lm(FTSE~SMI, data = df)
-summary(comb)
-adf.test(comb$residuals, k=1)
+comb3 <- lm(FTSE~SMI, data = df)
+summary(comb3)
+adf.test(comb3$residuals, k=1)
 
 print("*****     ADF test for SMI:FTSE")
-comb <- lm(SMI~FTSE, data = df)
-summary(comb)
-adf.test(comb$residuals, k=1)
+comb4 <- lm(SMI~FTSE, data = df)
+summary(comb4)
+adf.test(comb4$residuals, k=1)
 
 # The ADF test statistic for EWC as the independent variable is smaller (more negative) than that for EWA as the independent 
 # variable and hence we will choose this as our linear combination for any future trading implementations.
+
+# the **best** cointegrated pair is **DAX ~ SMI** <=> comb1
+# The **worst** cointegrated pair is the **SMI ~ FTSE** <=> comb4
 ```
 
 #####As it can be seen from the results of Augmented Dickey-Fuller Test, the **best** cointegrated pair is the **DAX ~ SMI**, because of smaller p - value and smaller ADF test statistics. The **worst** cointegrated pair is the **SMI ~ FTSE** because of the largest p - value. Nevertheless, the p - value even for the DAX ~ SMI pair is not very good, because it si more than 5% (ordinary level of the stationary hypothesis rejection).
+
+##Evaulation of the residuals for the models
+
+```{r residuals_plot}
+breaks <- 100
+hist(comb1$residuals, breaks=breaks, main = "DAX ~ SMI residuals")
+hist(comb4$residuals, breaks=breaks, main = "SMI ~ FTSE residuals")
+``` 
 
 
 
