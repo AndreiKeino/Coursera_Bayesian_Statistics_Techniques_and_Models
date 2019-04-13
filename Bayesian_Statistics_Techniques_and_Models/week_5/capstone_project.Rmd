@@ -98,15 +98,18 @@ adf.test(comb4$residuals, k=1)
 ##Evaulation of the residuals for the models
 
 ```{r residuals_plot}
+
+plot(comb1$residuals, main = "DAX ~ SMI residuals")
+plot(comb4$residuals, main = "SMI ~ FTSE residuals")
+
 breaks <- 100
 hist(comb1$residuals, breaks=breaks, main = "Histogram of DAX ~ SMI residuals")
 hist(comb4$residuals, breaks=breaks, main = "Histogram of SMI ~ FTSE residuals")
 
 plot(density(comb1$residuals), main = "Density of DAX ~ SMI residuals")
 plot(density(comb4$residuals), main = "Density of SMI ~ FTSE residuals")
-
 ``` 
 
-##The residuals for linear regression of DAX ~ SMI seems to have a complex stucture, so they can be modeled as a muxture  of three distributions.
+####The residuals for linear regression of DAX ~ SMI seems to have a complex stucture, so they can be modeled as a muxture  of three distributions. Also, it seems what the residuals for the linear models are not stationary.
 
 
