@@ -22,20 +22,8 @@ The analyzed data are contained in publicly available data set **EuStockMarkets*
 
 This is a form of mean reversion algorithm that has a distinct advantage of always being hedged against market movements. Pairs trading is a classic example of a strategy based on mathematical analysis. The principle is as follows. Let's say you have a pair of securities X and Y that have some underlying economic link. An example might be two companies that manufacture the same product, or two companies in one supply chain. If we can model this economic link with a mathematical model, we can make trades on it. More on this can be found here: <https://www.quantopian.com/lectures/introduction-to-pairs-trading>
 
-####Also, the various market regimes can be spotted. There are two very important market regimes - **trend** and **flat**.
+## Rhe aim of the analysis is try to asses residuals for some cointegrated pair with the help of the MCMC.
 
-A market **trend** is a perceived tendency of financial markets to move in a particular direction over time.[1] These trends are classified as secular for long time frames, primary for medium time frames, and secondary for short time frames.Traders attempt to identify market trends using technical analysis, a framework which characterizes market trends as predictable price tendencies within the market when price reaches support and resistance levels, varying over time.
-
-If the market have no dominant **trend** for some moment, it considered to be in the **flat** regime.
-
-A trend can only be determined in hindsight, since at any time prices in the future are not known.
-
-More on this can be found here: <https://en.wikipedia.org/wiki/Market_trend>
-
-#### So, the aims of the analysis are: 
-
-#### 1. Try to asses the cointegrated pairs with the help of the MCMC.
-#### 2. Check the market regimes for the stock indices data: either the trend regime of the flat regime with the help of the MCMC.
 
 ## The summary of data:
 
@@ -99,8 +87,8 @@ adf.test(comb4$residuals, k=1)
 
 ```{r residuals_plot}
 
-plot(comb1$residuals, main = "DAX ~ SMI residuals")
-plot(comb4$residuals, main = "SMI ~ FTSE residuals")
+plot(comb1$residuals, main = "DAX ~ SMI residuals by index")
+plot(comb4$residuals, main = "SMI ~ FTSE residuals by index")
 
 breaks <- 100
 hist(comb1$residuals, breaks=breaks, main = "Histogram of DAX ~ SMI residuals")
@@ -112,4 +100,53 @@ plot(density(comb4$residuals), main = "Density of SMI ~ FTSE residuals")
 
 ####The residuals for linear regression of DAX ~ SMI seems to have a complex stucture, so they can be modeled as a muxture  of three distributions. Also, it seems what the residuals for the linear models are not stationary.
 
+##Modelling the residuals for linear regression of DAX ~ SMI as mix of three populatons:
+
+```{r mixture_model}
+library("rjags")
+
+y <- comb1$residuals
+
+print(head(y))
+
+mod_string = " model {
+    for (i in 1:length(y)) {
+        y[i] ~ dnorm(mu[z[i]], prec)
+        z[i] ~ dcat(omega)
+    }
+  
+    mu[1] ~ dnorm(-1.0, 1.0/100.0)
+    mu[2] ~ dnorm(1.0, 1.0/100.0) T(mu[1],) # ensures mu[1] < mu[2]
+    mu[3] ~ dnorm(1.0, 1.0/100.0) T(mu[2],) # ensures mu[2] < mu[3]
+
+    prec ~ dgamma(1.0/2.0, 1.0*1.0/2.0)
+    sig = sqrt(1.0/prec)
+    
+    #omega ~ ddirich(c(1.0, 1.0))
+    omega ~ ddirich(c(1.0, 1.0, 1.0))
+} "
+
+data_jags <- list(y = y)
+
+names(data_jags)
+
+set.seed(5)
+
+params <- c("mu", "sig", "omega")
+
+mod = jags.model(textConnection(mod_string), data=data_jags, n.chains=3)
+update(mod, 1e3)
+
+mod_sim = coda.samples(model=mod,
+                        variable.names=params,
+                        n.iter=5e3)
+mod_csim = as.mcmc(do.call(rbind, mod_sim))
+
+## convergence diagnostics
+plot(mod_sim, ask=TRUE)
+
+autocorr.diag(mod_sim)
+effectiveSize(mod_sim)
+
+```
 
