@@ -5,9 +5,9 @@ date: "April 12, 2019"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
+```{r setup, echo = FALSE, message = FALSE}
 #knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning=FALSE)
 ```
 This is the capstone project of the Coursera course - Bayesian statistics: techniques and models <https://www.coursera.org/learn/mcmc-bayesian-statistics/>.
 The aim of the project is: select a research problem and accompanying data set that interest you. In selecting a data set, use publicly available data or data that you own (a few websites providing publicly available data are listed below). If you do not personally own the data, be sure to respect copyright laws and do not distribute the data without permission of the owner. If the data are owned by your employer or are otherwise sensitive (e.g., contain protected information), be sure that none of your analyses violate non-disclosure agreements or otherwise compromise anonymity. Responsible, ethical data handling is critical in science, public service, and business.
@@ -16,13 +16,11 @@ The aim of the project is: select a research problem and accompanying data set t
 
 The analyzed data are contained in publicly available data set **EuStockMarkets**. This data set contains the daily closing prices of major European stock indices: Germany DAX (Ibis), Switzerland SMI, France CAC, and UK FTSE, for 1991-1998. The data are sampled in business time, i.e., weekends and holidays are omitted. 
 
-## The aim of the analysis is to check some trading possibilities for these market data with the help of Markov Chain Monte Carlo analysis (MCMC).
-
 ####There is the trading algorithm known as **pairs trading algorithm**. 
 
 This is a form of mean reversion algorithm that has a distinct advantage of always being hedged against market movements. Pairs trading is a classic example of a strategy based on mathematical analysis. The principle is as follows. Let's say you have a pair of securities X and Y that have some underlying economic link. An example might be two companies that manufacture the same product, or two companies in one supply chain. If we can model this economic link with a mathematical model, we can make trades on it. More on this can be found here: <https://www.quantopian.com/lectures/introduction-to-pairs-trading>
 
-## Rhe aim of the analysis is try to asses residuals for some cointegrated pair with the help of the MCMC.
+## The aim of the analysis is to asses the linear relationship for some cointegrated pair with the help of the MCMC.
 
 
 ## The summary of data:
@@ -83,7 +81,7 @@ adf.test(comb4$residuals, k=1)
 
 #####As it can be seen from the results of Augmented Dickey-Fuller Test, the **best** cointegrated pair is the **DAX ~ SMI**, because of smaller p - value and smaller ADF test statistics. The **worst** cointegrated pair is the **SMI ~ FTSE** because of the largest p - value. Nevertheless, the p - value even for the DAX ~ SMI pair is not very good, because it si more than 5% (ordinary level of the stationary hypothesis rejection).
 
-##Evaulation of the residuals for the models
+
 
 ```{r residuals_plot}
 
@@ -100,53 +98,62 @@ plot(density(comb4$residuals), main = "Density of SMI ~ FTSE residuals")
 
 ####The residuals for linear regression of DAX ~ SMI seems to have a complex stucture, so they can be modeled as a muxture  of three distributions. Also, it seems what the residuals for the linear models are not stationary.
 
-##Modelling the residuals for linear regression of DAX ~ SMI as mix of three populatons:
+##Evaulation of the DAX ~ SMI linear model with the MCMC:
 
-```{r mixture_model}
-library("rjags")
+Now the linear model $DAX = b_1 + b_2 SMI$ will be fitted with the help of MCMC. Prior distribution for the coefficients $b_i$ will be modeled as $N(0, 10^{6})$. The prior distribution for $\sigma^2$ will be modeled as Inverse Gamma distribution - $IG(5/2, 25)$.
 
-y <- comb1$residuals
+```{r linear_regression, message = FALSE}
+suppressMessages(library("rjags"))
+#library("rjags")
 
-print(head(y))
-
-mod_string = " model {
-    for (i in 1:length(y)) {
-        y[i] ~ dnorm(mu[z[i]], prec)
-        z[i] ~ dcat(omega)
+mod1_string = " model {
+    for (i in 1:n) {
+        y[i] ~ dnorm(mu[i], prec)
+        mu[i] = b[1] + b[2]*x[i] 
     }
-  
-    mu[1] ~ dnorm(-1.0, 1.0/100.0)
-    mu[2] ~ dnorm(1.0, 1.0/100.0) T(mu[1],) # ensures mu[1] < mu[2]
-    mu[3] ~ dnorm(1.0, 1.0/100.0) T(mu[2],) # ensures mu[2] < mu[3]
-
-    prec ~ dgamma(1.0/2.0, 1.0*1.0/2.0)
-    sig = sqrt(1.0/prec)
     
-    #omega ~ ddirich(c(1.0, 1.0))
-    omega ~ ddirich(c(1.0, 1.0, 1.0))
+    for (i in 1:2) {
+        b[i] ~ dnorm(0.0, 1.0/1.0e6)
+    }
+    
+    prec ~ dgamma(5/2.0, 5*10.0/2.0)
+    sig2 = 1.0 / prec
+    sig = sqrt(sig2)
 } "
 
-data_jags <- list(y = y)
+set.seed(72)
+data1_jags = list(y=df$DAX, n=nrow(df), x=df$SMI)
 
-names(data_jags)
+params1 = c("b", "sig")
 
-set.seed(5)
+inits1 = function() {
+    inits = list("b"=rnorm(2,0.0,100.0), "prec"=rgamma(1,1.0,1.0))
+}
 
-params <- c("mu", "sig", "omega")
+mod1 = jags.model(textConnection(mod1_string), data=data1_jags, inits=inits1, n.chains=3)
+update(mod1, 1000) # burn-in
 
-mod = jags.model(textConnection(mod_string), data=data_jags, n.chains=3)
-update(mod, 1e3)
+mod1_sim = coda.samples(model=mod1,
+                        variable.names=params1,
+                        n.iter=5000)
 
-mod_sim = coda.samples(model=mod,
-                        variable.names=params,
-                        n.iter=5e3)
-mod_csim = as.mcmc(do.call(rbind, mod_sim))
+mod1_csim = do.call(rbind, mod1_sim) # combine multiple chains
 
-## convergence diagnostics
-plot(mod_sim, ask=TRUE)
+# diagnostics
 
-autocorr.diag(mod_sim)
-effectiveSize(mod_sim)
+autocorr.diag(mod1_sim)
+gelman.diag(mod1_sim)
+autocorr.plot(mod1_sim)
+effectiveSize(mod1_sim)
+
+print("MCMC diagnostics and posterior distributions:")
+plot(mod1_sim)
+
+print("DAX ~ SMI linear model with the MCMC summary:")
+summary(mod1_sim)
+
+print("DAX ~ SMI linear model summary:")
+summary(comb1)
 
 ```
 
